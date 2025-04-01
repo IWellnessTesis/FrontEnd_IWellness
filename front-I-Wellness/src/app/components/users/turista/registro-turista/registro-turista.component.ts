@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../services/auth.service';
-import countriesData from '../../../../assets/countries+cities.json';
+import { AuthService } from '../../../../services/auth/auth.service';
+import countriesData from '../../../../../assets/countries+cities.json';
 
 @Component({
   selector: 'app-registro-turista',
