@@ -103,3 +103,17 @@ body {
     display: block;
     margin-top: 5px;
 }
+
+#password {
+    width: 92%;
+}
+
+.toggle-password {
+    border: none;
+    background: #ffffff;
+}
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
