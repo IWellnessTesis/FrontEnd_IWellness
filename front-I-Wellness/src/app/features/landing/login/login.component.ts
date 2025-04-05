@@ -17,11 +17,28 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
+  emailError: string = '';
+  showPassword: boolean = false;
+  
+
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
+  validateEmail() {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!this.correo.match(regex)) {
+      this.emailError = 'Ingrese un correo electrónico válido';
+    } else {
+      this.emailError = '';
+    }
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
 
   onSubmit() {
     if (!this.correo || !this.password) {
