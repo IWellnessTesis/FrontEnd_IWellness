@@ -19,13 +19,12 @@ export class LoginComponent {
   isLoading: boolean = false;
   emailError: string = '';
   showPassword: boolean = false;
-  
-
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
+
   validateEmail() {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!this.correo.match(regex)) {
@@ -39,39 +38,46 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-
   onSubmit() {
     if (!this.correo || !this.password) {
       this.errorMessage = 'Por favor ingrese correo y contraseña';
       return;
     }
-    
+  
     this.isLoading = true;
     this.errorMessage = '';
-
-    this.authService.login(this.correo, this.password)
-    .subscribe({
-      next: (response:  any ) =>  {
-          this.isLoading = false;
-          
-          // Redireccionar según el rol
-          const user = response.usuario || {};
-          const rolNombre = user.rol?.nombre || '';
-          
-          if (rolNombre === 'Turista') {
-            this.router.navigate(['/hometurista']);
-          } else if (rolNombre === 'Proveedor') {
-            this.router.navigate(['/homeproveedor']);
-          } else if (rolNombre === 'Administrador') {
-            this.router.navigate(['/homeadmin']);
-          } else {
-            this.errorMessage = 'Rol de usuario no reconocido';
+  
+    this.authService.login(this.correo, this.password).subscribe({
+      next: () => {
+        // Login exitoso, ahora obtenemos el rol del usuario
+        this.authService.getUsuarioActual().subscribe({
+          next: (rol: string) => {
+            localStorage.setItem('rol', rol); // Guardamos el rol en localStorage si quieres
+  
+            // Redirigir según el rol
+            if (rol === 'Turista') {
+              this.router.navigate(['/hometurista']);
+            } else if (rol === 'Proveedor') {
+              this.router.navigate(['/homeproveedor']);
+            } else if (rol === 'Administrador') {
+              this.router.navigate(['/homeadmin']);
+            } else {
+              this.errorMessage = 'Rol de usuario no reconocido';
+            }
+  
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.errorMessage = 'No se pudo obtener el rol del usuario';
+            this.isLoading = false;
           }
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.errorMessage = error.message || 'Error en el inicio de sesión';
-        }
-      });
+        });
+      },
+      error: (err) => {
+        this.errorMessage = err.message || 'Error en el inicio de sesión';
+        this.isLoading = false;
+      }
+    });
   }
+  
 }
