@@ -15,24 +15,41 @@ export class AuthService {
  
   login(correo: string, contraseña: string): Observable<string> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  
+
     const body = {
       correo: correo,
       contraseña: contraseña
     };
-  
-    return this.http.post(`${this.apiUrl}/login`, body, { 
-      headers, 
-      responseType: 'text' // <-- Aquí forzamos la respuesta como texto
+
+    return this.http.post(`${this.apiUrl}/login`, body, {
+      headers,
+      responseType: 'text' // JWT en texto plano
     }).pipe(
       tap((token: string) => {
         if (token) {
-          localStorage.setItem('token', token); // Guardamos el JWT
+          localStorage.setItem('token', token);
         }
       }),
       catchError(error => {
         console.error('Error en login:', error);
         return throwError(() => new Error(error.error || 'Error en el inicio de sesión'));
+      })
+    );
+  }
+
+  getUsuarioActual(): Observable<string> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.get(`${this.apiUrl}/role`, {
+      headers,
+      responseType: 'text' // evitar el error de JSON.parse
+    }).pipe(
+      catchError(error => {
+        console.error('Error al obtener usuario actual:', error);
+        return throwError(() => new Error(error.error || 'Error al obtener usuario'));
       })
     );
   }
