@@ -16,9 +16,10 @@ export class HomeProveedorComponent {
   servicios: any[] = [];
 
   constructor(private router: Router, private authService: AuthService, private servicioService: ServicioService) {}
-          navigateTo(path: string) {
-            this.router.navigate([path]);
-          } 
+
+  navigateTo(path: string,id?: any) {
+    this.router.navigate([path, id]);
+  } 
 
   ngOnInit(): void {
     this.authService.usuarioHome().subscribe({
@@ -38,11 +39,10 @@ export class HomeProveedorComponent {
     this.servicioService.obtenerServiciosPorProveedor(this.usuario.id).subscribe({
       next: (data) => {
         this.servicios = data;
-        console.log(data);
+        console.log(this.servicios);
       }
     })
   }
-
   
 }  
         
