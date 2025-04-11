@@ -29,8 +29,8 @@ export class ServicioService {
     );
   }
 
-  actualizar(servicio: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/update/${servicio.id}`, servicio).pipe(
+  actualizar(id: number, servicio: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/update/${id}`, servicio).pipe(
       catchError(this.handleError)
     );
   }

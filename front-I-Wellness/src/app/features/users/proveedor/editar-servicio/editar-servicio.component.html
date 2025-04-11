@@ -2,13 +2,16 @@
         <div class="container">
             <div class="form-box">
                 <h2>Editar servicio</h2>
-                <div class="form-content">
+                <div class="form-content" *ngIf="servicio">
                     <div class="image-upload">
-                        <img [src]="servicio.imagen" alt="{{ servicio.nombre }}">
-                        <p>Agregar imagen</p>
+                        <label for="fileInput" class="image-label"  >
+                            <img [src]="servicio.imagen" alt="{{ servicio.nombre }}">
+                            <p class="upload-text">Agregar imagen</p>
+                        </label>
+                        <input type="file" id="fileInput" (change)="onFileSelected($event)" hidden accept="image/*">
                     </div>
                     <div class="form-fields">
-                        <input type="text" value="{{ servicio.nombre }}">
+                        <input type="text" value="{{ servicio.nombre }}" [(ngModel)]="servicio.nombre">
                         
                         <!-- Selección de días -->
                         <label for="days">Horarios disponibles:</label>
@@ -27,8 +30,8 @@
                             <input type="time" id="endTime" [(ngModel)]="endTime">
                         </div>
                         <label for="precio">Precio:</label>
-                        <input id="precio" type="number" value="{{ servicio.precio }}">
-                        <textarea >{{ servicio.descripcion }}</textarea>
+                        <input id="precio" type="number" value="{{ servicio.precio }}" [(ngModel)]="servicio.precio">
+                        <textarea [(ngModel)]="servicio.descripcion">{{ servicio.descripcion }}</textarea>
                         <button class="save-btn" (click)="navigateTo('homeproveedor')" (click)="getFormattedSchedule()">Guardar</button>
                     </div>
                 </div>

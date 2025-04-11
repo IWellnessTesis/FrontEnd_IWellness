@@ -21,12 +21,15 @@ export class HomeProveedorComponent {
     this.router.navigate([path, id]);
   } 
 
+  agregar(path: string){
+    this.router.navigate([path]);
+  }
+
   ngOnInit(): void {
     this.authService.usuarioHome().subscribe({
       next: (data) => {
         this.usuario = data;
         this.usuario = JSON.parse(data);
-        console.log('Usuario cargado:', this.usuario);
         this.traerServicios();
       },
       error: (err) => {
@@ -39,9 +42,33 @@ export class HomeProveedorComponent {
     this.servicioService.obtenerServiciosPorProveedor(this.usuario.id).subscribe({
       next: (data) => {
         this.servicios = data;
-        console.log(this.servicios);
       }
     })
+  }
+  
+  eliminarServicio(servicio: any){
+    var index = this.servicios.indexOf(servicio)
+    this.servicios.splice(index, 1);
+    this.servicioService.eliminar(servicio._idServicio).subscribe({
+      next: () => {
+        console.log("Servicio eliminado correctamente");
+      },
+      error: (err) => {
+        console.error("Error al eliminar:", err);
+      }
+    });
+  }
+
+  cambiarEstado(servicio: any) {
+    servicio.estado = !servicio.estado; // cambia el estado localmente
+  
+    this.servicioService.actualizar(servicio._idServicio, servicio).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error('Error al actualizar el estado del servicio:', err);
+      }
+    });
   }
   
 }  

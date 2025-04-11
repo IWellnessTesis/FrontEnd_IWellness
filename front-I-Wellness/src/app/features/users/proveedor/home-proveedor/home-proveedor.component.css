@@ -97,6 +97,11 @@ body {
 .service-info p {
     font-size: 14px;
     color: #777;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;  /* Muestra máximo 3 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .price {

@@ -37,9 +37,8 @@ export class EditarServicioComponent {
       this.servicioService.buscarPorId(id).subscribe({
         next: data => {
           this.servicio = data;
-          console.log('Horario desde backend:', this.servicio.horario);
-  
-          // Aquí aplicamos el parseo
+
+          // concatenamos el horario
           this.parseHorario(this.servicio.horario);
         }
       });
@@ -48,7 +47,7 @@ export class EditarServicioComponent {
   private parseHorario(horario: string): void {
     if (!horario) return;
   
-    const [diasParte, horaParte] = horario.split(';');
+    const [diasParte, horaParte] = horario.split('; ');
   
     const diasSeleccionados = diasParte.split(',').map(d => d.trim());
   
@@ -58,7 +57,6 @@ export class EditarServicioComponent {
   
     if (horaParte) {
       const horas = horaParte.split('-').map(h => h.trim());
-      console.log(horaParte);
   
       // Asegurar que las horas estén en formato HH:mm
       const formatHora = (hora: string) => hora.length === 5 ? hora : (hora.length === 2 ? `${hora}:00` : '');
@@ -77,14 +75,33 @@ export class EditarServicioComponent {
       .join(', ');
 
     return selectedDays && this.startTime && this.endTime
-      ? `${selectedDays}: ${this.startTime} - ${this.endTime}`
+      ? `${selectedDays}; ${this.startTime} - ${this.endTime}`
       : 'Horario no seleccionado';
       
   }
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.servicio.imagen = reader.result as string; // base64
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
   navigateTo(path: string) {
-    const horario = this.getFormattedSchedule();
-    console.log('Horario formateado:', horario);
-    this.router.navigate([path]);
+    this.servicio.horario = this.getFormattedSchedule();
+
+    this.servicioService.actualizar(this.servicio._idServicio, this.servicio  ).subscribe({
+   next: () => {
+     this.router.navigate(['homeproveedor']);
+   },
+   error: err => {
+     console.error('Error al actualizar el servicio:', err);
+   }
+ });
   }
 
 }

@@ -111,13 +111,25 @@ label {
 /* Imagen */
 .image-upload {
     text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.image-upload:hover .image-placeholder {
+    transform: scale(1.01);
+    border-color: #48A6A7; /* azul clarito */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    cursor: pointer;
 }
 
 .image-placeholder {
     width: 150px;
     height: 150px;
-    background: #E0E0E0;
-    border-radius: 10px;
+    background-color: #E0E0E0;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    margin: auto;
+    border: 2px dashed #ccc;
 }
 
 .image-upload p {
