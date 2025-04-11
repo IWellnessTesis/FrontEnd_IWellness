@@ -53,6 +53,23 @@ export class AuthService {
       })
     );
   }
+
+  usuarioHome(): Observable<string> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.get(`${this.apiUrl}/info`, {
+      headers,
+      responseType: 'text' // evitar el error de JSON.parse
+    }).pipe(
+      catchError(error => {
+        console.error('Error al obtener usuario actual:', error);
+        return throwError(() => new Error(error.error || 'Error al obtener usuario'));
+      })
+    );
+  }
   
 
   // Método para el registro de turistas
