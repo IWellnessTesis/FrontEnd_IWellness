@@ -9,7 +9,7 @@
         
         <div class="grid-container">
             <div class="card" 
-                 *ngFor="let item of gustos" 
+                 *ngFor="let item of preferencias" 
                  (click)="seleccionarGusto(item)"
                  [class.selected]="seleccionados.includes(item)">
               <img [src]="item.imagen" [alt]="item.nombre" />
@@ -18,5 +18,5 @@
           </div>
         </div>
         
-        <button class="next-button" (click)="continuar()">Siguiente</button>
+        <button class="next-button" (click)="agregarPreferencias()">Siguiente</button>
     </div>

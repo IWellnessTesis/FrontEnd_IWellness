@@ -36,7 +36,7 @@ export const routes: Routes = [
     { path: 'registroturista', component: RegistroTuristaComponent},
     { path: 'recuperar', component: RecuperarComponent},
     { path: 'formulariogustos', component: FormulariogustosComponent},
-    { path: 'perfilturista', component: PerfilTuristaComponent},
+    { path: 'perfilturista/:id', component: PerfilTuristaComponent},
     { path: 'hometurista', component: HomeTuristaComponent},
     { path: 'infoservicio/:id', component: InfoServicioComponent},
     { path: 'headerturista', component: HeaderTuristaComponent},

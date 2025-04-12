@@ -30,6 +30,7 @@ export class HomeProveedorComponent {
       next: (data) => {
         this.usuario = data;
         this.usuario = JSON.parse(data);
+        console.log(this.usuario)
         this.traerServicios();
       },
       error: (err) => {
@@ -42,6 +43,7 @@ export class HomeProveedorComponent {
     this.servicioService.obtenerServiciosPorProveedor(this.usuario.id).subscribe({
       next: (data) => {
         this.servicios = data;
+        console.log(this.servicios);
       }
     })
   }

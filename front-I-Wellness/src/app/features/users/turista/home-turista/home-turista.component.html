@@ -5,10 +5,10 @@
         <section>
           <h3>Para ti</h3>
           <div class="card-container">
-            <div class="card"> <img src="https://www.salussaunas.com/cdn/shop/files/Patio_XS_3_d853d6c0-a59d-488f-a323-137e2461a5ed.jpg?v=1736971068&width=1214" (click)="navigateTo('infoservicio')"><span>Sauna con esencias herbales</span></div>
-            <div class="card"> <img src="https://mytanfeet.com/wp-content/uploads/2023/06/la-fortuna-hot-springs-the-springs-resort-and-spa.jpg"><span>Sauna con contrastes térmicos</span></div>
-            <div class="card"> <img src="https://www.fortuna-ischgl.at/fileadmin/user_upload/Header_1920x1080/Wellness/2024/fortuna-hotel-ischgl-wellnessbereich_FPM4851_be.jpg"><span>Día de Sauna</span></div>
-            <div class="card"> <img src="https://www.salussaunas.com/cdn/shop/files/Patio_XS_2_1_3de33234-b573-484c-9bd2-b18337bcab04.jpg?v=1736971068&width=1214"><span>Sauna detox</span></div>
+            <div class="card" *ngFor="let servicio of serviciosFiltrados" (click)="navigateToDetalle(servicio._idServicio)">
+              <img [src]="servicio.imagen" [alt]="servicio.nombre">
+              <span>{{ servicio.nombre }}</span>
+            </div>
           </div>
         </section>
         
