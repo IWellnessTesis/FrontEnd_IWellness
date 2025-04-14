@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import  { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { HeaderAdminComponent } from './features/users/administrador/header-admin/header-admin.component';
 import { HeaderProveedorComponent } from './features/users/proveedor/header-proveedor/header-proveedor.component';
@@ -7,49 +7,62 @@ import { HeaderTuristaComponent } from './features/users/turista/header-turista/
 import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
 
-
-
-
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, HeaderProveedorComponent, HeaderTuristaComponent, HeaderAdminComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    FooterComponent,
+    HeaderProveedorComponent,
+    HeaderTuristaComponent,
+    HeaderAdminComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title: string = 'front-I-Wellness';
   headerType: string = 'default';
   //se muestra footer o no se muestra
-  showFooter: boolean = false; 
+  showFooter: boolean = false;
 
   constructor(private router: Router) {
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const headersMap: { [key: string]: string } = {
-          '/hometurista': 'headerturista',
-          '/homeproveedor': 'headerproveedor',
-          '/perfilturista': 'headerturista',
-          '/infoservicio': 'headerturista',
-          '/editpreferencias': 'headerturista',
-          '/agregarservicio': 'headerproveedor',
-          '/editarservicio': 'headerproveedor',
-          '/dashboard': 'headerproveedor',
-          '/homeadmin': 'headeradmin',
-          '/perfiladmin': 'headeradmin',
-          '/visitantes': 'headeradmin',
-          '/servicios': 'headeradmin',
-          '/proveedores': 'headeradmin'
-        };
+        const url = event.url;
 
-        // Asigna el header según la ruta, usa 'default' si no está en el mapa
-        this.headerType = headersMap[event.url] || 'default';
-        //rutas en las que se permite el header
+        if (
+          url.startsWith('/hometurista') ||
+          url.startsWith('/perfilturista') ||
+          url.startsWith('/infoservicio') ||
+          url.startsWith('/editpreferencias')
+        ) {
+          this.headerType = 'headerturista';
+        } else if (
+          url.startsWith('/homeproveedor') ||
+          url.startsWith('/agregarservicio') ||
+          url.startsWith('/editarservicio') ||
+          url.startsWith('/dashboard')
+        ) {
+          this.headerType = 'headerproveedor';
+        } else if (
+          url.startsWith('/homeadmin') ||
+          url.startsWith('/perfiladmin') ||
+          url.startsWith('/visitantes') ||
+          url.startsWith('/servicios') ||
+          url.startsWith('/proveedores')
+        ) {
+          this.headerType = 'headeradmin';
+        } else {
+          this.headerType = 'default';
+        }
+
+        // Footer logic (esto también podrías adaptarlo si las rutas tienen parámetros)
         const allowedRoutes = ['/', '/temas', '/analisis'];
-        this.showFooter = allowedRoutes.includes(event.url);
-      
+        this.showFooter = allowedRoutes.includes(url);
       }
     });
   }
-
 }

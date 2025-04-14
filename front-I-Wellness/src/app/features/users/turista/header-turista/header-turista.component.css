@@ -96,6 +96,10 @@
   border: 2px solid white;
 }
 
+.profile-pic:hover {
+  cursor: pointer;
+}
+
 .logout-btn {
   background: red;
   border: none;

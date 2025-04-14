@@ -20,9 +20,13 @@ export class UsuarioService {
     return this.http.get(`${API_URL}/buscar/${id}`);
   }
 
-  editarUsuario(usuario: any): Observable<any> {
-    console.log("modificado",usuario);
-    return this.http.put(`${API_URL}/editar`, usuario);
+ editarUsuario(id: number, datos: any): Observable<any> {
+    console.log('en el servicio front Datos a editar:', datos);
+    console.log('ID del usuario a editar:', id);
+    return this.http.put(`${API_URL}/editar/${id}`, datos);
+  }
+  actualizarUsuario(id: number, datos: any): Observable<any> {
+    return this.http.put(`${API_URL}/editar/${id}`, datos);
   }
 
   eliminarUsuario(id: number): Observable<any> {

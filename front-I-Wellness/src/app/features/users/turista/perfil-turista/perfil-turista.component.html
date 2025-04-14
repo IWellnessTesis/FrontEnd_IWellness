@@ -10,21 +10,16 @@
         <main class="content">
             <div class="profile-header">
                 <h1>Editar perfil</h1>
-                <img [src]="usuario.foto" alt="{{ usuario.nombre }}" class="profile-pic">
             </div>
             <form class="profile-form">
                 <div class="input-group full-width">
                     <label>Nombre</label>
-                    <input type="text" value="{{ usuario.nombre }}">
+                    <input type="text" [(ngModel)]="usuario.nombre" name="nombre">
                 </div>
 
                 <div class="input-group full-width">
-                    <label>Correo</label>
-                    <input type="email" value="{{ usuario.correo }}">
-                </div>
-                <div class="input-group full-width">
                     <label>Número de Contacto</label>
-                    <input type="text" value="{{  usuario.turistaInfo?.telefono }}">
+                    <input type="text" [(ngModel)]="usuario.turistaInfo.telefono" name="telefono">
                 </div>
                 <select class="input-group dropdown" id="country" name="country" [(ngModel)]="selectedCountry" (change)="onCountryChange()">
                     <option value="" disabled selected>Seleccione un país de procedencia</option>
@@ -38,7 +33,7 @@
                   </select>
                 <div class="buttons">
                     <button class="cancel" (click)="navigateTo('hometurista')">Cancel</button>
-                    <button class="save" (click)="guardarCambios()">Save</button>
+                    <button class="save" type="button" (click)="guardarCambios()">Save</button>
                 </div>
             </form>
         </main>

@@ -8,50 +8,82 @@ import { UsuarioService } from '../../services/usuario.service';
 @Component({
   selector: 'app-perfil-turista',
   standalone: true, // Como es standalone, hay que importar FormsModule aquí
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule],
   templateUrl: './perfil-turista.component.html',
-  styleUrl: './perfil-turista.component.css'
+  styleUrl: './perfil-turista.component.css',
 })
 export class PerfilTuristaComponent implements OnInit {
-
   countriesData: any[] = countriesData; // Cargamos los datos directamente
   countries: string[] = [];
   cities: string[] = [];
   selectedCountry: string = '';
   selectedCity: string = '';
-  usuario: any;
 
-  constructor(private route: ActivatedRoute, private router: Router, private usuarioServicio: UsuarioService) {}
+  usuario: any = {
+    id: null, // Asegúrate de que se asigne el id correcto en la carga inicial
+    nombre: '',
+    turistaInfo: {
+      telefono: null,
+      ciudad: '',
+      pais: ''
+    }
+  };
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private usuarioServicio: UsuarioService
+  ) {}
 
   ngOnInit() {
-      this.countries = this.countriesData.map(country => country.name);
-      
-      this.route.paramMap.subscribe(params => {
-        const id = Number(params.get('id'));
-        this.usuarioServicio.obtenerPorId(id).subscribe({
-          next: data => {
-            this.usuario = data;
-            console.log("original:",this.usuario)
-            
+    
+    this.countries = this.countriesData.map((country) => country.name);
+
+    this.route.paramMap.subscribe((params) => {
+      const id = Number(params.get('id'));
+      this.usuarioServicio.obtenerPorId(id).subscribe({
+        next: (data) => {
+          this.usuario = data;
+          console.log('original:', this.usuario);
+
           this.selectedCountry = this.usuario.turistaInfo?.pais;
-          this.onCountryChange(); 
+          this.onCountryChange();
           this.selectedCity = this.usuario.turistaInfo?.ciudad;
-          }
+        },
       });
     });
   }
-  
+
   onCountryChange() {
-    const country = this.countriesData.find(c => c.name === this.selectedCountry);
+    const country = this.countriesData.find(
+      (c) => c.name === this.selectedCountry
+    );
     this.cities = country ? country.cities : [];
   }
+
+  navigateTo(path: string) {}
+
+   guardarCambios(): void {
+    // Construir el objeto que enviará la información de actualización (coincide con EditarTuristaDTO)
+    const datosActualizar = {
+      nombre: this.usuario.nombre,
+      telefono: this.usuario.turistaInfo.telefono,
+      ciudad: this.selectedCity,
+      pais: this.selectedCountry
+    };
+
+    // Llama al servicio para actualizar
+    this.usuarioServicio.actualizarUsuario(this.usuario.id, datosActualizar)
+      .subscribe(
+        response => {
+          alert('Usuario actualizado correctamente');
+        },
+        error => {
+          console.error('Error al actualizar el usuario', error);
+          // Mostrar mensaje de error
+        }
+      );
+  }
   
-  navigateTo(path: string) {
-    
-  }
-
-  guardarCambios() {
-
-  }
-
+  
 }
