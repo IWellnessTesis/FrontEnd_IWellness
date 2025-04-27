@@ -34,6 +34,7 @@ export class UsuarioService {
   }
 
   obtenerProveedores(): Observable<any> {
+    console.log('obteniendo proveedores desde el servicio');
     return this.http.get(`${API_URL}/proveedores`);
   }
 

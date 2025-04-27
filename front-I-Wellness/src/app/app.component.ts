@@ -37,7 +37,8 @@ export class AppComponent {
           url.startsWith('/hometurista') ||
           url.startsWith('/perfilturista') ||
           url.startsWith('/infoservicio') ||
-          url.startsWith('/editpreferencias')
+          url.startsWith('/editpreferencias') ||
+          url.startsWith('/mapaempresas')
         ) {
           this.headerType = 'headerturista';
         } else if (

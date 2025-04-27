@@ -15,6 +15,7 @@ import { AgregarServicioComponent } from './features/users/proveedor/agregar-ser
 import { DashboardComponent } from './features/users/proveedor/dashboard/dashboard.component';
 import { EditarServicioComponent } from './features/users/proveedor/editar-servicio/editar-servicio.component';
 import { HeaderProveedorComponent } from './features/users/proveedor/header-proveedor/header-proveedor.component';
+import { MapaEmpresasComponent } from './features/users/turista/mapa-empresas/mapa-empresas.component';
 import { HomeProveedorComponent } from './features/users/proveedor/home-proveedor/home-proveedor.component';
 import { RegistroProveedorComponent } from './features/users/proveedor/registro-proveedor/registro-proveedor.component';
 import { EditPreferenciasComponent } from './features/users/turista/edit-preferencias/edit-preferencias.component';
@@ -40,6 +41,7 @@ export const routes: Routes = [
     { path: 'hometurista', component: HomeTuristaComponent},
     { path: 'infoservicio/:id', component: InfoServicioComponent},
     { path: 'headerturista', component: HeaderTuristaComponent},
+    { path: 'mapaempresas', component: MapaEmpresasComponent},
     { path: 'registroproveedor', component: RegistroProveedorComponent},
     { path: 'homeproveedor', component: HomeProveedorComponent},
     { path: 'agregarservicio', component: AgregarServicioComponent},
