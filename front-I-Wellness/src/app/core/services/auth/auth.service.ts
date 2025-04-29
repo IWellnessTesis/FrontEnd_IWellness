@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +12,14 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   // Método para el login
- 
-  login(correo: string, contraseña: string): Observable<string> {
+  login(correo: string, contraseña: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
+  
     const body = {
       correo: correo,
       contraseña: contraseña
     };
-
+  
     return this.http.post(`${this.apiUrl}/login`, body, {
       headers,
       responseType: 'text' // JWT en texto plano
@@ -30,12 +29,26 @@ export class AuthService {
           localStorage.setItem('token', token);
         }
       }),
+      switchMap((token: string) => {
+        // Una vez que tenemos el token, obtenemos el rol del usuario
+        return this.getUsuarioActual().pipe(
+          map((rol: string) => {
+            // Guardamos el rol
+            localStorage.setItem('rol', rol);
+            
+            // Devolvemos un objeto con el token y el rol
+            return { token, rol };
+          })
+        );
+      }),
       catchError(error => {
         console.error('Error en login:', error);
         return throwError(() => new Error(error.error || 'Error en el inicio de sesión'));
       })
     );
   }
+
+ 
 
   getUsuarioActual(): Observable<string> {
     const token = this.getToken();
@@ -72,85 +85,81 @@ export class AuthService {
   }
   
 
-  // Método para el registro de turistas
- registerTurista(turistaData: {
-   nombre: string,
-   correo: string,
-   contraseña: string,
-   telefono: string,
-   ciudad: string,
-   pais: string,
- }): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    
-    const body = {
-      nombre: turistaData.nombre,
-      correo: turistaData.correo,
-      contraseña: turistaData.contraseña,
-      telefono: turistaData.telefono,
-      ciudad: turistaData.ciudad,
-      pais: turistaData.pais
-    };
+  // Método para registrar turista y manejar login automático
+registerTurista(turistaData: any): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+  const body = {
+    nombre: turistaData.nombre,
+    correo: turistaData.correo,
+    contraseña: turistaData.contraseña,
+    telefono: turistaData.telefono,
+    ciudad: turistaData.ciudad,
+    pais: turistaData.pais
+  };
 
-    // Modificación para manejar mejor la respuesta
-  return this.http.post<any>(`http://localhost:8082/auth/registro/Turista`, body, { 
+  // Guardar las credenciales para posible autologin
+  localStorage.setItem('registeredEmail', turistaData.correo);
+  localStorage.setItem('tempPassword', turistaData.contraseña);
+
+  return this.http.post<any>(`${this.apiUrl}/registro/Turista`, body, { 
     headers,
-    responseType: 'text' as 'json'  // Cambiado para manejar respuesta de texto
+    responseType: 'text' as 'json'
   }).pipe(
     map(response => {
-      // Si la respuesta es un string, devuélvelo directamente
-      return { message: response };
+      console.log('Respuesta de registro:', response);
+      
+      return { 
+        success: true, 
+        message: response
+      };
     }),
     catchError(error => {
       console.error('Error en registro de turista:', error);
-      // Si hay un error, intentamos extraer el mensaje
       return throwError(() => new Error(error.error || 'Error en el registro de turista'));
     })
   );
-  }
+}
 
-  // Método para el registro de proveedores
-  registerProveedor(proveedorData: {
-    nombre: string,
-    correo: string,
-    contraseña: string,
-    nombre_empresa: string,
-    coordenadaX: string,
-    coordenadaY: string,
-    cargoContacto: string,
-    telefono: string,
-    telefonoEmpresa: string
-  }): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    
-    const body = {
-      nombre: proveedorData.nombre,
-      correo: proveedorData.correo,
-      contraseña: proveedorData.contraseña,
-      nombre_empresa: proveedorData.nombre_empresa,
-      coordenadaX: proveedorData.coordenadaX,
-      coordenadaY: proveedorData.coordenadaY,
-      cargoContacto: proveedorData.cargoContacto,
-      telefono: proveedorData.telefono,
-      telefonoEmpresa: proveedorData.telefonoEmpresa
-    };
+// Método similar para proveedores
+registerProveedor(proveedorData: any): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+  const body = {
+    nombre: proveedorData.nombre,
+    correo: proveedorData.correo,
+    contraseña: proveedorData.contraseña,
+    nombre_empresa: proveedorData.nombre_empresa,
+    coordenadaX: proveedorData.coordenadaX,
+    coordenadaY: proveedorData.coordenadaY,
+    cargoContacto: proveedorData.cargoContacto,
+    telefono: proveedorData.telefono,
+    telefonoEmpresa: proveedorData.telefonoEmpresa
+  };
 
-    return this.http.post<any>(`http://localhost:8082/auth/registro/Proveedor`, body, { 
-      headers,
-      responseType: 'text' as 'json'  // Cambiado para manejar respuesta de texto
-    }).pipe(
-      map(response => {
-        // Si la respuesta es un string, devuélvelo directamente
-        return { message: response };
-      }),
-      catchError(error => {
-        console.error('Error en registro de Proveedor:', error);
-        // Si hay un error, intentamos extraer el mensaje
-        return throwError(() => new Error(error.error || 'Error en el registro de Proveedor'));
-      })
-    );
-    }
+  // Guardar las credenciales para posible autologin
+  localStorage.setItem('registeredEmail', proveedorData.correo);
+  localStorage.setItem('tempPassword', proveedorData.contraseña);
 
+  return this.http.post<any>(`${this.apiUrl}/registro/Proveedor`, body, { 
+    headers,
+    responseType: 'text' as 'json'
+  }).pipe(
+    map(response => {
+      console.log('Respuesta de registro:', response);
+      
+      return { 
+        success: true, 
+        message: response 
+      };
+    }),
+    catchError(error => {
+      console.error('Error en registro de Proveedor:', error);
+      return throwError(() => new Error(error.error || 'Error en el registro de Proveedor'));
+    })
+  );
+}
+  
   // Verificar si el usuario está autenticado
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');

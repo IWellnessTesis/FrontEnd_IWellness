@@ -112,7 +112,7 @@ export class RegistroProveedorComponent {
   register() {
     if (this.validateForm()) {
       this.isLoading = true;
-
+  
       const providerData = {
         nombre: this.name,
         cargoContacto: this.contactPosition,
@@ -124,18 +124,27 @@ export class RegistroProveedorComponent {
         coordenadaX: this.coordinateX || '0',
         coordenadaY: this.coordinateY || '0'
       };
-
+  
       this.authService.registerProveedor(providerData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('Registro exitoso:', response);
-          localStorage.setItem('registeredEmail', this.email);
-          this.router.navigate(['formulariogustos']);
+          console.log('Login exitoso tras registro:', response);
+          
+          // Redirigimos según el rol
+          const rol = localStorage.getItem('rol');
+          
+          if (rol === 'Proveedor') {
+            this.router.navigate(['homeproveedor']);
+          } else {
+            // En caso de error o rol inesperado, vamos a la página principal
+            this.router.navigate(['homeproveedor']);
+          }
         },
         error: (error) => {
           this.isLoading = false;
           console.error('Error en el registro:', error);
-          if (error.error && error.error.includes('correo ya está registrado')) {
+          
+          if (error.message && error.message.includes('correo ya está registrado')) {
             this.emailError = 'Este correo electrónico ya está registrado';
           } else {
             alert('Error en el registro. Por favor, intente nuevamente.');
