@@ -117,3 +117,11 @@ body {
     font-size: 14px;
     margin-top: 10px;
 }
+
+.swal2-confirm {
+    background-color: #4a9c9f;
+}
+.swal2-confirm-button{
+    background-color: #4a9c9f;
+}
+

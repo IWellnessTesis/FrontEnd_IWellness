@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,13 @@ export class LoginComponent {
 
   onSubmit() {
     if (!this.correo || !this.password) {
-      this.errorMessage = 'Por favor ingrese correo y contraseña';
+      Swal.fire({
+        icon: 'error',
+        title: 'Rol no reconocido',
+        text: 'Contacta al administrador',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#4a9c9f'
+      });
       return;
     }
   
@@ -62,20 +69,37 @@ export class LoginComponent {
             } else if (rol === 'Administrador') {
               this.router.navigate(['/homeadmin']);
             } else {
-              this.errorMessage = 'Rol de usuario no reconocido';
+              Swal.fire({
+                icon: 'error',
+                title: 'Rol no reconocido',
+                text: 'Contacta al administrador',
+                confirmButtonText: 'OK'
+              });
             }
   
             this.isLoading = false;
           },
           error: (err) => {
-            this.errorMessage = 'No se pudo obtener el rol del usuario';
             this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'No se pudo obtener el rol del usuario',
+              confirmButtonText: 'Reintentar'
+            });
           }
         });
       },
       error: (err) => {
-        this.errorMessage = err.message || 'Error en el inicio de sesión';
         this.isLoading = false;
+        const mensaje = err.error?.message || 'Error en el inicio de sesión';
+        Swal.fire({
+          icon: 'error',
+          title: 'Login fallido',
+          text: mensaje,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#4a9c9f'
+        });
       }
     });
   }

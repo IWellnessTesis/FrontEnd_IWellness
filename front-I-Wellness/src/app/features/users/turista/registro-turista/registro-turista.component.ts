@@ -81,7 +81,7 @@ export class RegistroTuristaComponent implements OnInit {
   }
 
   validatePassword() {
-    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:;<>,.?/~]).{8,}$/;
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:;<>,.?/~]).{8,20}$/;
     if (!RegExp(regex).exec(this.password)) {
       this.passwordError = 'Debe tener al menos 8 caracteres, una mayúscula, un número y un caracter especial';
     } else {

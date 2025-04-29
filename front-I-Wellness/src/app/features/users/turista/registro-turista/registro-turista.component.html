@@ -11,7 +11,7 @@
 
             <button class="btn-section">Datos de contacto</button>
             
-            <input type="text" placeholder="Nombre" [(ngModel)]="name" (input)="validateName()" required>
+            <input type="text" placeholder="Nombre" [(ngModel)]="name" (input)="validateName()" maxlength="35" required>
             <small *ngIf="nameError" class="error-message">{{ nameError }}</small>
 
             <input type="email" placeholder="Correo" [(ngModel)]="email" (input)="validateEmail()" required>

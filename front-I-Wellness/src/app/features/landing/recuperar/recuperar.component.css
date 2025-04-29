@@ -115,3 +115,9 @@ body {
 .btn:hover {
     background: #3b6ea5;
 }
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}

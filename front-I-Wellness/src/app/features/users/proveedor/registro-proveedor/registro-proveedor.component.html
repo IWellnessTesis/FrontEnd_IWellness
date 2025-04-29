@@ -17,10 +17,10 @@
                 <div class="form-column">
                     <h3 class="section-title">Datos de contacto</h3>
                     
-                    <input type="text" placeholder="Nombre" [(ngModel)]="name" (input)="validateName()" required>
+                    <input type="text" placeholder="Nombre" [(ngModel)]="name" (input)="validateName()" maxlength="55" required>
                     <small *ngIf="nameError" class="error-message">{{ nameError }}</small>
 
-                    <input type="text" placeholder="Cargo de contacto" [(ngModel)]="contactPosition" (input)="validatecontactPosition()" required>
+                    <input type="text" placeholder="Cargo de contacto" [(ngModel)]="contactPosition" (input)="validatecontactPosition()" maxlength="25" required>
                     <small *ngIf="contactPositionError" class="error-message">{{ contactPositionError }}</small>
 
                     <input type="text" placeholder="Teléfono" [(ngModel)]="phone" (input)="validatePhone()" required>
@@ -29,7 +29,7 @@
                     <input type="password" placeholder="Contraseña" [(ngModel)]="password" (input)="validatePassword()" required>
                     <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
 
-                    <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" required>
+                    <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" maxlength="55" required>
                     <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
 
                 </div>
@@ -46,10 +46,10 @@
                     <input type="text" placeholder="Teléfono de la empresa" [(ngModel)]="companyNamePhone" (input)="validatecompanyNamePhone()" required>
                     <small *ngIf="companyNamePhoneError" class="error-message">{{ companyNamePhoneError }}</small>
 
-                    <input type="text" placeholder="Coordenadas eje X" [(ngModel)]="coordinateX" (input)="validatecoordinateX()" required>
+                    <input type="text" placeholder="Coordenadas eje X" [(ngModel)]="coordinateX" (input)="validatecoordinateX()" maxlength="20" required>
                     <small *ngIf="coordinateXError" class="error-message">{{ coordinateXError }}</small>
 
-                    <input type="text" placeholder="Coordenadas eje Y" [(ngModel)]="coordinateY" (input)="validatecoordinateY()" required>
+                    <input type="text" placeholder="Coordenadas eje Y" [(ngModel)]="coordinateY" (input)="validatecoordinateY()" maxlength="20" required>
                     <small *ngIf="coordinateYError" class="error-message">{{ coordinateYError }}</small>
                 </div>
             </div>

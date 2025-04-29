@@ -2,7 +2,7 @@
     <div class="container">
         <div class="left-panel">
             <div class="logo">
-                <img src="logo.png" alt="I-Wellness">
+                <img src="../../../assets/logo.png" alt="I-Wellness">
                 <h1>I-Wellness</h1>
             </div>
         </div>
@@ -11,8 +11,19 @@
             <br>
             <p class="subtitle">Enviaremos un correo para restablecerla</p>
             <p class="info-text">Por favor escribe tu correo:</p>
-            <input type="email" class="input-field" placeholder="Email">
-            <button class="btn">Enviar correo</button>
+            <form (submit)="onSubmit()">
+                <input
+                  type="correo"
+                  placeholder="Correo"
+                  class="input-field"
+                  [(ngModel)]="correo"
+                  name="correo"
+                  (input)="validateEmail()"
+                  required
+                />
+                <small *ngIf="emailError" class="error-message">{{ emailError }}</small>
+                <button type="submit" class="btn">Enviar correo</button>
+            </form>
         </div>
     </div>
 </body>

@@ -97,11 +97,13 @@ export class RegistroProveedorComponent {
   }
 
   validatecoordinateX() {
-    this.coordinateXError = this.coordinateX.trim() ? '' : 'Ingrese la coordenada X';
+    const coordinateRegex = /^-?\d{1,3}\.\d+$/;
+    this.coordinateXError = this.coordinateX.match(coordinateRegex) ? '' : 'Ingrese la coordenada X correctamente';
   }
 
   validatecoordinateY() {
-    this.coordinateYError = this.coordinateY.trim() ? '' : 'Ingrese la coordenada Y';
+    const coordinateRegex = /^-?\d{1,3}\.\d+$/;
+    this.coordinateYError = this.coordinateY.match(coordinateRegex) ? '' : 'Ingrese la coordenada Y correctamente';
   }
 
   // Verifica si hay errores para deshabilitar el botón
