@@ -97,6 +97,8 @@ export class RegistroTuristaComponent implements OnInit {
     }
   }
 
+  // Actualización del método registerUser en registro-turista.component.ts
+
   registerUser() {
     this.validateName();
     this.validateEmail();
@@ -119,21 +121,30 @@ export class RegistroTuristaComponent implements OnInit {
         pais: this.selectedCountry,
       };
 
+      // Registrar al usuario - el servicio actualizará guarda credenciales en localStorage
       this.authService.registerTurista(userData).subscribe({
         next: (response) => {
           this.isLoading = false;
           console.log('Registro exitoso:', response);
           
-          // Guardar el email para usarlo en el formulario de gustos
-          localStorage.setItem('registeredEmail', this.email);
-          
-          this.router.navigate(['formulariogustos']);
+          // Después del registro, intentamos login automático
+          this.authService.login(userData.correo, userData.contraseña).subscribe({
+            next: () => {
+              // Redirigir al formulario de gustos tras login exitoso
+              this.router.navigate(['formulariogustos']);
+            },
+            error: (loginError) => {
+              console.error('Error en login automático:', loginError);
+              // Aun sin login, redirigimos al formulario de gustos para mantener el flujo
+              this.router.navigate(['formulariogustos']);
+            }
+          });
         },
         error: (error) => {
           this.isLoading = false;
           console.error('Error en el registro:', error);
           
-          if (error.error && error.error.includes('correo ya está registrado')) {
+          if (error.message && error.message.includes('correo ya está registrado')) {
             this.emailError = 'Este correo electrónico ya está registrado';
           } else {
             alert('Error en el registro. Por favor, intente nuevamente.');
