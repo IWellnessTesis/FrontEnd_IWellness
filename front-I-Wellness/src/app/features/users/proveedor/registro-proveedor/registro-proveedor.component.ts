@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -130,22 +131,19 @@ export class RegistroProveedorComponent {
       this.authService.registerProveedor(providerData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('Login exitoso tras registro:', response);
-          
-          // Redirigimos según el rol
-          const rol = localStorage.getItem('rol');
-          
-          if (rol === 'Proveedor') {
-            this.router.navigate(['homeproveedor']);
-          } else {
-            // En caso de error o rol inesperado, vamos a la página principal
-            this.router.navigate(['homeproveedor']);
-          }
+          console.log('Login exitoso tras registro:', response); 
+          this.router.navigate(['//homeproveedor']);       
         },
         error: (error) => {
           this.isLoading = false;
           console.error('Error en el registro:', error);
-          
+          Swal.fire({
+            icon: 'error',
+            title: 'El correo ya está registrado',
+            text: 'Prueba con otro correo',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#4a9c9f'
+          });
           if (error.message && error.message.includes('correo ya está registrado')) {
             this.emailError = 'Este correo electrónico ya está registrado';
           } else {
