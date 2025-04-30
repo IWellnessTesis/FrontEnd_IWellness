@@ -66,7 +66,7 @@ export class LoginComponent {
               this.router.navigate(['/hometurista']);
             } else if (rol === 'Proveedor') {
               this.router.navigate(['/homeproveedor']);
-            } else if (rol === 'Administrador') {
+            } else if (rol === 'Admin') {
               this.router.navigate(['/homeadmin']);
             } else {
               Swal.fire({

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -7,57 +7,75 @@ import { Observable } from 'rxjs';
 })
 export class AdminService {
 
-  private apiUrl = 'http://localhost:8082/admin'; // La URL base de tu API (cambiar según el entorno)
+  private apiUrl = 'http://localhost:8082/admin'; 
 
   constructor(private http: HttpClient) { }
 
+  // Método para obtener las cabeceras con el token
+  private obtenerHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
+
   // Obtener todos los usuarios
   obtenerTodosLosUsuarios(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/usuarios`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${this.apiUrl}/usuarios`, { headers });
   }
 
   // Obtener todos los turistas
   obtenerTuristas(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/turistas`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${this.apiUrl}/turistas`, { headers });
   }
 
   // Obtener todos los proveedores
   obtenerProveedores(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/proveedores`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${this.apiUrl}/proveedores`, { headers });
   }
 
   // Obtener usuario por ID
   obtenerUsuarioPorId(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/usuarios/${id}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${this.apiUrl}/usuarios/${id}`, { headers });
   }
 
   // Crear un nuevo turista
   crearTurista(turistaDTO: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/turistas`, turistaDTO);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.post(`${this.apiUrl}/turistas`, turistaDTO, { headers });
   }
 
   // Crear un nuevo proveedor
   crearProveedor(proveedorDTO: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/proveedores`, proveedorDTO);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.post(`${this.apiUrl}/proveedores`, proveedorDTO, { headers });
   }
 
   // Actualizar un turista
   actualizarTurista(id: number, turistaDTO: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/turistas/${id}`, turistaDTO);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.put(`${this.apiUrl}/turistas/${id}`, turistaDTO, { headers });
   }
 
   // Actualizar un proveedor
   actualizarProveedor(id: number, proveedorData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/proveedores/${id}`, proveedorData);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.put(`${this.apiUrl}/proveedores/${id}`, proveedorData, { headers });
   }
 
   // Eliminar un usuario
   eliminarUsuario(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/usuarios/${id}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.delete(`${this.apiUrl}/usuarios/${id}`, { headers, responseType: 'text' });
   }
 
   // Obtener estadísticas para el dashboard
   obtenerEstadisticas(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/dashboard`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${this.apiUrl}/dashboard`, { headers });
   }
 }

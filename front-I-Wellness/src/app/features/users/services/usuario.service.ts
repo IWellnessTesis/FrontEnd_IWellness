@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { usuarios } from '../../../shared/models/usuarios';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -12,38 +12,54 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
+  // Función para obtener el token y configurar los headers
+  private obtenerHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
+
   obtenerTodos(): Observable<any> {
-    return this.http.get(`${API_URL}/all`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${API_URL}/all`, { headers });
   }
 
   obtenerPorId(id: number): Observable<any> {
-    return this.http.get(`${API_URL}/buscar/${id}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${API_URL}/buscar/${id}`, { headers });
   }
 
- editarUsuario(id: number, datos: any): Observable<any> {
+  editarUsuario(id: number, datos: any): Observable<any> {
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
     console.log('en el servicio front Datos a editar:', datos);
     console.log('ID del usuario a editar:', id);
-    return this.http.put(`${API_URL}/editar/${id}`, datos);
+    return this.http.put(`${API_URL}/editar/${id}`, datos, { headers });
   }
+
   actualizarUsuario(id: number, datos: any): Observable<any> {
-    return this.http.put(`${API_URL}/editar/${id}`, datos);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.put(`${API_URL}/editar/${id}`, datos, { headers });
   }
 
   eliminarUsuario(id: number): Observable<any> {
-    return this.http.delete(`${API_URL}/eliminar/${id}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.delete(`${API_URL}/eliminar/${id}`, { headers });
   }
 
   obtenerProveedores(): Observable<any> {
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
     console.log('obteniendo proveedores desde el servicio');
-    return this.http.get(`${API_URL}/proveedores`);
+    return this.http.get(`${API_URL}/proveedores`, { headers });
   }
 
   obtenerTuristas(): Observable<any> {
-    return this.http.get(`${API_URL}/turistas`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${API_URL}/turistas`, { headers });
   }
 
   obtenerPorCorreo(correo: string): Observable<any> {
-    return this.http.get(`${API_URL}/obtenerPorCorreo/${correo}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get(`${API_URL}/obtenerPorCorreo/${correo}`, { headers });
   }
 }
-

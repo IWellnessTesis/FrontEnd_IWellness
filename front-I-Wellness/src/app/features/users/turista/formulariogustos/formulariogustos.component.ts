@@ -24,7 +24,6 @@ export class FormulariogustosComponent implements OnInit {
   constructor(
     private router: Router, 
     private preferenciasService: PreferenciasService, 
-    private usuarioService: UsuarioService, 
     private turistaXPreferencia: TuristaXPreferenciaService,
     private authService: AuthService // Añadimos el servicio de autenticación
   ) {}
@@ -144,7 +143,6 @@ export class FormulariogustosComponent implements OnInit {
       error: (error) => {
         console.error('Error al obtener preferencias:', error);
         // En caso de error, cargar preferencias predeterminadas
-        this.preferencias = this.getPreferenciasPredeterminadas();
       }
     });
   }
@@ -172,18 +170,6 @@ export class FormulariogustosComponent implements OnInit {
     } else if (this.seleccionados.length < 5) {
       this.seleccionados.push(item); // Agregar a seleccionados si hay espacio
     }
-  }
-  
-  // Método para obtener preferencias predeterminadas
-  getPreferenciasPredeterminadas() {
-    return [
-      { id: 1, _idPreferencias: 1, nombre: 'Aventura', descripcion: 'Actividades de aventura' },
-      { id: 2, _idPreferencias: 2, nombre: 'Naturaleza', descripcion: 'Actividades en la naturaleza' },
-      { id: 3, _idPreferencias: 3, nombre: 'Cultural', descripcion: 'Actividades culturales' },
-      { id: 4, _idPreferencias: 4, nombre: 'Gastronómico', descripcion: 'Actividades gastronómicas' },
-      { id: 5, _idPreferencias: 5, nombre: 'Playa', descripcion: 'Actividades en la playa' },
-      { id: 6, _idPreferencias: 6, nombre: 'Montaña', descripcion: 'Actividades en la montaña' }
-    ];
   }
   
   // Método para agregar preferencias y continuar

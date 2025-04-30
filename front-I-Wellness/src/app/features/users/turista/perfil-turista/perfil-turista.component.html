@@ -1,10 +1,10 @@
 <body>
     <div class="container">
         <aside class="sidebar">
-            <p>Hola, Pepito</p>
+            <p>Hola, {{usuario.nombre}}</p>
             <ul>
                 <li class="active">&#9998; Edit profile</li>
-                <li><a href="/editpreferencias">&#9992; Preferencias</a></li>
+                <li><a [routerLink]="['/editpreferencias', usuario.id]">&#9992; Preferencias</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -21,6 +21,7 @@
                     <label>Número de Contacto</label>
                     <input type="text" [(ngModel)]="usuario.turistaInfo.telefono" name="telefono">
                 </div>
+                
                 <select class="input-group dropdown" id="country" name="country" [(ngModel)]="selectedCountry" (change)="onCountryChange()">
                     <option value="" disabled selected>Seleccione un país de procedencia</option>
                     <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
@@ -31,6 +32,7 @@
                     <option value="" disabled>Seleccione su ciudad</option>
                     <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
                   </select>
+
                 <div class="buttons">
                     <button class="cancel" (click)="navigateTo('hometurista')">Cancel</button>
                     <button class="save" type="button" (click)="guardarCambios()">Save</button>
