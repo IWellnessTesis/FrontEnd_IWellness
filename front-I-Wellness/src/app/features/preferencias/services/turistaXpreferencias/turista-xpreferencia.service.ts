@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -15,10 +15,16 @@ export class TuristaXPreferenciaService {
     return this.http.get<any>(`${this.apiUrl}/all`);
   }
 
-  // Crear una nueva relación de Turista X Preferencia
-  crear(turistaXPreferencia: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/crear`, turistaXPreferencia);
-  }
+// Crear una nueva relación de Turista X Preferencia
+crear(turistaXPreferencia: any): Observable<any> {
+  const token = localStorage.getItem('token'); 
+  const headers = new HttpHeaders({
+    'Authorization': token ? `Bearer ${token}` : ''
+  });
+
+  // Realiza la solicitud POST incluyendo los encabezados con el token
+  return this.http.post<any>(`${this.apiUrl}/crear`, turistaXPreferencia, { headers });
+}
 
   // Actualizar una relación de Turista X Preferencia
   actualizar(turistaXPreferencia: any): Observable<any> {
