@@ -19,7 +19,7 @@ body {
     width: 250px;
     background: rgba(255, 255, 255, 0.9);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 10px 0px 0px 10px;
 }
 .sidebar h2 {
     margin: 0 0 20px;
@@ -41,7 +41,7 @@ body {
     flex: 1;
     background: rgba(255, 255, 255, 0.9);
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 0px 10px 10px 0px;
     margin: auto;
     width: 60%;
 }

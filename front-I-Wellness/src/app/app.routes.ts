@@ -6,7 +6,7 @@ import { RecuperarComponent } from './features/landing/recuperar/recuperar.compo
 import { RegistroComponent } from './features/landing/registro/registro.component';
 import { TemasComponent } from './features/landing/temas/temas.component';
 import { HeaderAdminComponent } from './features/users/administrador/header-admin/header-admin.component';
-import { HomeAdminComponent } from './features/users/administrador/home-admin/home-admin.component';
+import { AdminComponent } from './features/users/administrador/home-admin/home-admin.component';
 import { PerfilAdminComponent } from './features/users/administrador/perfil-admin/perfil-admin.component';
 import { ProveedoresComponent } from './features/users/administrador/proveedores/proveedores.component';
 import { ServiciosComponent } from './features/users/administrador/servicios/servicios.component';
@@ -22,9 +22,10 @@ import { EditPreferenciasComponent } from './features/users/turista/edit-prefere
 import { FormulariogustosComponent } from './features/users/turista/formulariogustos/formulariogustos.component';
 import { HeaderTuristaComponent } from './features/users/turista/header-turista/header-turista.component';
 import { HomeTuristaComponent } from './features/users/turista/home-turista/home-turista.component';
-import { InfoServicioComponent } from './features/users/turista/info-servicio/info-servicio.component';
+import { InfoServicioComponent } from './features/users/proveedor/info-servicio/info-servicio.component';
 import { PerfilTuristaComponent } from './features/users/turista/perfil-turista/perfil-turista.component';
 import { RegistroTuristaComponent } from './features/users/turista/registro-turista/registro-turista.component';
+import { CrearTuristaComponent } from './features/users/administrador/crear-turista/crear-turista.component';
 
 
 
@@ -48,12 +49,13 @@ export const routes: Routes = [
     { path: 'editarservicio/:id', component: EditarServicioComponent},
     { path: 'dashboard', component: DashboardComponent},	
     { path: 'headerproveedor', component: HeaderProveedorComponent},
-    { path: 'editpreferencias', component: EditPreferenciasComponent},
+    { path: 'editpreferencias/:id', component: EditPreferenciasComponent},
     { path: 'headeradmin', component: HeaderAdminComponent},
-    { path: 'homeadmin', component: HomeAdminComponent},	
+    { path: 'homeadmin', component: AdminComponent},	
     { path: 'perfiladmin', component: PerfilAdminComponent},
     { path: 'visitantes', component: VisitantesComponent},
     { path: 'servicios', component: ServiciosComponent},
     { path: 'proveedores', component: ProveedoresComponent},
-    { path: '**', redirectTo: ''} // Redirect to home
+    { path: 'crearturista', component: CrearTuristaComponent},
+    { path: '**', redirectTo: ''}, // Redirect to home
 ];

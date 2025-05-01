@@ -31,37 +31,23 @@ export class AppComponent {
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const url = event.url;
-
-        if (
-          url.startsWith('/hometurista') ||
-          url.startsWith('/perfilturista') ||
-          url.startsWith('/infoservicio') ||
-          url.startsWith('/editpreferencias') ||
-          url.startsWith('/mapaempresas')
-        ) {
+        // Obtener el rol almacenado en el localStorage
+        const rol = localStorage.getItem('rol');  // Aquí asumimos que el rol está guardado en localStorage con la clave 'rol'
+  
+        // Determinar el tipo de encabezado dependiendo del rol
+        if (rol === 'Turista') {
           this.headerType = 'headerturista';
-        } else if (
-          url.startsWith('/homeproveedor') ||
-          url.startsWith('/agregarservicio') ||
-          url.startsWith('/editarservicio') ||
-          url.startsWith('/dashboard')
-        ) {
+        } else if (rol === 'Proveedor') {
           this.headerType = 'headerproveedor';
-        } else if (
-          url.startsWith('/homeadmin') ||
-          url.startsWith('/perfiladmin') ||
-          url.startsWith('/visitantes') ||
-          url.startsWith('/servicios') ||
-          url.startsWith('/proveedores')
-        ) {
+        } else if (rol === 'Admin') {
           this.headerType = 'headeradmin';
         } else {
           this.headerType = 'default';
         }
-
-        // Footer logic (esto también podrías adaptarlo si las rutas tienen parámetros)
+  
+        // Lógica para mostrar el footer (si es necesario)
         const allowedRoutes = ['/', '/temas', '/analisis'];
+        const url = event.url;
         this.showFooter = allowedRoutes.includes(url);
       }
     });

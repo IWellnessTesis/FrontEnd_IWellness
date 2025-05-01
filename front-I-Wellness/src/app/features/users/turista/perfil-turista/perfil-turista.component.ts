@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import countriesData from '../../../../../assets/countries+cities.json';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,7 @@ import { UsuarioService } from '../../services/usuario.service';
 @Component({
   selector: 'app-perfil-turista',
   standalone: true, // Como es standalone, hay que importar FormsModule aquí
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule ],
   templateUrl: './perfil-turista.component.html',
   styleUrl: './perfil-turista.component.css',
 })

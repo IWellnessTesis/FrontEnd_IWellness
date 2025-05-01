@@ -10,21 +10,24 @@ export class TuristaXPreferenciaService {
 
   constructor(private http: HttpClient) { }
 
+  // Método para obtener las cabeceras con el token
+  private obtenerHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
+
   // Obtener todos los registros de turistaXPreferencia
   obtenerTodos(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/all`);
   }
 
-// Crear una nueva relación de Turista X Preferencia
-crear(turistaXPreferencia: any): Observable<any> {
-  const token = localStorage.getItem('token'); 
-  const headers = new HttpHeaders({
-    'Authorization': token ? `Bearer ${token}` : ''
-  });
-
-  // Realiza la solicitud POST incluyendo los encabezados con el token
-  return this.http.post<any>(`${this.apiUrl}/crear`, turistaXPreferencia, { headers });
-}
+  // Crear una nueva relación de Turista X Preferencia
+  crear(turistaXPreferencia: any): Observable<any> {
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.post<any>(`${this.apiUrl}/crear`, turistaXPreferencia, { headers });
+  }
 
   // Actualizar una relación de Turista X Preferencia
   actualizar(turistaXPreferencia: any): Observable<any> {
@@ -47,7 +50,10 @@ crear(turistaXPreferencia: any): Observable<any> {
   }
 
   // Eliminar todas las relaciones por ID de turista
-  eliminarPreferenciasPorTurista(idTurista: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/eliminarPorTurista/${idTurista}`);
+  eliminarPreferenciasPorTurista(idTurista: number): Observable<string> {
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.delete(`${this.apiUrl}/eliminarPorTurista/${idTurista}`, { headers,
+      responseType: 'text' as const // Asegúrate de que la respuesta sea texto plano
+    });
   }
 }
