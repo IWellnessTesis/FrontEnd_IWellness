@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
 export class HeaderAdminComponent {
   constructor(private router: Router) {}
   navigateTo(path: string) {
+    if (path === '') {
+      localStorage.clear(); // Borra todo el localStorage
+    }
     this.router.navigate([path]);
   }
 }

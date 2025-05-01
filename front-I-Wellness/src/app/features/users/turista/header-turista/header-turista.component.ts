@@ -33,20 +33,9 @@ export class HeaderTuristaComponent {
       this.router.navigate([path, param]);
     } else {
       // Si no hay parámetro o es undefined, navegar solo con la ruta
+      localStorage.clear();
       this.router.navigate([path]);
     }
-  }
-  
-  // Versión corregida del método logout:
-  logout() {
-    // Primero destruir la sesión
-    this.authService.logout();
-    
-    // Luego navegar a la página de inicio o login
-    this.router.navigate(['/login']);
-    
-    // O puedes usar el método navigateTo si prefieres
-    // this.navigateTo('/login');
   }
 
 }

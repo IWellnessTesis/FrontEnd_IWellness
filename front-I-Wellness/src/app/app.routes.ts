@@ -26,6 +26,8 @@ import { InfoServicioComponent } from './features/users/proveedor/info-servicio/
 import { PerfilTuristaComponent } from './features/users/turista/perfil-turista/perfil-turista.component';
 import { RegistroTuristaComponent } from './features/users/turista/registro-turista/registro-turista.component';
 import { CrearTuristaComponent } from './features/users/administrador/crear-turista/crear-turista.component';
+import { CrearProveedorComponent } from './features/users/administrador/crear-proveedor/crear-proveedor.component';
+import { PerfilProveedorComponent } from './features/users/proveedor/perfil-proveedor/perfil-proveedor.component';
 
 
 
@@ -54,8 +56,10 @@ export const routes: Routes = [
     { path: 'homeadmin', component: AdminComponent},	
     { path: 'perfiladmin', component: PerfilAdminComponent},
     { path: 'visitantes', component: VisitantesComponent},
-    { path: 'servicios', component: ServiciosComponent},
+    { path: 'servicios/:id', component: ServiciosComponent},
     { path: 'proveedores', component: ProveedoresComponent},
     { path: 'crearturista', component: CrearTuristaComponent},
+    { path: 'crearproveedor', component: CrearProveedorComponent},
+    { path: 'perfilproveedor/:id', component: PerfilProveedorComponent},
     { path: '**', redirectTo: ''}, // Redirect to home
 ];

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class HeaderProveedorComponent {
     constructor(private router: Router) {}
     navigateTo(path: string) {
+      localStorage.clear();
       this.router.navigate([path]);
     }
 }

@@ -1,0 +1,57 @@
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <p>Hola, {{proveedor.nombre}}</p>
+            <ul>
+                <li class="active">&#9998; Editar perfil</li>
+                <li><a [routerLink]="['/servicios', proveedor.id]">&#9992; Servicios</a></li> <!-- Enlace para ver y editar servicios -->
+            </ul>
+        </aside>
+        <main class="content">
+            <div class="profile-header">
+                <h1>Editar perfil del proveedor</h1>
+            </div>
+            <form class="profile-form">
+                <div class="input-group full-width">
+                    <label>Nombre</label>
+                    <input type="text" [(ngModel)]="proveedor.nombre" name="nombre">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Número de Contacto</label>
+                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.telefono" name="telefono">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Teléfono de la Empresa</label>
+                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.telefonoEmpresa" name="telefonoEmpresa">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Nombre de la Empresa</label>
+                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.nombre_empresa" name="nombre_empresa">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Cargo de Contacto</label>
+                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.cargoContacto" name="cargoContacto">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Coordenada X</label>
+                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.coordenadaX" name="coordenadaX">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Coordenada Y</label>
+                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.coordenadaY" name="coordenadaY">
+                </div>
+
+                <div class="buttons">
+                    <button class="cancel" (click)="navigateTo('homeproveedor')">Cancelar</button>
+                    <button class="save" type="button" (click)="guardarCambios()">Guardar</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
