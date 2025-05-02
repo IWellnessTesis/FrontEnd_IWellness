@@ -1,53 +1,66 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './landing/home/home.component';
-import { TemasComponent } from './landing/temas/temas.component';
-import { RegistroComponent } from './landing/registro/registro.component';
-import { LoginComponent } from './landing/login/login.component';
-import { RegistroTuristaComponent } from './users/turista/registro-turista/registro-turista.component';
-import { RecuperarComponent } from './landing/recuperar/recuperar.component';
-import { FormulariogustosComponent } from './users/turista/formulariogustos/formulariogustos.component';
-import { HomeTuristaComponent } from './users/turista/home-turista/home-turista.component';
-import { PerfilTuristaComponent } from './users/turista/perfil-turista/perfil-turista.component';
-import { InfoServicioComponent } from './users/turista/info-servicio/info-servicio.component';
-import { HeaderTuristaComponent } from './users/turista/header-turista/header-turista.component';
-import { RegistroProveedorComponent } from './users/proveedor/registro-proveedor/registro-proveedor.component';
-import { HomeProveedorComponent } from './users/proveedor/home-proveedor/home-proveedor.component';
-import { AgregarServicioComponent } from './users/proveedor/agregar-servicio/agregar-servicio.component';
-import { EditarServicioComponent } from './users/proveedor/editar-servicio/editar-servicio.component';
-import { DashboardComponent } from './users/proveedor/dashboard/dashboard.component';
-import { HeaderProveedorComponent } from './users/proveedor/header-proveedor/header-proveedor.component';
-import { EditPreferenciasComponent } from './users/turista/edit-preferencias/edit-preferencias.component';
-import { HeaderAdminComponent } from './users/administrador/header-admin/header-admin.component';
-import { HomeAdminComponent } from './users/administrador/home-admin/home-admin.component';
-import { PerfilAdminComponent } from './users/administrador/perfil-admin/perfil-admin.component';
-import { VisitantesComponent } from './users/administrador/visitantes/visitantes.component';
-import { ServiciosComponent } from './users/administrador/servicios/servicios.component';
-import { ProveedoresComponent } from './users/administrador/proveedores/proveedores.component';
+import { AnalisisComponent } from './features/analisis/analisis.component';
+import { HomeComponent } from './features/landing/home/home.component';
+import { LoginComponent } from './features/landing/login/login.component';
+import { RecuperarComponent } from './features/landing/recuperar/recuperar.component';
+import { RegistroComponent } from './features/landing/registro/registro.component';
+import { TemasComponent } from './features/landing/temas/temas.component';
+import { HeaderAdminComponent } from './features/users/administrador/header-admin/header-admin.component';
+import { AdminComponent } from './features/users/administrador/home-admin/home-admin.component';
+import { PerfilAdminComponent } from './features/users/administrador/perfil-admin/perfil-admin.component';
+import { ProveedoresComponent } from './features/users/administrador/proveedores/proveedores.component';
+import { ServiciosComponent } from './features/users/administrador/servicios/servicios.component';
+import { VisitantesComponent } from './features/users/administrador/visitantes/visitantes.component';
+import { AgregarServicioComponent } from './features/users/proveedor/agregar-servicio/agregar-servicio.component';
+import { DashboardComponent } from './features/users/proveedor/dashboard/dashboard.component';
+import { EditarServicioComponent } from './features/users/proveedor/editar-servicio/editar-servicio.component';
+import { HeaderProveedorComponent } from './features/users/proveedor/header-proveedor/header-proveedor.component';
+import { MapaEmpresasComponent } from './features/users/turista/mapa-empresas/mapa-empresas.component';
+import { HomeProveedorComponent } from './features/users/proveedor/home-proveedor/home-proveedor.component';
+import { RegistroProveedorComponent } from './features/users/proveedor/registro-proveedor/registro-proveedor.component';
+import { EditPreferenciasComponent } from './features/users/turista/edit-preferencias/edit-preferencias.component';
+import { FormulariogustosComponent } from './features/users/turista/formulariogustos/formulariogustos.component';
+import { HeaderTuristaComponent } from './features/users/turista/header-turista/header-turista.component';
+import { HomeTuristaComponent } from './features/users/turista/home-turista/home-turista.component';
+import { InfoServicioComponent } from './features/users/proveedor/info-servicio/info-servicio.component';
+import { PerfilTuristaComponent } from './features/users/turista/perfil-turista/perfil-turista.component';
+import { RegistroTuristaComponent } from './features/users/turista/registro-turista/registro-turista.component';
+import { CrearTuristaComponent } from './features/users/administrador/crear-turista/crear-turista.component';
+import { CrearProveedorComponent } from './features/users/administrador/crear-proveedor/crear-proveedor.component';
+import { PerfilProveedorComponent } from './features/users/proveedor/perfil-proveedor/perfil-proveedor.component';
+
+
+
 
 export const routes: Routes = [
     { path: '', component: HomeComponent},
     { path: 'temas', component: TemasComponent},
+    { path: 'analisis', component: AnalisisComponent},
     { path: 'registro', component: RegistroComponent},
     { path: 'login', component: LoginComponent},
     { path: 'registroturista', component: RegistroTuristaComponent},
     { path: 'recuperar', component: RecuperarComponent},
     { path: 'formulariogustos', component: FormulariogustosComponent},
-    { path: 'perfilturista', component: PerfilTuristaComponent},
+    { path: 'perfilturista/:id', component: PerfilTuristaComponent},
     { path: 'hometurista', component: HomeTuristaComponent},
-    { path: 'infoservicio', component: InfoServicioComponent},
+    { path: 'infoservicio/:id', component: InfoServicioComponent},
     { path: 'headerturista', component: HeaderTuristaComponent},
+    { path: 'mapaempresas', component: MapaEmpresasComponent},
     { path: 'registroproveedor', component: RegistroProveedorComponent},
     { path: 'homeproveedor', component: HomeProveedorComponent},
     { path: 'agregarservicio', component: AgregarServicioComponent},
-    { path: 'editarservicio', component: EditarServicioComponent},
+    { path: 'editarservicio/:id', component: EditarServicioComponent},
     { path: 'dashboard', component: DashboardComponent},	
     { path: 'headerproveedor', component: HeaderProveedorComponent},
-    { path: 'editpreferencias', component: EditPreferenciasComponent},
+    { path: 'editpreferencias/:id', component: EditPreferenciasComponent},
     { path: 'headeradmin', component: HeaderAdminComponent},
-    { path: 'homeadmin', component: HomeAdminComponent},	
-    { path: 'perfiladmin', component: PerfilAdminComponent},
+    { path: 'homeadmin', component: AdminComponent},	
+    { path: 'perfiladmin/:id', component: PerfilAdminComponent},
     { path: 'visitantes', component: VisitantesComponent},
-    { path: 'servicios', component: ServiciosComponent},
+    { path: 'servicios/:id', component: ServiciosComponent},
     { path: 'proveedores', component: ProveedoresComponent},
-    { path: '**', redirectTo: ''} // Redirect to home
+    { path: 'crearturista', component: CrearTuristaComponent},
+    { path: 'crearproveedor', component: CrearProveedorComponent},
+    { path: 'perfilproveedor/:id', component: PerfilProveedorComponent},
+    { path: '**', redirectTo: ''}, // Redirect to home
 ];
