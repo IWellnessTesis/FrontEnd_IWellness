@@ -5,6 +5,8 @@ import { PreferenciasService } from '../../../preferencias/services/preferencias
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { TuristaXPreferenciaService } from '../../../preferencias/services/turistaXpreferencias/turista-xpreferencia.service';
+import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-formulariogustos',
@@ -172,22 +174,24 @@ export class FormulariogustosComponent implements OnInit {
     }
   }
   
-  // Método para agregar preferencias y continuar
   agregarPreferencias() {
     if (this.seleccionados.length >= 3 && this.seleccionados.length <= 5) {
-      // Si no hay usuario autenticado o es temporal, redirigimos al login
       if (!this.authService.isAuthenticated() || !this.usuario || !this.usuario.id) {
-        console.log('No se pueden guardar preferencias sin usuario autenticado');
-        localStorage.setItem('pendingPreferences', JSON.stringify(this.seleccionados));
-        this.router.navigate(['/login']);
+        Swal.fire({
+          icon: 'warning',
+          title: 'No autenticado',
+          text: 'Debes iniciar sesión para guardar tus preferencias.',
+          confirmButtonText: 'Ir al login'
+        }).then(() => {
+          localStorage.setItem('pendingPreferences', JSON.stringify(this.seleccionados));
+          this.router.navigate(['/login']);
+        });
         return;
       }
-      
+  
       const idUsuario = this.usuario.id;
-      console.log('Guardando preferencias para usuario:', idUsuario, this.seleccionados);
-      
+  
       try {
-        // Convertimos las promesas a observables para mejor manejo
         const peticiones = this.seleccionados.map(pref => {
           const turistaXPreferencia = {
             idUsuario: idUsuario,
@@ -195,35 +199,56 @@ export class FormulariogustosComponent implements OnInit {
               _idPreferencias: pref._idPreferencias || pref.id
             }
           };
-          
           return this.turistaXPreferencia.crear(turistaXPreferencia);
         });
-        
-        // Solo si hay conexión al servicio, intentamos guardar
+  
         if (peticiones.length > 0) {
-          // Usamos forkJoin o similar para manejar múltiples observables
-          // Simplificado para este ejemplo
-          peticiones[0].subscribe({
+          Swal.fire({
+            title: 'Guardando tus preferencias...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+  
+          forkJoin(peticiones).subscribe({
             next: () => {
-              console.log('Preferencias guardadas correctamente');
-              this.router.navigate(['/hometurista']);
+              Swal.fire({
+                icon: 'success',
+                title: 'Preferencias guardadas',
+                text: 'Tus preferencias se han guardado exitosamente.',
+                confirmButtonText: 'Continuar'
+              }).then(() => this.router.navigate(['/hometurista']));
             },
             error: (err) => {
-              console.error('Error al guardar preferencias:', err);
-              // En caso de error, seguimos adelante como si hubiera funcionado
-              this.router.navigate(['/hometurista']);
+              console.error('Error al guardar alguna preferencia:', err);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al guardar tus preferencias. Intenta de nuevo.',
+                confirmButtonText: 'Ok'
+              }).then(() => this.router.navigate(['/hometurista']));
             }
           });
         } else {
-          // Sin peticiones, simplemente avanzamos
           this.router.navigate(['/hometurista']);
         }
       } catch (error) {
         console.error('Error general al guardar preferencias:', error);
-        this.router.navigate(['/hometurista']);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error inesperado',
+          text: 'Ocurrió un problema inesperado.',
+          confirmButtonText: 'Volver'
+        }).then(() => this.router.navigate(['/hometurista']));
       }
     } else {
-      alert('Debes seleccionar entre 3 y 5 opciones.');
+      Swal.fire({
+        icon: 'info',
+        title: 'Selecciona más opciones',
+        text: 'Debes seleccionar entre 3 y 5 preferencias antes de continuar.',
+        confirmButtonText: 'Entendido'
+      });
     }
   }
 }

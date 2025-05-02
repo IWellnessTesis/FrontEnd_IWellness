@@ -29,6 +29,12 @@ export class AppComponent {
   showFooter: boolean = false;
 
   constructor(private router: Router) {
+
+    if (!sessionStorage.getItem('sessionStarted')) {
+      localStorage.removeItem('rol');
+      sessionStorage.setItem('sessionStarted', 'true');
+    }
+    
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         // Obtener el rol almacenado en el localStorage
