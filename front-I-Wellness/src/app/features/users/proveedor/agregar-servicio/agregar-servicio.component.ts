@@ -133,52 +133,92 @@ export class AgregarServicioComponent {
   guardarServicio() {
     // Validaciones
     if (!this.nuevoServicio.nombre.trim()) {
-      Swal.fire('Campo requerido', 'El nombre del servicio es obligatorio.', 'warning');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'El nombre del servicio es obligatorio.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f'
+      });
       return;
     }
   
     if (!this.nuevoServicio.descripcion.trim()) {
-      Swal.fire('Campo requerido', 'La descripción es obligatoria.', 'warning');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'La descripción es obligatoria.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
   
     if (this.nuevoServicio.precio !== null && this.nuevoServicio.precio !== undefined && this.nuevoServicio.precio < 0) {
-      Swal.fire('Campo requerido', 'El precio no puede ser negativo. Usa 0 para servicios gratuitos.', 'warning');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'El precio no puede ser negativo. Usa 0 para servicios gratuitos.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
   
     if (!this.imagePreview) {
-      Swal.fire('Campo requerido', 'Debes subir una imagen del servicio.', 'warning');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'Debes subir una imagen del servicio.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
   
     const diasSeleccionados = this.days.some(day => day.selected);
     if (!diasSeleccionados) {
-      Swal.fire('Campo requerido', 'Debes seleccionar al menos un día disponible.', 'warning');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'Debes seleccionar al menos un día disponible.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
   
     if (!this.startTime || !this.endTime) {
-      Swal.fire('Campo requerido', 'Debes seleccionar el horario de apertura y cierre.', 'warning');
+      Swal.fire({
+        title: 'Campo requerido',
+        text: 'Debes seleccionar el horario de apertura y cierre.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
-    
+  
     // Hora de apertura debe ser antes que la de cierre
     const [startHour, startMinute] = this.startTime.split(':').map(Number);
     const [endHour, endMinute] = this.endTime.split(':').map(Number);
     const startDate = new Date();
     startDate.setHours(startHour, startMinute);
-    
+  
     const endDate = new Date();
     endDate.setHours(endHour, endMinute);
-    
+  
     if (startDate >= endDate) {
-      Swal.fire('Horario inválido', 'La hora de apertura debe ser anterior a la hora de cierre.', 'warning');
+      Swal.fire({
+        title: 'Horario inválido',
+        text: 'La hora de apertura debe ser anterior a la hora de cierre.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
   
     if (this.selectedPreferences.length < 2 || this.selectedPreferences.length > 5) {
-      Swal.fire('Preferencias inválidas', 'Debes seleccionar entre 2 y 5 preferencias.', 'warning');
+      Swal.fire({
+        title: 'Preferencias inválidas',
+        text: 'Debes seleccionar entre 2 y 5 preferencias.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f' 
+      });
       return;
     }
   
@@ -198,7 +238,12 @@ export class AgregarServicioComponent {
   
         Promise.all(guardarPreferencias)
           .then(() => {
-            Swal.fire('¡Éxito!', 'Servicio y preferencias guardados correctamente.', 'success').then(() => {
+            Swal.fire({
+              title: '¡Éxito!',
+              text: 'Servicio y preferencias guardados correctamente.',
+              icon: 'success',
+              confirmButtonColor: '#4a9c9f' 
+            }).then(() => {
               const rol = localStorage.getItem('rol');
               if (rol === 'Admin') {
                 window.history.back();
@@ -208,11 +253,21 @@ export class AgregarServicioComponent {
             });
           })
           .catch(() => {
-            Swal.fire('Error', 'El servicio se guardó, pero hubo un error al guardar las preferencias.', 'error');
+            Swal.fire({
+              title: 'Error',
+              text: 'El servicio se guardó, pero hubo un error al guardar las preferencias.',
+              icon: 'error',
+              confirmButtonColor: '#4a9c9f' 
+            });
           });
       },
       error: () => {
-        Swal.fire('Error', 'Ocurrió un problema al guardar el servicio.', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un problema al guardar el servicio.',
+          icon: 'error',
+          confirmButtonColor: '#4a9c9f'
+        });
       }
     });
   }

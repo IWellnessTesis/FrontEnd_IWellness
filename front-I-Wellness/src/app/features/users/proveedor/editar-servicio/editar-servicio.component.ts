@@ -153,85 +153,81 @@ export class EditarServicioComponent {
   
   navigateTo() {
     this.servicio.horario = this.getFormattedSchedule();
-  
-    // Verificamos si se han seleccionado al menos 2 preferencias
+
     if (this.selectedPreferences.length < 2) {
       Swal.fire({
         title: '¡Error!',
         text: 'Debe seleccionar al menos 2 preferencias.',
         icon: 'error',
+        confirmButtonColor: '#4a9c9f',
         confirmButtonText: 'Aceptar'
       });
-      return; // Salir del método si no se cumple la validación
+      return;
     }
-  
+
     this.eliminarPreferenciasDeServicio(this.servicio._idServicio);
-    
-    // Preparar las relaciones ServicioXPreferencia
+
     const servicioXPreferenciaData = this.selectedPreferences.map((idPreferencia) => ({
       idServicio: this.servicio._idServicio,
       preferencia: {
         _idPreferencias: idPreferencia
       }
     }));
-  
-    // Actualizar el servicio
+
     this.servicioService.actualizar(this.servicio._idServicio, this.servicio).subscribe({
       next: () => {
-        // Guardar cada relación de ServicioXPreferencia una por una
         this.guardarRelacionesIndividuales(servicioXPreferenciaData);
-  
-        // Mostrar alerta de éxito
+
         Swal.fire({
           title: '¡Servicio actualizado!',
           text: 'El servicio se ha actualizado correctamente.',
           icon: 'success',
+          confirmButtonColor: '#4a9c9f',
           confirmButtonText: 'Aceptar'
         }).then(() => {
-          const rol = localStorage.getItem('rol'); // Obtén el rol del localStorage
-  
+          const rol = localStorage.getItem('rol');
+
           if (rol === 'Admin') {
-            // Si el rol es Admin, navega a la página anterior
             window.history.back();
           } else if (rol === 'Proveedor') {
-            // Si el rol es Proveedor, navega a 'homeproveedor'
             this.router.navigate(['homeproveedor']);
           } else {
-            // Si no tiene rol o no coincide con los valores esperados
             console.log('Rol no reconocido');
           }
         });
       },
       error: err => {
         console.error('Error al actualizar el servicio:', err);
-        // Mostrar alerta de error
+
         Swal.fire({
           title: 'Error',
           text: 'Hubo un problema al actualizar el servicio.',
           icon: 'error',
+          confirmButtonColor: '#4a9c9f',
           confirmButtonText: 'Aceptar'
         });
       }
     });
   }
 
-  // Método para eliminar las preferencias de un servicio
-eliminarPreferenciasDeServicio(idServicio: number) {
-  this.servicioXPreferencia.eliminarPreferenciasPorServicio(idServicio).subscribe({
-    next: () => {
-      console.log('Preferencias eliminadas para el servicio:', idServicio);
-    },
-    error: (err) => {
-      console.error('Error al eliminar las preferencias del servicio', err);
-      Swal.fire({
-        title: 'Error',
-        text: 'Hubo un problema al eliminar las preferencias.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
-    }
-  });
-}
+  eliminarPreferenciasDeServicio(idServicio: number) {
+    this.servicioXPreferencia.eliminarPreferenciasPorServicio(idServicio).subscribe({
+      next: () => {
+        console.log('Preferencias eliminadas para el servicio:', idServicio);
+      },
+      error: (err) => {
+        console.error('Error al eliminar las preferencias del servicio', err);
+
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema al eliminar las preferencias.',
+          icon: 'error',
+          confirmButtonColor: '#4a9c9f',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
   
   // Método para guardar cada relación de ServicioXPreferencia individualmente
   guardarRelacionesIndividuales(servicioXPreferenciaData: any[]) {
@@ -242,10 +238,12 @@ eliminarPreferenciasDeServicio(idServicio: number) {
         },
         error: (err) => {
           console.error('Error al guardar la relación de ServicioXPreferencia', err);
+
           Swal.fire({
             title: 'Error',
             text: 'Hubo un problema al guardar una relación de preferencia.',
             icon: 'error',
+            confirmButtonColor: '#4a9c9f',
             confirmButtonText: 'Aceptar'
           });
         }

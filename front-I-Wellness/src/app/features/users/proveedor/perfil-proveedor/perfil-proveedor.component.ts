@@ -123,7 +123,8 @@ export class PerfilProveedorComponent {
       title: '¡Proveedor actualizado!',
       text: 'La información del proveedor se ha actualizado correctamente.',
       icon: 'success',
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#4a9c9f',
     });
   }
 
@@ -133,7 +134,8 @@ export class PerfilProveedorComponent {
       title: 'Error',
       text: 'Hubo un problema al actualizar el proveedor.',
       icon: 'error',
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#4a9c9f',
     });
   }
 }

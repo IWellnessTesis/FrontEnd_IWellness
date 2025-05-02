@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import countriesData from '../../../../../assets/countries+cities.json';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registro-turista',
@@ -97,8 +98,6 @@ export class RegistroTuristaComponent implements OnInit {
     }
   }
 
-  // Actualización del método registerUser en registro-turista.component.ts
-
   registerUser() {
     this.validateName();
     this.validateEmail();
@@ -127,32 +126,64 @@ export class RegistroTuristaComponent implements OnInit {
           this.isLoading = false;
           console.log('Registro exitoso:', response);
           
-          // Después del registro, intentamos login automático
-          this.authService.login(userData.correo, userData.contraseña).subscribe({
-            next: () => {
-              // Redirigir al formulario de gustos tras login exitoso
-              this.router.navigate(['formulariogustos']);
-            },
-            error: (loginError) => {
-              console.error('Error en login automático:', loginError);
-              // Aun sin login, redirigimos al formulario de gustos para mantener el flujo
-              this.router.navigate(['formulariogustos']);
-            }
+          // Alerta de éxito
+          Swal.fire({
+            title: '¡Registro Exitoso!',
+            text: 'Tu cuenta ha sido registrada correctamente.',
+            icon: 'success',
+            confirmButtonColor: '#4a9c9f',
+            confirmButtonText: 'Aceptar'
+          }).then(() => {
+            // Después del registro, intentamos login automático
+            this.authService.login(userData.correo, userData.contraseña).subscribe({
+              next: () => {
+                // Redirigir al formulario de gustos tras login exitoso
+                this.router.navigate(['formulariogustos']);
+              },
+              error: (loginError) => {
+                console.error('Error en login automático:', loginError);
+                // Aun sin login, redirigimos al formulario de gustos para mantener el flujo
+                this.router.navigate(['formulariogustos']);
+              }
+            });
           });
         },
         error: (error) => {
           this.isLoading = false;
           console.error('Error en el registro:', error);
           
+          // Alerta de error con el mensaje correspondiente
           if (error.message && error.message.includes('correo ya está registrado')) {
             this.emailError = 'Este correo electrónico ya está registrado';
+            Swal.fire({
+              title: 'Error',
+              text: 'Este correo electrónico ya está registrado. Por favor, usa otro.',
+              icon: 'error',
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
           } else {
-            alert('Error en el registro. Por favor, intente nuevamente.');
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema en el registro. Por favor, intenta nuevamente.',
+              icon: 'error',
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
           }
         }
       });
     } else {
       console.log('Corrige los errores antes de enviar el formulario.');
+
+      // Alerta de validación
+      Swal.fire({
+        title: 'Formulario incompleto',
+        text: 'Por favor, corrige los errores antes de continuar.',
+        icon: 'warning',
+        confirmButtonColor: '#4a9c9f',
+        confirmButtonText: 'Aceptar'
+      });
     }
   }
 }

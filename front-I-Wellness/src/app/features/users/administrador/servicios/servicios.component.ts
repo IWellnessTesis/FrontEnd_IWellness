@@ -74,8 +74,8 @@ export class ServiciosComponent {
       text: 'Esta acción eliminará el servicio permanentemente.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: '#E82A3C',
+      cancelButtonColor: '#4a9c9f',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {

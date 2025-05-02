@@ -181,7 +181,8 @@ export class FormulariogustosComponent implements OnInit {
           icon: 'warning',
           title: 'No autenticado',
           text: 'Debes iniciar sesión para guardar tus preferencias.',
-          confirmButtonText: 'Ir al login'
+          confirmButtonText: 'Ir al login',
+          confirmButtonColor: '#4a9c9f',
         }).then(() => {
           localStorage.setItem('pendingPreferences', JSON.stringify(this.seleccionados));
           this.router.navigate(['/login']);
@@ -217,7 +218,8 @@ export class FormulariogustosComponent implements OnInit {
                 icon: 'success',
                 title: 'Preferencias guardadas',
                 text: 'Tus preferencias se han guardado exitosamente.',
-                confirmButtonText: 'Continuar'
+                confirmButtonText: 'Continuar',
+                confirmButtonColor: '#4a9c9f',
               }).then(() => this.router.navigate(['/hometurista']));
             },
             error: (err) => {
@@ -226,7 +228,8 @@ export class FormulariogustosComponent implements OnInit {
                 icon: 'error',
                 title: 'Error',
                 text: 'Hubo un problema al guardar tus preferencias. Intenta de nuevo.',
-                confirmButtonText: 'Ok'
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#4a9c9f',
               }).then(() => this.router.navigate(['/hometurista']));
             }
           });
@@ -239,7 +242,8 @@ export class FormulariogustosComponent implements OnInit {
           icon: 'error',
           title: 'Error inesperado',
           text: 'Ocurrió un problema inesperado.',
-          confirmButtonText: 'Volver'
+          confirmButtonText: 'Volver',
+          confirmButtonColor: '#4a9c9f',
         }).then(() => this.router.navigate(['/hometurista']));
       }
     } else {
@@ -247,7 +251,8 @@ export class FormulariogustosComponent implements OnInit {
         icon: 'info',
         title: 'Selecciona más opciones',
         text: 'Debes seleccionar entre 3 y 5 preferencias antes de continuar.',
-        confirmButtonText: 'Entendido'
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#4a9c9f',
       });
     }
   }

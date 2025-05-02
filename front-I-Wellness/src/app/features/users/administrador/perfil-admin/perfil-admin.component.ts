@@ -56,7 +56,8 @@ export class PerfilAdminComponent {
               title: 'Administrador actualizado!',
               text: 'La información del administrador se ha actualizado correctamente.',
               icon: 'success',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              confirmButtonColor: '#4a9c9f'
             });
           },
           (error: any) => {
@@ -66,7 +67,8 @@ export class PerfilAdminComponent {
               title: 'Error',
               text: 'Hubo un problema al actualizar el administrador.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              confirmButtonColor: '#4a9c9f'
             });
           }
         );
