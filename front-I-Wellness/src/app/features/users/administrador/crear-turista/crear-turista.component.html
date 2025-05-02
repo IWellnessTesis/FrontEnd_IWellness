@@ -1,0 +1,58 @@
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo">
+                <img src="../../../../assets/logo.png" alt="I-Wellness Logo">
+                <h1>I-Wellness</h1>
+            </div>
+        </div>
+        <div class="right-panel">
+            <h2 class="title"><span class="turista">Crear</span> <span class="registro"> Turista</span></h2>
+
+            <button class="btn-section">Datos de contacto</button>
+            
+            <input type="text" placeholder="Nombre" [(ngModel)]="name" (input)="validateName()" maxlength="35" required>
+            <small *ngIf="nameError" class="error-message">{{ nameError }}</small>
+
+            <input type="email" placeholder="Correo" [(ngModel)]="email" (input)="validateEmail()" required>
+            <small *ngIf="emailError" class="error-message">{{ emailError }}</small>
+
+            <input type="text" placeholder="Teléfono" [(ngModel)]="phone" (input)="validatePhone()" required>
+            <small *ngIf="phoneError" class="error-message">{{ phoneError }}</small>
+
+            <input type="password" placeholder="Contraseña" [(ngModel)]="password" (input)="validatePassword()" required>
+            <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
+
+            <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" required>
+            <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
+
+            <select id="country" [(ngModel)]="selectedCountry" (change)="onCountryChange()">
+                <option value="" disabled selected>Seleccione un país de procedencia</option>
+                <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+            </select>
+
+            <select id="city" [disabled]="!selectedCountry">
+                <option value="" disabled selected>Seleccione su ciudad</option>
+                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+            </select>
+
+            <div class="preferencias-section">
+                <h3>Selecciona tus preferencias (entre 3 y 5):</h3>
+                <div class="preferencias-list">
+                  <label *ngFor="let pref of preferencias">
+                    <input
+                      type="checkbox"
+                      [value]="pref._idPreferencias"
+                      (change)="onPreferenceChange($event, pref._idPreferencias)">
+                    {{ pref.nombre }}
+                  </label>
+                </div>
+                <div class="error-message" *ngIf="selectedPreferences.length < 3 || selectedPreferences.length > 5">
+                  Debes seleccionar entre 3 y 5 preferencias.
+                </div>
+              </div>
+
+            <button class="btn-submit" (click)="createTurista()">Crear turista</button>
+        </div>
+    </div>
+</body>
