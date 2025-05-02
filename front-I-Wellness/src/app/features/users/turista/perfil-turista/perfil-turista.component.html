@@ -10,6 +10,13 @@
         <main class="content">
             <div class="profile-header">
                 <h1>Editar perfil</h1>
+                <input type="file" id="fotoInput" (change)="onFotoSeleccionada($event)" hidden>
+                <img 
+                    [src]="fotoPreview || usuario.foto" 
+                    alt="Profile Picture" 
+                    class="profile-pic"
+                    (click)="seleccionarFoto()"
+                    title="Haz clic para cambiar tu foto de perfil">
             </div>
             <form class="profile-form">
                 <div class="input-group full-width">

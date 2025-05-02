@@ -23,12 +23,16 @@ export class PerfilTuristaComponent implements OnInit {
   usuario: any = {
     id: null, // Asegúrate de que se asigne el id correcto en la carga inicial
     nombre: '',
+    foto: '',
     turistaInfo: {
       telefono: null,
       ciudad: '',
       pais: ''
     }
   };
+
+  fotoPreview: string | ArrayBuffer | null = null;
+  fotoSeleccionada: File | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +59,28 @@ export class PerfilTuristaComponent implements OnInit {
     });
   }
 
+  seleccionarFoto(): void {
+    const input = document.getElementById('fotoInput') as HTMLInputElement;
+    if (input) {
+      input.click();
+    }
+  }
+  
+  onFotoSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        this.fotoPreview = reader.result;
+        this.usuario.foto = reader.result; 
+      };
+  
+      reader.readAsDataURL(file); 
+    }
+  }
+
   onCountryChange() {
     const country = this.countriesData.find(
       (c) => c.name === this.selectedCountry
@@ -71,10 +97,11 @@ export class PerfilTuristaComponent implements OnInit {
       nombre: this.usuario.nombre,
       telefono: this.usuario.turistaInfo.telefono,
       ciudad: this.selectedCity,
-      pais: this.selectedCountry
+      pais: this.selectedCountry,
+      foto: this.usuario.foto
     };
   
-    this.usuarioServicio.actualizarUsuario(this.usuario.id, datosActualizar)
+    this.usuarioServicio.editarTurista(this.usuario.id, datosActualizar)
       .subscribe(
         response => {
           Swal.fire({

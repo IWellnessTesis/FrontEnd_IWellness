@@ -30,16 +30,16 @@ export class UsuarioService {
     return this.http.get(`${API_URL}/buscar/${id}`, { headers });
   }
 
-  editarUsuario(id: number, datos: any): Observable<any> {
+  editarTurista(id: number, datos: any): Observable<any> {
     const headers = this.obtenerHeaders(); // Agregar token en los headers
     console.log('en el servicio front Datos a editar:', datos);
     console.log('ID del usuario a editar:', id);
-    return this.http.put(`${API_URL}/editar/${id}`, datos, { headers });
+    return this.http.put(`${API_URL}/editarTurista/${id}`, datos, { headers });
   }
 
-  actualizarUsuario(id: number, datos: any): Observable<any> {
+  editarProveedor(id: number, datos: any): Observable<any> {
     const headers = this.obtenerHeaders(); // Agregar token en los headers
-    return this.http.put(`${API_URL}/editar/${id}`, datos, { headers });
+    return this.http.put(`${API_URL}/editarProveedor/${id}`, datos, { headers });
   }
 
   eliminarUsuario(id: number): Observable<any> {
