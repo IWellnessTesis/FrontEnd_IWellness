@@ -131,6 +131,8 @@ export class EditPreferenciasComponent {
       });
     });
   }
+  
+  
 
   finalizarGuardado(exitos: number, errores: number) {
     if (exitos === this.peticiones.length) {

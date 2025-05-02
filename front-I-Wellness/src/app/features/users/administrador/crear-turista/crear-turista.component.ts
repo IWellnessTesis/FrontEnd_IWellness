@@ -162,6 +162,7 @@ export class CrearTuristaComponent implements OnInit {
         pais: this.selectedCountry,
       };
   
+
       this.adminService.crearTurista(turistaData).subscribe({
         next: (response: any) => {
           const turistaId = response.id;
@@ -225,6 +226,7 @@ export class CrearTuristaComponent implements OnInit {
         error: (error: any) => {
           this.isLoading = false;
           console.error('Error al crear turista:', error);
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
