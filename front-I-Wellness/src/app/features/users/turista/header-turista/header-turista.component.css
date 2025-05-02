@@ -94,10 +94,9 @@
   height: 40px;
   border-radius: 50%;
   border: 2px solid white;
-}
-
-.profile-pic:hover {
   cursor: pointer;
+  object-fit: cover; 
+
 }
 
 .logout-btn {
