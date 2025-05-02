@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioService } from '../../../servicios/services/servicio.service';
 import Swal from 'sweetalert2';
+import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
+import { ServicioXPreferenciaService } from '../../../preferencias/services/servicioXpreferencias/servicio-xpreferencia.service';
 
 @Component({
   selector: 'app-editar-servicio',
@@ -30,7 +32,16 @@ export class EditarServicioComponent {
 
   servicio: any;
 
-  constructor(private route: ActivatedRoute,private router: Router, private servicioService: ServicioService) {}
+  preferencias: any[] = [];
+  selectedPreferences: number[] = [];
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router, 
+    private servicioService: ServicioService,
+    private preferenciasService: PreferenciasService, 
+    private servicioXPreferencia: ServicioXPreferenciaService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -38,13 +49,61 @@ export class EditarServicioComponent {
       this.servicioService.buscarPorId(id).subscribe({
         next: data => {
           this.servicio = data;
-
-          // concatenamos el horario
+          this.cargarPreferencias();
+          this.cargarPreferenciasServicio();
           this.parseHorario(this.servicio.horario);
         }
       });
     });
   }
+
+  cargarPreferencias() {
+    this.preferenciasService.obtenerPreferencias().subscribe({
+      next: (data) => {
+        this.preferencias = data;
+        console.log('Preferencias cargadas:', this.preferencias);
+      },
+      error: (error) => {
+        console.error('Error al obtener preferencias:', error);
+        // En caso de error, cargar preferencias predeterminadas
+      }
+    });
+  }
+
+  cargarPreferenciasServicio() {
+    const idServicio = this.servicio._idServicio; // Asegúrate de tener el ID del servicio cargado
+    this.servicioXPreferencia.obtenerPorServicio(idServicio).subscribe({
+      next: (preferenciasServicio) => {
+        // Obtener los IDs de las preferencias asociadas al servicio
+        this.selectedPreferences = preferenciasServicio.map((p: any) => p.preferencia._idPreferencias);
+  
+        // Marcar las preferencias seleccionadas en la lista de preferencias
+        this.preferencias.forEach(preferencia => {
+          // Verificamos si el ID de la preferencia está en la lista de seleccionadas
+          preferencia.selected = this.selectedPreferences.includes(preferencia._idPreferencias);
+        });
+  
+        console.log('Preferencias seleccionadas para el servicio:', this.selectedPreferences);
+      },
+      error: (error) => {
+        console.error('Error al obtener preferencias del servicio:', error);
+      }
+    });
+  }
+
+  onPreferenceChange(event: any, idPreferencia: number) {
+    if (event.target.checked) {
+      if (this.selectedPreferences.length < 5) {
+        this.selectedPreferences.push(idPreferencia);
+      } else {
+        // Desmarca si ya hay 5 seleccionadas
+        event.target.checked = false;
+      }
+    } else {
+      this.selectedPreferences = this.selectedPreferences.filter(id => id !== idPreferencia);
+    }
+  }
+
   private parseHorario(horario: string): void {
     if (!horario) return;
   
@@ -94,9 +153,34 @@ export class EditarServicioComponent {
   
   navigateTo() {
     this.servicio.horario = this.getFormattedSchedule();
-
+  
+    // Verificamos si se han seleccionado al menos 2 preferencias
+    if (this.selectedPreferences.length < 2) {
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Debe seleccionar al menos 2 preferencias.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return; // Salir del método si no se cumple la validación
+    }
+  
+    this.eliminarPreferenciasDeServicio(this.servicio._idServicio);
+    
+    // Preparar las relaciones ServicioXPreferencia
+    const servicioXPreferenciaData = this.selectedPreferences.map((idPreferencia) => ({
+      idServicio: this.servicio._idServicio,
+      preferencia: {
+        _idPreferencias: idPreferencia
+      }
+    }));
+  
+    // Actualizar el servicio
     this.servicioService.actualizar(this.servicio._idServicio, this.servicio).subscribe({
       next: () => {
+        // Guardar cada relación de ServicioXPreferencia una por una
+        this.guardarRelacionesIndividuales(servicioXPreferenciaData);
+  
         // Mostrar alerta de éxito
         Swal.fire({
           title: '¡Servicio actualizado!',
@@ -105,7 +189,7 @@ export class EditarServicioComponent {
           confirmButtonText: 'Aceptar'
         }).then(() => {
           const rol = localStorage.getItem('rol'); // Obtén el rol del localStorage
-
+  
           if (rol === 'Admin') {
             // Si el rol es Admin, navega a la página anterior
             window.history.back();
@@ -128,6 +212,44 @@ export class EditarServicioComponent {
           confirmButtonText: 'Aceptar'
         });
       }
+    });
+  }
+
+  // Método para eliminar las preferencias de un servicio
+eliminarPreferenciasDeServicio(idServicio: number) {
+  this.servicioXPreferencia.eliminarPreferenciasPorServicio(idServicio).subscribe({
+    next: () => {
+      console.log('Preferencias eliminadas para el servicio:', idServicio);
+    },
+    error: (err) => {
+      console.error('Error al eliminar las preferencias del servicio', err);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al eliminar las preferencias.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  });
+}
+  
+  // Método para guardar cada relación de ServicioXPreferencia individualmente
+  guardarRelacionesIndividuales(servicioXPreferenciaData: any[]) {
+    servicioXPreferenciaData.forEach((data) => {
+      this.servicioXPreferencia.crear(data).subscribe({
+        next: () => {
+          console.log('Relación de ServicioXPreferencia guardada con éxito:', data);
+        },
+        error: (err) => {
+          console.error('Error al guardar la relación de ServicioXPreferencia', err);
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al guardar una relación de preferencia.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
     });
   }
 

@@ -13,7 +13,7 @@
                     <div class="service-info">
                         <h3>{{ servicio.nombre }}</h3>
                         <p>{{ servicio.descripcion }}</p>
-                        <p class="price">{{ servicio.precio }} USD</p>
+                        <p class="price">{{ servicio.precio === 0 ? 'Gratis' : servicio.precio + ' USD' }}</p>
                     </div>
                     <div class="service-actions">
                         <button class="visibility-btn" (click)="navigateTo('infoservicio', servicio._idServicio)">👁</button>
