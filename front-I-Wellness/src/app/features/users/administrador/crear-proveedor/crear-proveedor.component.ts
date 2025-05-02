@@ -106,41 +106,50 @@ export class CrearProveedorComponent {
     this.coordinateYError = this.coordinateY.match(coordinateRegex) ? '' : 'Ingrese la coordenada Y correctamente';
   }
  
-   agregarProveedor() {
-     if (this.validateForm()) {
-       this.isLoading = true;
-       const providerData = {
-         nombre: this.name,
-         cargoContacto: this.contactPosition,
-         telefono: this.phone,
-         contraseña: this.password,
-         nombre_empresa: this.companyName,
-         correo: this.email,
-         telefonoEmpresa: this.companyNamePhone,
-         coordenadaX: this.coordinateX || '0',
-         coordenadaY: this.coordinateY || '0'
-       };
- 
-       this.adminService.crearProveedor(providerData).subscribe({
-         next: () => {
-           this.isLoading = false;
-           Swal.fire({
-             icon: 'success',
-             title: 'Proveedor registrado exitosamente',
-             confirmButtonColor: '#4a9c9f'
-           });
-           this.router.navigate(['/proveedores']);
-         },
-         error: (error) => {
-           this.isLoading = false;
-           Swal.fire({
-             icon: 'error',
-             title: 'Error al registrar',
-             text: error?.message || 'Inténtalo nuevamente.',
-             confirmButtonColor: '#4a9c9f'
-           });
-         }
-       });
-     }
-   }
+  agregarProveedor() {
+    if (this.validateForm()) {
+      this.isLoading = true;
+      const providerData = {
+        nombre: this.name,
+        cargoContacto: this.contactPosition,
+        telefono: this.phone,
+        contraseña: this.password,
+        nombre_empresa: this.companyName,
+        correo: this.email,
+        telefonoEmpresa: this.companyNamePhone,
+        coordenadaX: this.coordinateX || '0',
+        coordenadaY: this.coordinateY || '0'
+      };
+  
+      this.adminService.crearProveedor(providerData).subscribe({
+        next: () => {
+          this.isLoading = false;
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            icon: 'success',
+            title: 'Proveedor registrado exitosamente',
+            text: 'El proveedor ha sido creado correctamente.',
+            confirmButtonColor: '#4a9c9f',
+            confirmButtonText: 'Aceptar',
+            timer: 3000 // Cierra la alerta después de 3 segundos
+          }).then(() => {
+            // Redirigir a la página de proveedores después de la alerta
+            this.router.navigate(['/proveedores']);
+          });
+        },
+        error: (error) => {
+          this.isLoading = false;
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al registrar',
+            text: error?.message || 'Inténtalo nuevamente.',
+            confirmButtonColor: '#4a9c9f',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    }
+  }
+  
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioService } from '../../../servicios/services/servicio.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-servicios',
@@ -24,7 +25,7 @@ export class ServiciosComponent {
   ngOnInit(): void {
     // Obtener el ID del proveedor desde los parámetros de la URL
     this.route.paramMap.subscribe(params => {
-      const id = params.get('idProveedor');
+      const id = params.get('id');
       if (id) {
         this.idProveedor = +id;
         this.cargarServicios();
@@ -34,11 +35,14 @@ export class ServiciosComponent {
     });
   }
 
+  navigateTo(path: string,id?: any) {
+    this.router.navigate([path, id]);
+  } 
+
   cargarServicios(): void {
     this.servicioService.obtenerServiciosPorProveedor(this.idProveedor).subscribe({
       next: (data: any) => {
         this.servicios = data;
-        console.log(this.servicios);
       },
       error: (error) => {
         this.errorMessage = 'Error al cargar los servicios.';
@@ -47,21 +51,47 @@ export class ServiciosComponent {
     });
   }
 
-  navigateTo(path: string): void {
-    this.router.navigate([path]);
+  crearServicio(): void {
+    sessionStorage.setItem('idProveedor', this.idProveedor.toString());
+    this.router.navigate(['/agregarservicio'])
+  }
+
+  cambiarEstado(servicio: any) {
+    servicio.estado = !servicio.estado; // cambia el estado localmente
+  
+    this.servicioService.actualizar(servicio._idServicio, servicio).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error('Error al actualizar el estado del servicio:', err);
+      }
+    });
   }
 
   eliminarServicio(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
-      this.servicioService.eliminar(id).subscribe({
-        next: () => {
-          this.servicios = this.servicios.filter(s => s._idServicio !== id);
-        },
-        error: (error) => {
-          this.errorMessage = 'Error al eliminar el servicio.';
-          console.error(error);
-        }
-      });
-    }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará el servicio permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.servicioService.eliminar(id).subscribe({
+          next: () => {
+            this.servicios = this.servicios.filter(s => s._idServicio !== id);
+            Swal.fire('¡Eliminado!', 'El servicio ha sido eliminado.', 'success');
+          },
+          error: (error) => {
+            Swal.fire('Error', 'No se pudo eliminar el servicio.', 'error');
+            console.error(error);
+          }
+        });
+      }
+    });
   }
+  
 }

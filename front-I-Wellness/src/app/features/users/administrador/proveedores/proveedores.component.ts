@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../admin/services/admin.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-proveedores',
@@ -39,15 +40,44 @@ export class ProveedoresComponent {
   }
 
   deleteProveedor(id: number) {
-    // Aquí llamas a tu servicio para eliminar el visitante
-    this.adminService.eliminarUsuario(id).subscribe({
-      next: () => {
-        // Aquí podrías recargar la lista si estás usando ngFor
-        this.cargarProveedores();
-      },
-      error: (err: any) => {
-        console.error('Error al eliminar proveedor:', err);
+    // Mostrar alerta de confirmación antes de eliminar
+    Swal.fire({
+      icon: 'warning',
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará el proveedor de forma permanente.',
+      showCancelButton: true,
+      confirmButtonColor: '#4a9c9f',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result: { isConfirmed: any; }) => {
+      if (result.isConfirmed) {
+        // Si el usuario confirma, proceder a eliminar el proveedor
+        this.adminService.eliminarUsuario(id).subscribe({
+          next: () => {
+            // Si se elimina correctamente, recargar la lista de proveedores
+            this.cargarProveedores();
+            // Mostrar alerta de éxito
+            Swal.fire({
+              icon: 'success',
+              title: 'Proveedor eliminado',
+              text: 'El proveedor ha sido eliminado correctamente.',
+              confirmButtonColor: '#4a9c9f'
+            });
+          },
+          error: (err: any) => {
+            // Si ocurre un error, mostrar alerta de error
+            console.error('Error al eliminar proveedor:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: 'No se pudo eliminar el proveedor. Intenta nuevamente.',
+              confirmButtonColor: '#4a9c9f'
+            });
+          }
+        });
       }
     });
   }
+  
 }

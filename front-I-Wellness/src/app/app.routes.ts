@@ -54,7 +54,7 @@ export const routes: Routes = [
     { path: 'editpreferencias/:id', component: EditPreferenciasComponent},
     { path: 'headeradmin', component: HeaderAdminComponent},
     { path: 'homeadmin', component: AdminComponent},	
-    { path: 'perfiladmin', component: PerfilAdminComponent},
+    { path: 'perfiladmin/:id', component: PerfilAdminComponent},
     { path: 'visitantes', component: VisitantesComponent},
     { path: 'servicios/:id', component: ServiciosComponent},
     { path: 'proveedores', component: ProveedoresComponent},

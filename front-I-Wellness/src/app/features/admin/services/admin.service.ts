@@ -55,6 +55,12 @@ export class AdminService {
     return this.http.post(`${this.apiUrl}/proveedores`, proveedorDTO, { headers });
   }
 
+    // Actualizar un turista
+    actualizarAdmin(id: number, adminDTO: any): Observable<any> {
+      const headers = this.obtenerHeaders(); // Agregar token en los headers
+      return this.http.put(`${this.apiUrl}/admin/${id}`, adminDTO, { headers });
+    }
+
   // Actualizar un turista
   actualizarTurista(id: number, turistaDTO: any): Observable<any> {
     const headers = this.obtenerHeaders(); // Agregar token en los headers

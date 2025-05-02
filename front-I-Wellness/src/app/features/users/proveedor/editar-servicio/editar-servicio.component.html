@@ -32,7 +32,7 @@
                         <label for="precio">Precio:</label>
                         <input id="precio" type="number" value="{{ servicio.precio }}" [(ngModel)]="servicio.precio">
                         <textarea [(ngModel)]="servicio.descripcion">{{ servicio.descripcion }}</textarea>
-                        <button class="save-btn" (click)="navigateTo('homeproveedor')" (click)="getFormattedSchedule()">Guardar</button>
+                        <button class="save-btn" (click)="navigateTo()" (click)="getFormattedSchedule()">Guardar</button>
                     </div>
                 </div>
             </div>

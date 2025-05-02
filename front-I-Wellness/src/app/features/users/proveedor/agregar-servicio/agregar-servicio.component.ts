@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServicioService } from '../../../servicios/services/servicio.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-agregar-servicio',
@@ -22,13 +23,13 @@ export class AgregarServicioComponent {
     nombre: '',
     descripcion: '',
     precio: 0,
-    imagen: '', 
+    imagen: '',
     horario: '',
     estado: true
   };
 
-   // Días de la semana disponibles
-   days = [
+  // Días de la semana disponibles
+  days = [
     { name: 'Lunes', selected: false },
     { name: 'Martes', selected: false },
     { name: 'Miércoles', selected: false },
@@ -44,21 +45,39 @@ export class AgregarServicioComponent {
 
   imagePreview: string | null = null;
 
-
-  constructor(private router: Router, private servicioService: ServicioService, private authService:AuthService) {}
+  constructor(private router: Router, private servicioService: ServicioService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.usuarioHome().subscribe({
-      next: (data) => {
-        this.usuario = data;
-        this.usuario = JSON.parse(data);
-      },
-      error: (err) => {
-        console.error('Error al obtener el usuario:', err);
+    // Verificamos si el rol es admin o proveedor
+    const rol = localStorage.getItem('rol'); 
+
+    if (rol === 'Admin') {
+      // Si es admin, obtenemos el idProveedor desde la ruta (pasado por estado)
+      const navigation = this.router.getCurrentNavigation();
+      const proveedorId = sessionStorage.getItem('idProveedor');
+
+      if (proveedorId) {
+        this.nuevoServicio._idProveedor = parseInt(proveedorId);
+      } else {
+        console.error('No se encontró el proveedorId');
       }
-    });
+    } else if (rol === 'Proveedor') {
+      // Si es proveedor, obtenemos el idProveedor desde el usuario autenticado
+      this.authService.usuarioHome().subscribe({
+        next: (data) => {
+          this.usuario = data;
+          this.usuario = JSON.parse(data);
+          this.nuevoServicio._idProveedor = this.usuario.id; // Asumimos que el id del proveedor está en "this.usuario.id"
+        },
+        error: (err) => {
+          console.error('Error al obtener el usuario:', err);
+        }
+      });
+    } else {
+      console.error('Rol no válido');
+    }
   }
-  
+
   // Método para generar la cadena de horario estandarizada
   getFormattedSchedule(): string {
     const selectedDays = this.days
@@ -84,19 +103,38 @@ export class AgregarServicioComponent {
   }
 
   guardarServicio() {
-    // Generar el string de horario
     this.nuevoServicio.horario = this.getFormattedSchedule();
-
-    this.nuevoServicio._idProveedor = this.usuario.id
-
+    console.log('Servicio a enviar:', this.nuevoServicio);
+  
     this.servicioService.guardar(this.nuevoServicio).subscribe({
       next: () => {
-        this.router.navigate(['homeproveedor']);
+        // Mostrar alerta de éxito
+        Swal.fire({
+          title: '¡Servicio guardado!',
+          text: 'El servicio se ha guardado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          const rol = localStorage.getItem('rol');
+  
+          if (rol === 'Admin') {
+            window.history.back();
+          } else if (rol === 'Proveedor') {
+            this.router.navigate(['homeproveedor']);
+          }
+        });
       },
       error: err => {
         console.error('Error al crear servicio:', err);
+        // Mostrar alerta de error
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema al guardar el servicio.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
-
+  
 }

@@ -7,6 +7,7 @@ import countriesData from '../../../../../assets/countries+cities.json';
 import { AdminService } from '../../../admin/services/admin.service';
 import { TuristaXPreferenciaService } from '../../../preferencias/services/turistaXpreferencias/turista-xpreferencia.service';
 import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -161,20 +162,22 @@ export class CrearTuristaComponent implements OnInit {
         pais: this.selectedCountry,
       };
   
-      // Paso 1: Crear al turista
       this.adminService.crearTurista(turistaData).subscribe({
         next: (response: any) => {
-          console.log('Turista creado exitosamente:', response);
-  
-          const turistaId = response.id; // Asegúrate que el backend lo devuelve
-  
-          // Paso 2: Asociar cada preferencia individualmente
+          const turistaId = response.id;
           const totalPreferencias = this.selectedPreferences.length;
           let asociadas = 0;
   
           if (totalPreferencias === 0) {
             this.isLoading = false;
-            this.router.navigate(['listado-turistas']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Turista creado',
+              text: 'El turista fue creado exitosamente.',
+              confirmButtonColor: '#3085d6'
+            }).then(() => {
+              this.router.navigate(['listado-turistas']);
+            });
             return;
           }
   
@@ -191,18 +194,29 @@ export class CrearTuristaComponent implements OnInit {
                 asociadas++;
                 if (asociadas === totalPreferencias) {
                   this.isLoading = false;
-                  console.log('Todas las preferencias asociadas.');
-                  this.router.navigate(['visitantes']);
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Turista creado',
+                    text: 'El turista y sus preferencias fueron registrados correctamente.',
+                    confirmButtonColor: '#3085d6'
+                  }).then(() => {
+                    this.router.navigate(['visitantes']);
+                  });
                 }
               },
               error: (error: any) => {
                 console.error(`Error al asociar preferencia ${prefId}:`, error);
-                // Aún si falla alguna, dejamos que continúe el resto
                 asociadas++;
                 if (asociadas === totalPreferencias) {
                   this.isLoading = false;
-                  alert('El turista fue creado, pero algunas preferencias no se asociaron correctamente.');
-                  this.router.navigate(['listado-turistas']);
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Turista creado con advertencias',
+                    text: 'El turista fue creado, pero algunas preferencias no se asociaron correctamente.',
+                    confirmButtonColor: '#f39c12'
+                  }).then(() => {
+                    this.router.navigate(['listado-turistas']);
+                  });
                 }
               }
             });
@@ -211,13 +225,21 @@ export class CrearTuristaComponent implements OnInit {
         error: (error: any) => {
           this.isLoading = false;
           console.error('Error al crear turista:', error);
-          alert('Error en la creación del turista. Por favor, intente nuevamente.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error en la creación del turista. Por favor, intente nuevamente.',
+            confirmButtonColor: '#d33'
+          });
         }
       });
     } else {
-      console.log('Corrige los errores antes de enviar el formulario.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Formulario inválido',
+        text: 'Corrige los errores antes de enviar el formulario.',
+        confirmButtonColor: '#d33'
+      });
     }
   }
-  
-  
 }

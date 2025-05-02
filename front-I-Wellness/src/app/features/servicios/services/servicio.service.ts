@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -11,6 +11,14 @@ export class ServicioService {
 
   constructor(private http: HttpClient) {}
 
+    // Método para obtener las cabeceras con el token
+    private obtenerHeaders(): HttpHeaders {
+      const token = localStorage.getItem('token');
+      return new HttpHeaders({
+        'Authorization': token ? `Bearer ${token}` : ''
+      });
+    }
+
   obtenerTodos(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/all`).pipe(
       catchError(this.handleError)
@@ -22,12 +30,13 @@ export class ServicioService {
       catchError(this.handleError)
     );
   }
-
   guardar(servicio: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/save`, servicio).pipe(
-      catchError(this.handleError)
+    const headers = this.obtenerHeaders(); 
+    return this.http.post<any>(`${this.baseUrl}/save`, servicio, { headers }).pipe(
+      catchError(this.handleError),
     );
   }
+  
 
   actualizar(id: number, servicio: any): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/update/${id}`, servicio).pipe(
@@ -35,11 +44,16 @@ export class ServicioService {
     );
   }
 
-  eliminar(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/delete/${id}`).pipe(
+  eliminar(id: number): Observable<string> {
+    const headers = this.obtenerHeaders();
+    return this.http.delete(`${this.baseUrl}/delete/${id}`, {
+      headers,
+      responseType: 'text' as const
+    }).pipe(
       catchError(this.handleError)
     );
   }
+  
 
   obtenerServiciosPorProveedor(idProveedor: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${idProveedor}/servicios`).pipe(

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
 import { TuristaXPreferenciaService } from '../../../preferencias/services/turistaXpreferencias/turista-xpreferencia.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-preferencias',
@@ -15,8 +16,7 @@ export class EditPreferenciasComponent {
   seleccionados: any[] = [];
   preferencias: any[] = [];
   idUsuario!: number;
-
-
+  peticiones: any[]= [];
 
   seleccionarGusto(item: any) {
     const index = this.seleccionados.indexOf(item);
@@ -26,6 +26,7 @@ export class EditPreferenciasComponent {
       this.seleccionados.push(item); // Agregar a seleccionados si hay espacio
     }
   }
+
   constructor(  
     private route: ActivatedRoute,
     private router: Router,
@@ -52,24 +53,34 @@ export class EditPreferenciasComponent {
       },
       error: (error) => {
         console.error('Error al obtener preferencias:', error);
-        // En caso de error, cargar preferencias predeterminadas
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar preferencias',
+          text: 'Hubo un problema al cargar las preferencias. Intenta nuevamente.',
+          confirmButtonColor: '#4a9c9f'
+        });
       }
     });
   }
 
   agregarPreferencias() {
     if (this.seleccionados.length < 3 || this.seleccionados.length > 5) {
-      alert('Debes seleccionar entre 3 y 5 preferencias.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Número incorrecto de preferencias',
+        text: 'Debes seleccionar entre 3 y 5 preferencias.',
+        confirmButtonColor: '#4a9c9f'
+      });
       return;
     }
-  
+
     if (!this.idUsuario) {
       console.error('No se encontró el ID del usuario.');
       return;
     }
-  
+
     console.log('Eliminando preferencias previas del usuario:', this.idUsuario);
-  
+
     // Paso 1: Eliminar todas las preferencias anteriores
     this.turistaXPreferencia.eliminarPreferenciasPorTurista(this.idUsuario).subscribe({
       next: () => {
@@ -78,13 +89,18 @@ export class EditPreferenciasComponent {
       },
       error: (err: any) => {
         console.error('Error al eliminar preferencias anteriores:', err);
-        alert('No se pudieron eliminar las preferencias previas. Intenta nuevamente.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al eliminar preferencias',
+          text: 'No se pudieron eliminar las preferencias previas. Intenta nuevamente.',
+          confirmButtonColor: '#4a9c9f'
+        });
       }
     });
   }
-  
+
   guardarNuevasPreferencias() {
-    const peticiones = this.seleccionados.map(pref => {
+    this.peticiones = this.seleccionados.map(pref => {
       const turistaXPreferencia = {
         idUsuario: this.idUsuario,
         preferencia: {
@@ -93,47 +109,54 @@ export class EditPreferenciasComponent {
       };
       return this.turistaXPreferencia.crear(turistaXPreferencia);
     });
-  
+
     let exitos = 0;
     let errores = 0;
-  
-    peticiones.forEach((peticion, i) => {
+
+    this.peticiones.forEach((peticion, i) => {
       peticion.subscribe({
         next: () => {
           exitos++;
-          if (exitos + errores === peticiones.length) {
+          if (exitos + errores === this.peticiones.length) {
             this.finalizarGuardado(exitos, errores);
           }
         },
-        error: (err) => {
+        error: (err: any) => {
           errores++;
           console.error('Error al guardar preferencia:', err);
-          if (exitos + errores === peticiones.length) {
+          if (exitos + errores === this.peticiones.length) {
             this.finalizarGuardado(exitos, errores);
           }
         }
       });
     });
   }
-  
+
   finalizarGuardado(exitos: number, errores: number) {
-  
+    if (exitos === this.peticiones.length) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Preferencias guardadas',
+        text: 'Tus preferencias han sido guardadas correctamente.',
+        confirmButtonColor: '#4a9c9f'
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Hubo un error',
+        text: `Se guardaron ${exitos} preferencias, pero hubo un error con ${errores} preferencias.`,
+        confirmButtonColor: '#4a9c9f'
+      });
+    }
+
     // Obtener el rol del usuario desde el localStorage
-    const rol = localStorage.getItem('rol');  // Aquí asumimos que el rol está guardado en localStorage con la clave 'rol'
-  
+    const rol = localStorage.getItem('rol'); 
+
     // Verificar el rol y redirigir a la página correspondiente
     if (rol === 'Admin') {
       this.router.navigate(['/visitantes']);
     } else if (rol === 'Turista') {
       this.router.navigate(['/hometurista']);
-    } else {
-      // Si no se encuentra un rol válido, podrías redirigir a una página predeterminada o mostrar un mensaje de error
-      console.log('Rol no encontrado, redirigiendo a la página de inicio...');
-      this.router.navigate(['/inicio']);
-    }
+    } 
   }
-  
-  
-
-
 }

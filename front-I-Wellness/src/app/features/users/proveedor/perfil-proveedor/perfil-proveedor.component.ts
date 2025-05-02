@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AdminService } from '../../../admin/services/admin.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil-proveedor',
@@ -24,7 +25,6 @@ export class PerfilProveedorComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private adminService: AdminService
   ) {}
 
@@ -40,7 +40,9 @@ export class PerfilProveedorComponent {
     });
   }
 
-  navigateTo(path: string) {}
+  navigateTo(): void {
+    window.history.back();
+  }
 
   guardarCambios(): void {
     const datosActualizar = {
@@ -56,10 +58,23 @@ export class PerfilProveedorComponent {
     this.adminService.actualizarProveedor(this.proveedor.id, datosActualizar)
       .subscribe(
         (response: any) => {
-          alert('Proveedor actualizado correctamente');
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            title: '¡Proveedor actualizado!',
+            text: 'La información del proveedor se ha actualizado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          });
         },
         (error: any) => {
           console.error('Error al actualizar el proveedor', error);
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al actualizar el proveedor.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
         }
       );
   }
