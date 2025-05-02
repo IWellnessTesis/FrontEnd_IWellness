@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { AnalisisComponent } from './features/analisis/analisis.component';
 import { HomeComponent } from './features/landing/home/home.component';
 import { LoginComponent } from './features/landing/login/login.component';
 import { RecuperarComponent } from './features/landing/recuperar/recuperar.component';
@@ -35,7 +34,6 @@ import { PerfilProveedorComponent } from './features/users/proveedor/perfil-prov
 export const routes: Routes = [
     { path: '', component: HomeComponent},
     { path: 'temas', component: TemasComponent},
-    { path: 'analisis', component: AnalisisComponent},
     { path: 'registro', component: RegistroComponent},
     { path: 'login', component: LoginComponent},
     { path: 'registroturista', component: RegistroTuristaComponent},
