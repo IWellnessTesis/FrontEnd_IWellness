@@ -1,0 +1,76 @@
+.service-container {
+  max-width: 900px;
+  margin: 120px auto;
+  background-color: #fdfdfd;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.service-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.service-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.service-image {
+  flex: 0 0 250px;
+  width: 100%;
+  max-width: 250px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.service-meta {
+  flex: 1;
+}
+
+.service-description {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #444;
+}
+
+.service-price,
+.service-hours {
+  font-size: 16px;
+  margin: 6px 0;
+}
+
+.service-days {
+  margin-top: 30px;
+}
+
+.service-days ul {
+  list-style: none;
+  padding: 0;
+}
+
+.service-days li {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.reviews {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.review {
+  margin-bottom: 15px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}

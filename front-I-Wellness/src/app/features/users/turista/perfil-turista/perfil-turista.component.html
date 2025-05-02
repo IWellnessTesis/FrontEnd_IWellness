@@ -1,0 +1,43 @@
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <p>Hola, {{usuario.nombre}}</p>
+            <ul>
+                <li class="active">📝 Edit profile</li>
+                <li><a [routerLink]="['/editpreferencias', usuario.id]">🎯 Preferencias</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <div class="profile-header">
+                <h1>Editar perfil</h1>
+            </div>
+            <form class="profile-form">
+                <div class="input-group full-width">
+                    <label>Nombre</label>
+                    <input type="text" [(ngModel)]="usuario.nombre" name="nombre">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Número de Contacto</label>
+                    <input type="text" [(ngModel)]="usuario.turistaInfo.telefono" name="telefono">
+                </div>
+                
+                <select class="input-group dropdown" id="country" name="country" [(ngModel)]="selectedCountry" (change)="onCountryChange()">
+                    <option value="" disabled selected>Seleccione un país de procedencia</option>
+                    <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                </select>
+                  
+            
+                <select class="input-group dropdown" id="city" name="city" [(ngModel)]="selectedCity" [disabled]="!selectedCountry">
+                    <option value="" disabled>Seleccione su ciudad</option>
+                    <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+                  </select>
+
+                <div class="buttons">
+                    <button class="cancel" (click)="navigateTo()">Cancel</button>
+                    <button class="save" type="button" (click)="guardarCambios()">Save</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
