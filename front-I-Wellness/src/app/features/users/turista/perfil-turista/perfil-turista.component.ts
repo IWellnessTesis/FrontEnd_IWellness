@@ -4,6 +4,7 @@ import countriesData from '../../../../../assets/countries+cities.json';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../../services/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil-turista',
@@ -61,26 +62,36 @@ export class PerfilTuristaComponent implements OnInit {
     this.cities = country ? country.cities : [];
   }
 
-  navigateTo(path: string) {}
+  navigateTo() {
+    window.history.back();
+  }
 
-   guardarCambios(): void {
-    // Construir el objeto que enviará la información de actualización (coincide con EditarTuristaDTO)
+  guardarCambios(): void {
     const datosActualizar = {
       nombre: this.usuario.nombre,
       telefono: this.usuario.turistaInfo.telefono,
       ciudad: this.selectedCity,
       pais: this.selectedCountry
     };
-
-    // Llama al servicio para actualizar
+  
     this.usuarioServicio.actualizarUsuario(this.usuario.id, datosActualizar)
       .subscribe(
         response => {
-          alert('Usuario actualizado correctamente');
+          Swal.fire({
+            icon: 'success',
+            title: '¡Cambios guardados!',
+            text: 'Tu perfil ha sido actualizado correctamente.',
+            confirmButtonColor: '#3085d6'
+          });
         },
         error => {
           console.error('Error al actualizar el usuario', error);
-          // Mostrar mensaje de error
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al actualizar tu perfil. Intenta de nuevo.',
+            confirmButtonColor: '#d33'
+          });
         }
       );
   }

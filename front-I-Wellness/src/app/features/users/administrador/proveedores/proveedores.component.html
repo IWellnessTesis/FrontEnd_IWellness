@@ -1,28 +1,31 @@
-<body>
-    <div class="container">
-        <h2>Aquí está la lista de empresas:</h2>
+<div class="container">
+    <h2>Aquí está la lista de proveedores:</h2>
   
-        <div class="services-box">
-            <button class="add-service-btn" (click)="navigateTo('agregarservicio')">Añadir nueva empresa <span>+</span></button>
+    <button class="add-service-btn" (click)="navigateTo('crearproveedor')">
+      Añadir nuevo proveedor <span>+</span>
+    </button>
+
+    <div class="services-box">
+      <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
   
-            <div class="service-card">
-                <img src="https://media-cdn.tripadvisor.com/media/photo-s/06/96/b8/da/volcano-lodge-springs.jpg" alt="Día de Sauna" class="service-image">
-                <div class="service-info">
-                    <h3>Hotel La Fortuna</h3>
-                    <p>La Fortuna, San Carlos</p>
-                    <p class="categoria">Balnearios</p>
-                </div>
-                <div class="service-actions">
-                    <button class="visibility-btn" (click)="navigateTo('infoservicio')">👁</button>
-                    <button class="edit-btn" (click)="navigateTo('editarservicio')">✏️</button>
-                    <button class="delete-btn">🗑</button>
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                </div>
-            </div>
+      <div *ngFor="let proveedor of proveedores" class="service-card">
+        <!-- Imagen del proveedor o placeholder -->
+        <img [src]="proveedor.foto || 'https://via.placeholder.com/150'" 
+             alt="Imagen de empresa" 
+             class="service-image">
+  
+        <!-- Información de la empresa -->
+        <div class="service-info">
+          <h3>{{ proveedor.nombre }}</h3>
+          <p>{{ proveedor.proveedor.nombre_empresa }}</p>
         </div>
+  
+        <!-- Acciones -->
+        <div class="service-actions">
+          <button class="edit-btn" (click)="navigateTo('perfilproveedor/' + proveedor.id)">✏️</button>
+          <button class="delete-btn" (click)="deleteProveedor(proveedor.id)">🗑</button>  
+        </div>
+      </div>
     </div>
-  </body>
+  </div>
   

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../admin/services/admin.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-visitantes',
@@ -44,14 +45,37 @@ export class VisitantesComponent {
   }
 
   deleteVisitante(id: number) {
-    // Aquí llamas a tu servicio para eliminar el visitante
-    this.adminService.eliminarUsuario(id).subscribe({
-      next: () => {
-        // Aquí podrías recargar la lista si estás usando ngFor
-        this.cargarTuristas();
-      },
-      error: (err: any) => {
-        console.error('Error al eliminar visitante:', err);
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Este visitante será eliminado permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.adminService.eliminarUsuario(id).subscribe({
+          next: () => {
+            this.cargarTuristas();
+            Swal.fire({
+              icon: 'success',
+              title: 'Eliminado',
+              text: 'El visitante fue eliminado correctamente.',
+              confirmButtonColor: '#3085d6'
+            });
+          },
+          error: (err: any) => {
+            console.error('Error al eliminar visitante:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar el visitante. Intenta nuevamente.',
+              confirmButtonColor: '#d33'
+            });
+          }
+        });
       }
     });
   }

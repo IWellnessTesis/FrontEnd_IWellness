@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioService } from '../../../servicios/services/servicio.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-editar-servicio',
@@ -91,17 +92,43 @@ export class EditarServicioComponent {
     }
   }
   
-  navigateTo(path: string) {
+  navigateTo() {
     this.servicio.horario = this.getFormattedSchedule();
 
-    this.servicioService.actualizar(this.servicio._idServicio, this.servicio  ).subscribe({
-   next: () => {
-     this.router.navigate(['homeproveedor']);
-   },
-   error: err => {
-     console.error('Error al actualizar el servicio:', err);
-   }
- });
+    this.servicioService.actualizar(this.servicio._idServicio, this.servicio).subscribe({
+      next: () => {
+        // Mostrar alerta de éxito
+        Swal.fire({
+          title: '¡Servicio actualizado!',
+          text: 'El servicio se ha actualizado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          const rol = localStorage.getItem('rol'); // Obtén el rol del localStorage
+
+          if (rol === 'Admin') {
+            // Si el rol es Admin, navega a la página anterior
+            window.history.back();
+          } else if (rol === 'Proveedor') {
+            // Si el rol es Proveedor, navega a 'homeproveedor'
+            this.router.navigate(['homeproveedor']);
+          } else {
+            // Si no tiene rol o no coincide con los valores esperados
+            console.log('Rol no reconocido');
+          }
+        });
+      },
+      error: err => {
+        console.error('Error al actualizar el servicio:', err);
+        // Mostrar alerta de error
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema al actualizar el servicio.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
 
 }

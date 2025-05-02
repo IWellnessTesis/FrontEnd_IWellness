@@ -21,6 +21,7 @@ body {
   max-width: 900px;
   text-align: left;
   color: white;
+  margin: auto
 }
 
 /* Caja de servicios */
@@ -69,6 +70,7 @@ body {
   width: 200px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  justify-content: space-between;
 }
 
 /* Imagen del servicio */
@@ -105,6 +107,7 @@ body {
   justify-content: space-around;
   padding: 8px;
   background: #F8F8F8;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.5);
 }
 
 .service-actions button {
