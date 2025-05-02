@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { ServicioService } from '../../../servicios/services/servicio.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import Swal from 'sweetalert2';
+import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
+import { ServicioXPreferenciaService } from '../../../preferencias/services/servicioXpreferencias/servicio-xpreferencia.service';
 
 @Component({
   selector: 'app-agregar-servicio',
@@ -22,7 +24,7 @@ export class AgregarServicioComponent {
     _idProveedor: 0,
     nombre: '',
     descripcion: '',
-    precio: 0,
+    precio: null,
     imagen: '',
     horario: '',
     estado: true
@@ -45,36 +47,62 @@ export class AgregarServicioComponent {
 
   imagePreview: string | null = null;
 
-  constructor(private router: Router, private servicioService: ServicioService, private authService: AuthService) {}
+  preferencias: any[] = [];
+  selectedPreferences: number[] = [];
 
-  ngOnInit(): void {
-    // Verificamos si el rol es admin o proveedor
-    const rol = localStorage.getItem('rol'); 
 
-    if (rol === 'Admin') {
-      // Si es admin, obtenemos el idProveedor desde la ruta (pasado por estado)
-      const navigation = this.router.getCurrentNavigation();
-      const proveedorId = sessionStorage.getItem('idProveedor');
+  constructor(
+    private router: Router, 
+    private servicioService: ServicioService, 
+    private authService: AuthService,
+    private preferenciasService: PreferenciasService, 
+    private servicioXPreferencia: ServicioXPreferenciaService, ) {}
 
-      if (proveedorId) {
-        this.nuevoServicio._idProveedor = parseInt(proveedorId);
+    ngOnInit(): void {
+      this.cargarPreferencias();
+      const rol = localStorage.getItem('rol');
+    
+      if (rol === 'Admin') {
+        const proveedorId = sessionStorage.getItem('idProveedor');
+        this.nuevoServicio._idProveedor = proveedorId ? parseInt(proveedorId) : 0;
+      } else if (rol === 'Proveedor') {
+        this.authService.usuarioHome().subscribe({
+          next: (data) => {
+            this.usuario = JSON.parse(data);
+            this.nuevoServicio._idProveedor = this.usuario.id ?? 0;
+          },
+          error: (err) => {
+            console.error('Error al obtener el usuario:', err);
+          }
+        });
       } else {
-        console.error('No se encontró el proveedorId');
+        Swal.fire('Error', 'Rol no válido. No se puede continuar.', 'error');
       }
-    } else if (rol === 'Proveedor') {
-      // Si es proveedor, obtenemos el idProveedor desde el usuario autenticado
-      this.authService.usuarioHome().subscribe({
-        next: (data) => {
-          this.usuario = data;
-          this.usuario = JSON.parse(data);
-          this.nuevoServicio._idProveedor = this.usuario.id; // Asumimos que el id del proveedor está en "this.usuario.id"
-        },
-        error: (err) => {
-          console.error('Error al obtener el usuario:', err);
-        }
-      });
+    }
+
+  cargarPreferencias() {
+    this.preferenciasService.obtenerPreferencias().subscribe({
+      next: (data) => {
+        this.preferencias = data;
+        console.log('Preferencias cargadas:', this.preferencias);
+      },
+      error: (error) => {
+        console.error('Error al obtener preferencias:', error);
+        // En caso de error, cargar preferencias predeterminadas
+      }
+    });
+  }
+
+  onPreferenceChange(event: any, idPreferencia: number) {
+    if (event.target.checked) {
+      if (this.selectedPreferences.length < 5) {
+        this.selectedPreferences.push(idPreferencia);
+      } else {
+        // Desmarca si ya hay 5 seleccionadas
+        event.target.checked = false;
+      }
     } else {
-      console.error('Rol no válido');
+      this.selectedPreferences = this.selectedPreferences.filter(id => id !== idPreferencia);
     }
   }
 
@@ -103,38 +131,92 @@ export class AgregarServicioComponent {
   }
 
   guardarServicio() {
+    // Validaciones
+    if (!this.nuevoServicio.nombre.trim()) {
+      Swal.fire('Campo requerido', 'El nombre del servicio es obligatorio.', 'warning');
+      return;
+    }
+  
+    if (!this.nuevoServicio.descripcion.trim()) {
+      Swal.fire('Campo requerido', 'La descripción es obligatoria.', 'warning');
+      return;
+    }
+  
+    if (this.nuevoServicio.precio !== null && this.nuevoServicio.precio !== undefined && this.nuevoServicio.precio < 0) {
+      Swal.fire('Campo requerido', 'El precio no puede ser negativo. Usa 0 para servicios gratuitos.', 'warning');
+      return;
+    }
+  
+    if (!this.imagePreview) {
+      Swal.fire('Campo requerido', 'Debes subir una imagen del servicio.', 'warning');
+      return;
+    }
+  
+    const diasSeleccionados = this.days.some(day => day.selected);
+    if (!diasSeleccionados) {
+      Swal.fire('Campo requerido', 'Debes seleccionar al menos un día disponible.', 'warning');
+      return;
+    }
+  
+    if (!this.startTime || !this.endTime) {
+      Swal.fire('Campo requerido', 'Debes seleccionar el horario de apertura y cierre.', 'warning');
+      return;
+    }
+    
+    // Hora de apertura debe ser antes que la de cierre
+    const [startHour, startMinute] = this.startTime.split(':').map(Number);
+    const [endHour, endMinute] = this.endTime.split(':').map(Number);
+    const startDate = new Date();
+    startDate.setHours(startHour, startMinute);
+    
+    const endDate = new Date();
+    endDate.setHours(endHour, endMinute);
+    
+    if (startDate >= endDate) {
+      Swal.fire('Horario inválido', 'La hora de apertura debe ser anterior a la hora de cierre.', 'warning');
+      return;
+    }
+  
+    if (this.selectedPreferences.length < 2 || this.selectedPreferences.length > 5) {
+      Swal.fire('Preferencias inválidas', 'Debes seleccionar entre 2 y 5 preferencias.', 'warning');
+      return;
+    }
+  
+    // Formatear el horario
     this.nuevoServicio.horario = this.getFormattedSchedule();
-    console.log('Servicio a enviar:', this.nuevoServicio);
   
+    // Guardar el servicio
     this.servicioService.guardar(this.nuevoServicio).subscribe({
-      next: () => {
-        // Mostrar alerta de éxito
-        Swal.fire({
-          title: '¡Servicio guardado!',
-          text: 'El servicio se ha guardado correctamente.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar'
-        }).then(() => {
-          const rol = localStorage.getItem('rol');
+      next: (response: any) => {
+        const idServicio = response._idServicio;
+        const guardarPreferencias = this.selectedPreferences.map(idPref => {
+          return this.servicioXPreferencia.crear({
+            idServicio,
+            preferencia: { _idPreferencias: idPref }
+          }).toPromise();
+        });
   
-          if (rol === 'Admin') {
-            window.history.back();
-          } else if (rol === 'Proveedor') {
-            this.router.navigate(['homeproveedor']);
-          }
-        });
+        Promise.all(guardarPreferencias)
+          .then(() => {
+            Swal.fire('¡Éxito!', 'Servicio y preferencias guardados correctamente.', 'success').then(() => {
+              const rol = localStorage.getItem('rol');
+              if (rol === 'Admin') {
+                window.history.back();
+              } else {
+                this.router.navigate(['homeproveedor']);
+              }
+            });
+          })
+          .catch(() => {
+            Swal.fire('Error', 'El servicio se guardó, pero hubo un error al guardar las preferencias.', 'error');
+          });
       },
-      error: err => {
-        console.error('Error al crear servicio:', err);
-        // Mostrar alerta de error
-        Swal.fire({
-          title: 'Error',
-          text: 'Hubo un problema al guardar el servicio.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
+      error: () => {
+        Swal.fire('Error', 'Ocurrió un problema al guardar el servicio.', 'error');
       }
     });
   }
+  
+  
   
 }
