@@ -86,7 +86,6 @@ export class CrearTuristaComponent implements OnInit {
 
   validatePreferences() {
     if (this.selectedPreferences.length < 3 || this.selectedPreferences.length > 5) {
-      alert('Debes seleccionar entre 3 y 5 preferencias');
     }
   }
 
@@ -175,7 +174,7 @@ export class CrearTuristaComponent implements OnInit {
               icon: 'success',
               title: 'Turista creado',
               text: 'El turista fue creado exitosamente.',
-              confirmButtonColor: '#3085d6'
+              confirmButtonColor: '#4a9c9f'
             }).then(() => {
               this.router.navigate(['listado-turistas']);
             });
@@ -199,7 +198,7 @@ export class CrearTuristaComponent implements OnInit {
                     icon: 'success',
                     title: 'Turista creado',
                     text: 'El turista y sus preferencias fueron registrados correctamente.',
-                    confirmButtonColor: '#3085d6'
+                    confirmButtonColor: '#4a9c9f'
                   }).then(() => {
                     this.router.navigate(['visitantes']);
                   });
@@ -214,7 +213,7 @@ export class CrearTuristaComponent implements OnInit {
                     icon: 'warning',
                     title: 'Turista creado con advertencias',
                     text: 'El turista fue creado, pero algunas preferencias no se asociaron correctamente.',
-                    confirmButtonColor: '#f39c12'
+                    confirmButtonColor: '#4a9c9f'
                   }).then(() => {
                     this.router.navigate(['listado-turistas']);
                   });
@@ -231,7 +230,7 @@ export class CrearTuristaComponent implements OnInit {
             icon: 'error',
             title: 'Error',
             text: 'Error en la creación del turista. Por favor, intente nuevamente.',
-            confirmButtonColor: '#d33'
+            confirmButtonColor: '#E82A3C'
           });
         }
       });
@@ -240,7 +239,7 @@ export class CrearTuristaComponent implements OnInit {
         icon: 'error',
         title: 'Formulario inválido',
         text: 'Corrige los errores antes de enviar el formulario.',
-        confirmButtonColor: '#d33'
+        confirmButtonColor: '#E82A3C'
       });
     }
   }

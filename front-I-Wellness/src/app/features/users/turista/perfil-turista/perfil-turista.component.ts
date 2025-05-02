@@ -108,7 +108,7 @@ export class PerfilTuristaComponent implements OnInit {
             icon: 'success',
             title: '¡Cambios guardados!',
             text: 'Tu perfil ha sido actualizado correctamente.',
-            confirmButtonColor: '#3085d6'
+            confirmButtonColor: '#4a9c9f'
           });
         },
         error => {
@@ -117,7 +117,7 @@ export class PerfilTuristaComponent implements OnInit {
             icon: 'error',
             title: 'Error',
             text: 'Hubo un problema al actualizar tu perfil. Intenta de nuevo.',
-            confirmButtonColor: '#d33'
+            confirmButtonColor: '#E82A3C'
           });
         }
       );

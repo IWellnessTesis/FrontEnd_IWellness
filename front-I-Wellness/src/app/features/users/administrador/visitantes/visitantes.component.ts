@@ -50,8 +50,8 @@ export class VisitantesComponent {
       text: 'Este visitante será eliminado permanentemente.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#E82A3C',
+      cancelButtonColor: '#4a9c9f',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
@@ -63,7 +63,7 @@ export class VisitantesComponent {
               icon: 'success',
               title: 'Eliminado',
               text: 'El visitante fue eliminado correctamente.',
-              confirmButtonColor: '#3085d6'
+              confirmButtonColor: '#4a9c9f'
             });
           },
           error: (err: any) => {
@@ -72,7 +72,7 @@ export class VisitantesComponent {
               icon: 'error',
               title: 'Error',
               text: 'Hubo un problema al eliminar el visitante. Intenta nuevamente.',
-              confirmButtonColor: '#d33'
+              confirmButtonColor: ' #4a9c9f'
             });
           }
         });

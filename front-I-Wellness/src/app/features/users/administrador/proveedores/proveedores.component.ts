@@ -46,8 +46,8 @@ export class ProveedoresComponent {
       title: '¿Estás seguro?',
       text: 'Esta acción eliminará el proveedor de forma permanente.',
       showCancelButton: true,
-      confirmButtonColor: '#4a9c9f',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#E82A3C',
+      cancelButtonColor: '#4a9c9f',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     }).then((result: { isConfirmed: any; }) => {
