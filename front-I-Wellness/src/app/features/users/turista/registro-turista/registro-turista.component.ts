@@ -165,7 +165,7 @@ export class RegistroTuristaComponent implements OnInit {
           } else {
             Swal.fire({
               title: 'Error',
-              text: 'Hubo un problema en el registro. Por favor, intenta nuevamente.',
+              text: 'Este correo electrónico ya está registrado. Por favor, usa otro.',
               icon: 'error',
               confirmButtonColor: '#d33',
               confirmButtonText: 'Aceptar'

@@ -140,10 +140,15 @@ export class RegistroProveedorComponent {
         error: (error) => {
           this.isLoading = false;
           console.error('Error en el registro:', error);
+          Swal.fire({
+                        title: 'Error',
+                        text: 'Este correo electrónico ya está registrado. Por favor, usa otro.',
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'Aceptar'
+                      });
           if (error.error && error.error.includes('correo ya está registrado')) {
             this.emailError = 'Este correo electrónico ya está registrado';
-          } else {
-            alert('Error en el registro. Por favor, intente nuevamente.');
           }
         }
       });
