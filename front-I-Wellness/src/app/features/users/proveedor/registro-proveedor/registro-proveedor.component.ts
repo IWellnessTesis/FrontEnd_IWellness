@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component,AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import Swal from 'sweetalert2';
+import * as L from 'leaflet';
 
 
 @Component({
@@ -13,7 +14,7 @@ import Swal from 'sweetalert2';
   templateUrl: './registro-proveedor.component.html',
   styleUrl: './registro-proveedor.component.css'
 })
-export class RegistroProveedorComponent {
+export class RegistroProveedorComponent implements AfterViewInit {
   // Form fields
   name: string = '';
   contactPosition: string = '';
@@ -40,11 +41,78 @@ export class RegistroProveedorComponent {
 
   isLoading: boolean = false;
 
+  //map
+  private map!: L.Map;
+  private marker!: L.Marker;
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
+  ngAfterViewInit(): void {
+
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+      iconUrl: 'assets/leaflet/marker-icon.png',
+      shadowUrl: 'assets/leaflet/marker-shadow.png',
+    });
+    this.initMap();
+        
+  }
+private initMap(): void {
+    // … código previo …
+    this.map = L.map('reg-map').setView([10.5, -84.7], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(this.map);
+
+    this.marker = L.marker([0, 0], { draggable: true })
+      .addTo(this.map)
+      .setOpacity(0);
+
+    // Click en mapa → mueve marker + actualiza inputs
+    this.map.on('click', (e) => {
+      this.moveMarkerAndUpdateInputs(e.latlng.lat, e.latlng.lng);
+    });
+
+    // Drag del marker → actualiza inputs
+    this.marker.on('dragend', () => {
+      const { lat, lng } = this.marker.getLatLng();
+      this.moveMarkerAndUpdateInputs(lat, lng);
+    });
+  }
+
+  /** centraliza movimiento y actualización de inputs */
+  private moveMarkerAndUpdateInputs(lat: number, lng: number) {
+    this.marker
+      .setLatLng([lat, lng])
+      .setOpacity(1);
+
+    this.map.panTo([lat, lng]);
+
+    this.coordinateX = lat.toFixed(6);
+    this.coordinateY = lng.toFixed(6);
+
+    this.validatecoordinateX();
+    this.validatecoordinateY();
+  }
+
+  /** se dispara cuando cambias a mano las coordenadas */
+  onInputCoordsChange() {
+    const lat = parseFloat(this.coordinateX);
+    const lng = parseFloat(this.coordinateY);
+    this.validatecoordinateX();
+    this.validatecoordinateY();
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+      // mueve el marker y centra el mapa
+      this.marker
+        .setLatLng([lat, lng])
+        .setOpacity(1);
+      this.map.panTo([lat, lng]);
+    }
+  }
   // Validación del formulario antes de registrar
   validateForm(): boolean {
     this.validateName();
