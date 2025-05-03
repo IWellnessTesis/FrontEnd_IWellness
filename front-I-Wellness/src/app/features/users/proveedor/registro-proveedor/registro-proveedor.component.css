@@ -16,12 +16,14 @@ body {
 
 /* Contenedor principal */
 .container {
+    margin-top: 2%;
     display: flex;
     width: 80%;
     max-width: 1000px;
+    max-height: 85%;
     background: white;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: hidden;   
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -53,6 +55,8 @@ body {
     background: white;
     padding: 40px;
     text-align: center;
+    max-height: 90vh;
+  overflow-y: auto;    
 }
 
 .title {
@@ -144,5 +148,6 @@ input {
     width: 100%;
     margin-top: 0.5rem;
     border: 1px solid #ccc;
+    margin-bottom: 0.5rem;
   }
   
