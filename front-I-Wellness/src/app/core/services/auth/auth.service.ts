@@ -85,80 +85,79 @@ export class AuthService {
   }
   
 
-  // Método para registrar turista y manejar login automático
-registerTurista(turistaData: any): Observable<any> {
-  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  registerProveedor(proveedorData: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
+    const body = {
+      nombre: proveedorData.nombre,
+      correo: proveedorData.correo,
+      contraseña: proveedorData.contraseña,
+      nombre_empresa: proveedorData.nombre_empresa,
+      coordenadaX: proveedorData.coordenadaX,
+      coordenadaY: proveedorData.coordenadaY,
+      cargoContacto: proveedorData.cargoContacto,
+      telefono: proveedorData.telefono,
+      telefonoEmpresa: proveedorData.telefonoEmpresa
+    };
   
-  const body = {
-    nombre: turistaData.nombre,
-    correo: turistaData.correo,
-    contraseña: turistaData.contraseña,
-    telefono: turistaData.telefono,
-    ciudad: turistaData.ciudad,
-    pais: turistaData.pais
-  };
-
-  // Guardar las credenciales para posible autologin
-  localStorage.setItem('registeredEmail', turistaData.correo);
-  localStorage.setItem('tempPassword', turistaData.contraseña);
-
-  return this.http.post<any>(`${this.apiUrl}/registro/Turista`, body, { 
-    headers,
-    responseType: 'text' as 'json'
-  }).pipe(
-    map(response => {
-      console.log('Respuesta de registro:', response);
-      
-      return { 
-        success: true, 
-        message: response
-      };
-    }),
-    catchError(error => {
-      console.error('Error en registro de turista:', error);
-      return throwError(() => new Error(error.error || 'Error en el registro de turista'));
-    })
-  );
-}
-
-// Método similar para proveedores
-registerProveedor(proveedorData: any): Observable<any> {
-  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.apiUrl}/registro/Proveedor`, body, { 
+      headers,
+      responseType: 'text' as 'json'
+    }).pipe(
+      switchMap((response) => {
+        console.log('Respuesta de registro:', response);
+        
+        // Después del registro exitoso, hacer login automático
+        return this.login(proveedorData.correo, proveedorData.contraseña).pipe(
+          map(loginResponse => ({
+            success: true,
+            message: response,
+            loginData: loginResponse
+          }))
+        );
+      }),
+      catchError(error => {
+        console.error('Error en registro de Proveedor:', error);
+        return throwError(() => new Error(error.error || 'Error en el registro de Proveedor'));
+      })
+    );
+  }
   
-  const body = {
-    nombre: proveedorData.nombre,
-    correo: proveedorData.correo,
-    contraseña: proveedorData.contraseña,
-    nombre_empresa: proveedorData.nombre_empresa,
-    coordenadaX: proveedorData.coordenadaX,
-    coordenadaY: proveedorData.coordenadaY,
-    cargoContacto: proveedorData.cargoContacto,
-    telefono: proveedorData.telefono,
-    telefonoEmpresa: proveedorData.telefonoEmpresa
-  };
-
-  // Guardar las credenciales para posible autologin
-  localStorage.setItem('registeredEmail', proveedorData.correo);
-  localStorage.setItem('tempPassword', proveedorData.contraseña);
-
-  return this.http.post<any>(`${this.apiUrl}/registro/Proveedor`, body, { 
-    headers,
-    responseType: 'text' as 'json'
-  }).pipe(
-    map(response => {
-      console.log('Respuesta de registro:', response);
-      
-      return { 
-        success: true, 
-        message: response 
-      };
-    }),
-    catchError(error => {
-      console.error('Error en registro de Proveedor:', error);
-      return throwError(() => new Error(error.error || 'Error en el registro de Proveedor'));
-    })
-  );
-}
+  // Similar para registerTurista
+  registerTurista(turistaData: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
+    const body = {
+      nombre: turistaData.nombre,
+      correo: turistaData.correo,
+      contraseña: turistaData.contraseña,
+      telefono: turistaData.telefono,
+      ciudad: turistaData.ciudad,
+      pais: turistaData.pais
+    };
+  
+    return this.http.post<any>(`${this.apiUrl}/registro/Turista`, body, { 
+      headers,
+      responseType: 'text' as 'json'
+    }).pipe(
+      switchMap((response) => {
+        console.log('Respuesta de registro:', response);
+        
+        // Después del registro exitoso, hacer login automático
+        return this.login(turistaData.correo, turistaData.contraseña).pipe(
+          map(loginResponse => ({
+            success: true,
+            message: response,
+            loginData: loginResponse
+          }))
+        );
+      }),
+      catchError(error => {
+        console.error('Error en registro de turista:', error);
+        return throwError(() => new Error(error.error || 'Error en el registro de turista'));
+      })
+    );
+  }
   
   // Verificar si el usuario está autenticado
   isAuthenticated(): boolean {
@@ -180,5 +179,40 @@ registerProveedor(proveedorData: any): Observable<any> {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+  }
+
+  getUserInfo(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => new Error('No hay token disponible'));
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.get<any>(`${this.apiUrl}/info`, { headers }).pipe(
+      map(response => {
+        // Si la respuesta es una cadena JSON, la parseamos
+        if (typeof response === 'string') {
+          return JSON.parse(response);
+        }
+        return response;
+      }),
+      catchError(error => {
+        console.error('Error al obtener información del usuario:', error);
+        return throwError(() => new Error(error.error || 'Error al obtener usuario'));
+      })
+    );
+  }
+  
+  getCurrentUserId(): Observable<number> {
+    return this.getUserInfo().pipe(
+      map(userInfo => userInfo.id)
+    );
+  }
+  
+  getCurrentUserRole(): string | null {
+    return localStorage.getItem('rol');
   }
 }
