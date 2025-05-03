@@ -1,26 +1,10 @@
 <body>
-    <!-- Mostrar spinner mientras carga -->
-    <div *ngIf="isLoading" class="loading-container">
-        <div class="spinner"></div>
-        <p>Cargando perfil...</p>
-    </div>
-
-    <!-- Mostrar mensaje de error si no tiene autorización -->
-    <div *ngIf="unauthorized && !isLoading" class="unauthorized-container">
-        <div class="alert alert-danger">
-            <h2>Acceso denegado</h2>
-            <p>{{ error }}</p>
-            <button class="btn btn-primary" (click)="navigateTo()">Volver al inicio</button>
-        </div>
-    </div>
-
-    <!-- Mostrar contenido normal solo si tiene autorización y no está cargando -->
-    <div class="container" *ngIf="!unauthorized && !isLoading">
+    <div class="container">
         <aside class="sidebar">
             <p>Hola, {{proveedor.nombre}}</p>
             <ul>
                 <li class="active">📝 Editar perfil</li>
-                <li><a [routerLink]="['/servicios', proveedor.id]">🛎️ Servicios</a></li>
+                <li><a [routerLink]="['/servicios', proveedor.id]">🛎️ Servicios</a></li> <!-- Enlace para ver y editar servicios -->
             </ul>
         </aside>
         <main class="content">

@@ -1,21 +1,5 @@
 <body>
-    <!-- Mostrar spinner mientras carga -->
-    <div *ngIf="isLoading" class="loading-container">
-        <div class="spinner"></div>
-        <p>Cargando perfil...</p>
-    </div>
-
-    <!-- Mostrar mensaje de error si no tiene autorización -->
-    <div *ngIf="unauthorized && !isLoading" class="unauthorized-container">
-        <div class="alert alert-danger">
-            <h2>Acceso denegado</h2>
-            <p>{{ error }}</p>
-            <button class="btn btn-primary" (click)="navigateTo()">Volver al inicio</button>
-        </div>
-    </div>
-
-    <!-- Mostrar contenido normal solo si tiene autorización y no está cargando -->
-    <div class="container" *ngIf="!unauthorized && !isLoading">
+    <div class="container">
         <aside class="sidebar">
             <p>Hola, {{usuario.nombre}}</p>
             <ul>
@@ -50,10 +34,11 @@
                     <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
                 </select>
                   
+            
                 <select class="input-group dropdown" id="city" name="city" [(ngModel)]="selectedCity" [disabled]="!selectedCountry">
                     <option value="" disabled>Seleccione su ciudad</option>
                     <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
-                </select>
+                  </select>
 
                 <div class="buttons">
                     <button class="cancel" (click)="navigateTo()">Cancel</button>

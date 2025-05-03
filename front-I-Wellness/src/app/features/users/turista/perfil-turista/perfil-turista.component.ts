@@ -8,23 +8,20 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil-turista',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  standalone: true, // Como es standalone, hay que importar FormsModule aquí
+  imports: [CommonModule, FormsModule, RouterModule ],
   templateUrl: './perfil-turista.component.html',
   styleUrl: './perfil-turista.component.css',
 })
 export class PerfilTuristaComponent implements OnInit {
-  countriesData: any[] = countriesData;
+  countriesData: any[] = countriesData; // Cargamos los datos directamente
   countries: string[] = [];
   cities: string[] = [];
   selectedCountry: string = '';
   selectedCity: string = '';
-  isLoading: boolean = true;
-  error: string = '';
-  unauthorized: boolean = false;
 
   usuario: any = {
-    id: null,
+    id: null, // Asegúrate de que se asigne el id correcto en la carga inicial
     nombre: '',
     foto: '',
     turistaInfo: {
@@ -44,63 +41,24 @@ export class PerfilTuristaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    
     this.countries = this.countriesData.map((country) => country.name);
 
     this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
-      this.cargarPerfil(id);
+      this.usuarioServicio.obtenerPorId(id).subscribe({
+        next: (data) => {
+          this.usuario = data;
+          console.log('original:', this.usuario);
+
+          this.selectedCountry = this.usuario.turistaInfo?.pais;
+          this.onCountryChange();
+          this.selectedCity = this.usuario.turistaInfo?.ciudad;
+        },
+      });
     });
   }
 
-  cargarPerfil(id: number) {
-    // Asegurarse de que isLoading está en true al comenzar
-    this.isLoading = true;
-    this.unauthorized = false;
-    
-    this.usuarioServicio.obtenerPorId(id).subscribe({
-      next: (data) => {
-        this.usuario = data;
-        this.selectedCountry = this.usuario.turistaInfo?.pais;
-        this.onCountryChange();
-        this.selectedCity = this.usuario.turistaInfo?.ciudad;
-        // Importante: poner isLoading en false cuando los datos se cargan exitosamente
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error al obtener perfil:', error);
-        
-        // Importante: poner isLoading en false cuando hay un error
-        this.isLoading = false;
-        
-        if (error.status === 403) {
-          this.unauthorized = true;
-          this.error = 'No tiene permiso para acceder a este perfil';
-          
-          Swal.fire({
-            icon: 'error',
-            title: 'Acceso denegado',
-            text: 'No tiene permisos para ver este perfil',
-            confirmButtonColor: '#E82A3C'
-          }).then(() => {
-            this.router.navigate(['/hometurista']);
-          });
-        } else if (error.status === 401) {
-          this.router.navigate(['/login']);
-        } else {
-          this.error = 'Error al cargar el perfil';
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo cargar el perfil',
-            confirmButtonColor: '#E82A3C'
-          });
-        }
-      }
-    });
-  }
-
-  // Resto de métodos existentes...
-  
   seleccionarFoto(): void {
     const input = document.getElementById('fotoInput') as HTMLInputElement;
     if (input) {
@@ -131,7 +89,7 @@ export class PerfilTuristaComponent implements OnInit {
   }
 
   navigateTo() {
-    this.router.navigate(['/hometurista']);
+    window.history.back();
   }
 
   guardarCambios(): void {
@@ -163,31 +121,6 @@ export class PerfilTuristaComponent implements OnInit {
           });
         }
       );
-  }
-
-  cargarPerfilPorId(id: number) {
-    this.usuarioServicio.obtenerPorId(id).subscribe({
-      next: (data) => {
-        this.usuario = data;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error al obtener perfil:', error);
-        
-        if (error.status === 403) {
-          // Usuario no tiene permiso
-          this.unauthorized = true;
-          this.error = 'No tiene permiso para acceder a este perfil';
-        } else if (error.status === 401) {
-          // Usuario no autenticado
-          this.router.navigate(['/login']);
-        } else {
-          this.error = 'Error al cargar el perfil';
-        }
-        
-        this.isLoading = false;
-      }
-    });
   }
   
   
