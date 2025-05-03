@@ -131,28 +131,22 @@ export class RegistroProveedorComponent {
       this.authService.registerProveedor(providerData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('Login exitoso tras registro:', response); 
-          this.router.navigate(['//homeproveedor']);       
+          console.log('Registro y login exitosos:', response);
+          
+          // El token ya está guardado por el servicio de auth
+          // Redirigir directamente al home del proveedor
+          this.router.navigate(['/homeproveedor']);
         },
         error: (error) => {
           this.isLoading = false;
           console.error('Error en el registro:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'El correo ya está registrado',
-            text: 'Prueba con otro correo',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#4a9c9f'
-          });
-          if (error.message && error.message.includes('correo ya está registrado')) {
+          if (error.error && error.error.includes('correo ya está registrado')) {
             this.emailError = 'Este correo electrónico ya está registrado';
           } else {
             alert('Error en el registro. Por favor, intente nuevamente.');
           }
         }
       });
-    } else {
-      console.log('Corrige los errores antes de enviar el formulario.');
     }
   }
 
