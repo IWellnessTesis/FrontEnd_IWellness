@@ -30,6 +30,12 @@ export class UsuarioService {
     return this.http.get(`${API_URL}/buscar/${id}`, { headers });
   }
 
+  // NUEVO MÉTODO PARA OBTENER EL PERFIL DEL USUARIO ACTUAL
+  obtenerPerfilActual(): Observable<any> {
+    const headers = this.obtenerHeaders();
+    return this.http.get(`${API_URL}/perfil`, { headers });
+  }
+
   editarTurista(id: number, datos: any): Observable<any> {
     const headers = this.obtenerHeaders(); // Agregar token en los headers
     console.log('en el servicio front Datos a editar:', datos);
