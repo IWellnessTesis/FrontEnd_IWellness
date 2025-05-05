@@ -27,38 +27,47 @@ import { RegistroTuristaComponent } from './features/users/turista/registro-turi
 import { CrearTuristaComponent } from './features/users/administrador/crear-turista/crear-turista.component';
 import { CrearProveedorComponent } from './features/users/administrador/crear-proveedor/crear-proveedor.component';
 import { PerfilProveedorComponent } from './features/users/proveedor/perfil-proveedor/perfil-proveedor.component';
-
-
-
+import { authGuard, turistaGuard, proveedorGuard, adminGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+    // Rutas públicas
     { path: '', component: HomeComponent},
     { path: 'temas', component: TemasComponent},
     { path: 'registro', component: RegistroComponent},
     { path: 'login', component: LoginComponent},
     { path: 'registroturista', component: RegistroTuristaComponent},
     { path: 'recuperar', component: RecuperarComponent},
-    { path: 'formulariogustos', component: FormulariogustosComponent},
-    { path: 'perfilturista/:id', component: PerfilTuristaComponent},
-    { path: 'hometurista', component: HomeTuristaComponent},
-    { path: 'infoservicio/:id', component: InfoServicioComponent},
-    { path: 'headerturista', component: HeaderTuristaComponent},
-    { path: 'mapaempresas', component: MapaEmpresasComponent},
     { path: 'registroproveedor', component: RegistroProveedorComponent},
-    { path: 'homeproveedor', component: HomeProveedorComponent},
-    { path: 'agregarservicio', component: AgregarServicioComponent},
-    { path: 'editarservicio/:id', component: EditarServicioComponent},
-    { path: 'dashboard', component: DashboardComponent},	
-    { path: 'headerproveedor', component: HeaderProveedorComponent},
-    { path: 'editpreferencias/:id', component: EditPreferenciasComponent},
-    { path: 'headeradmin', component: HeaderAdminComponent},
-    { path: 'homeadmin', component: AdminComponent},	
-    { path: 'perfiladmin/:id', component: PerfilAdminComponent},
-    { path: 'visitantes', component: VisitantesComponent},
-    { path: 'servicios/:id', component: ServiciosComponent},
-    { path: 'proveedores', component: ProveedoresComponent},
-    { path: 'crearturista', component: CrearTuristaComponent},
-    { path: 'crearproveedor', component: CrearProveedorComponent},
-    { path: 'perfilproveedor/:id', component: PerfilProveedorComponent},
-    { path: '**', redirectTo: ''}, // Redirect to home
+    
+    // Rutas compartidas - accesibles a todos los usuarios autenticados
+    { path: 'infoservicio/:id', component: InfoServicioComponent, canActivate: [authGuard] },
+    
+    // Rutas específicas para Turistas
+    { path: 'formulariogustos', component: FormulariogustosComponent, canActivate: [turistaGuard] },
+    { path: 'perfilturista/:id', component: PerfilTuristaComponent, canActivate: [turistaGuard] },
+    { path: 'hometurista', component: HomeTuristaComponent, canActivate: [turistaGuard] },
+    { path: 'headerturista', component: HeaderTuristaComponent, canActivate: [turistaGuard] },
+    { path: 'mapaempresas', component: MapaEmpresasComponent, canActivate: [turistaGuard] },
+    { path: 'editpreferencias/:id', component: EditPreferenciasComponent, canActivate: [turistaGuard] },
+    
+    // Rutas específicas para Proveedores
+    { path: 'homeproveedor', component: HomeProveedorComponent, canActivate: [proveedorGuard] },
+    { path: 'agregarservicio', component: AgregarServicioComponent, canActivate: [proveedorGuard] },
+    { path: 'editarservicio/:id', component: EditarServicioComponent, canActivate: [proveedorGuard] },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [proveedorGuard] },
+    { path: 'headerproveedor', component: HeaderProveedorComponent, canActivate: [proveedorGuard] },
+    { path: 'perfilproveedor/:id', component: PerfilProveedorComponent, canActivate: [proveedorGuard] },
+    
+    // Rutas específicas para Administradores
+    { path: 'headeradmin', component: HeaderAdminComponent, canActivate: [adminGuard] },
+    { path: 'homeadmin', component: AdminComponent, canActivate: [adminGuard] },
+    { path: 'perfiladmin/:id', component: PerfilAdminComponent, canActivate: [adminGuard] },
+    { path: 'visitantes', component: VisitantesComponent, canActivate: [adminGuard] },
+    { path: 'servicios/:id', component: ServiciosComponent, canActivate: [adminGuard] },
+    { path: 'proveedores', component: ProveedoresComponent, canActivate: [adminGuard] },
+    { path: 'crearturista', component: CrearTuristaComponent, canActivate: [adminGuard] },
+    { path: 'crearproveedor', component: CrearProveedorComponent, canActivate: [adminGuard] },
+    
+    // Ruta comodín - redirige a home
+    { path: '**', redirectTo: ''}, 
 ];
