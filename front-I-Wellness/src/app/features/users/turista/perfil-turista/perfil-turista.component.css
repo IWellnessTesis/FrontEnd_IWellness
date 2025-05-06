@@ -75,6 +75,21 @@ body {
 .full-width {
     width: 100%;
 }
+
+/* Estilos específicos para cada campo */
+.genero, .fecha, .estadocivil {
+    position: relative;
+}
+
+/* Añadir un poco de espacio adicional */
+.genero {
+    margin-bottom: 22px;
+}
+
+.estadocivil {
+    margin-top: 5px;
+}
+
 .input-group label {
     font-weight: bold;
     margin-bottom: 5px;

@@ -44,6 +44,39 @@
                     <label>Número de Contacto</label>
                     <input type="text" [(ngModel)]="usuario.turistaInfo.telefono" name="telefono">
                 </div>
+
+                <div class="genero full-width">
+                    <label>Género</label>
+                    <select [(ngModel)]="usuario.turistaInfo.genero" name="genero" class="form-select">
+                      <option value="" disabled selected>Seleccione su género</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="No Binario">No Binario</option>
+                      <option value="Prefiero no decir">Prefiero no decir</option>
+                    </select>
+                  </div>
+                          
+                <div class="fecha full-width">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" 
+                           [ngModel]="usuario.turistaInfo.fechaNacimientoFormateada || ''" 
+                           (ngModelChange)="usuario.turistaInfo.fechaNacimientoFormateada = $event"
+                           name="fechaNacimiento" 
+                           class="form-control">
+                </div>
+                  
+                <div class="estado full-width">
+                    <label>Estado Civil</label>
+                    <select [(ngModel)]="usuario.turistaInfo.estadoCivil" name="estadoCivil" class="form-control">
+                      <option value="" disabled>Seleccione su estado civil</option>
+                      <option value="Soltero/a">Soltero/a</option>
+                      <option value="Casado/a">Casado/a</option>
+                      <option value="Divorciado/a">Divorciado/a</option>
+                      <option value="Viudo/a">Viudo/a</option>
+                      <option value="Unión Libre">Unión Libre</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                </div>
                 
                 <select class="input-group dropdown" id="country" name="country" [(ngModel)]="selectedCountry" (change)="onCountryChange()">
                     <option value="" disabled selected>Seleccione un país de procedencia</option>
