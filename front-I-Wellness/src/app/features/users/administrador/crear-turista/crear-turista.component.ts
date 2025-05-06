@@ -31,6 +31,9 @@ export class CrearTuristaComponent implements OnInit {
   phone: string = '';
   password: string = '';
   confirmPassword: string = '';
+  genero: string = '';
+  fechaNacimiento: Date | string = new Date();
+  estadoCivil: string = '';
 
   // Mensajes de error
   nameError: string = '';
@@ -38,6 +41,9 @@ export class CrearTuristaComponent implements OnInit {
   phoneError: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
+  generoerror: string = '';
+  fechaNacimientoError: string = '';
+  estadoCivilerror: string = '';
 
   // Estado de carga
   isLoading: boolean = false;
@@ -136,6 +142,49 @@ export class CrearTuristaComponent implements OnInit {
       this.confirmPasswordError = 'Las contraseñas no coinciden';
     } else {
       this.confirmPasswordError = '';
+    }
+  }
+  
+  validateGenero() {
+    const regex = /^[A-Za-z\s]+$/;
+    if (!this.genero.match(regex)) {
+      this.generoerror = 'El genero solo puede contener letras y espacios';
+    } else {
+      this.generoerror = '';
+    }
+  } 
+
+  validateFechaNacimiento() {
+    if (!this.fechaNacimiento) {
+      this.fechaNacimientoError = 'La fecha de nacimiento es obligatoria';
+      return;
+    }
+    
+    const fechaComoDate = (this.fechaNacimiento instanceof Date) ? 
+      this.fechaNacimiento : new Date(this.fechaNacimiento);
+    
+    if (isNaN(fechaComoDate.getTime())) {
+      this.fechaNacimientoError = 'La fecha de nacimiento no es válida';
+      return;
+    }
+    
+    const hoy = new Date();
+    const anioMin = 1900;
+    const edad = hoy.getFullYear() - fechaComoDate.getFullYear();
+    
+    if (fechaComoDate.getFullYear() < anioMin || edad > 120 || edad < 0) {
+      this.fechaNacimientoError = 'La fecha de nacimiento no es válida';
+    } else {
+      this.fechaNacimientoError = '';
+    }
+  }
+
+  validateEstadoCivil() {
+    const regex = /^[A-Za-z\s]+$/;
+    if (!this.estadoCivil.match(regex)) {
+      this.estadoCivilerror = 'El estado civil solo puede contener letras y espacios';
+    } else {
+      this.estadoCivilerror = '';
     }
   }
 

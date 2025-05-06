@@ -28,6 +28,9 @@ export class RegistroTuristaComponent implements OnInit {
   phone: string = '';
   password: string = '';
   confirmPassword: string = '';
+  genero: string = '';
+  fechaNacimiento: string = '';
+  estadoCivil: string = '';
 
   // Mensajes de error
   nameError: string = '';
@@ -35,6 +38,9 @@ export class RegistroTuristaComponent implements OnInit {
   phoneError: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
+  generoError: string = '';
+  fechaNacimientoError: string = '';
+  estadoCivilError: string = '';
   
   // Estado de carga
   isLoading: boolean = false;
@@ -98,26 +104,84 @@ export class RegistroTuristaComponent implements OnInit {
     }
   }
 
+  validateGenero() {
+    if (!this.genero) {
+      this.generoError = 'Seleccione un género';
+    } else {
+      this.generoError = '';
+    }
+  }
+
+  validateFechaNacimiento() {
+    if (!this.fechaNacimiento) {
+      this.fechaNacimientoError = 'Seleccione una fecha de nacimiento';
+    } else {
+      // Validar que sea una fecha pasada y que no sea demasiado antigua
+      const fechaSeleccionada = new Date(this.fechaNacimiento);
+      const hoy = new Date();
+      const anioMinimo = 1900;
+      
+      if (fechaSeleccionada > hoy) {
+        this.fechaNacimientoError = 'La fecha no puede ser futura';
+      } else if (fechaSeleccionada.getFullYear() < anioMinimo) {
+        this.fechaNacimientoError = 'La fecha no puede ser anterior a 1925';
+      } else if (hoy.getFullYear() - fechaSeleccionada.getFullYear() < 17) {
+        this.fechaNacimientoError = 'Debes ser mayor de 16 años para registrarte';
+      }else {
+        this.fechaNacimientoError = '';
+      }
+    }
+  }
+
+  validateEstadoCivil() {
+    if (!this.estadoCivil) {
+      this.estadoCivilError = 'Seleccione un estado civil';
+    } else {
+      this.estadoCivilError = '';
+    }
+  }
+
   registerUser() {
     this.validateName();
     this.validateEmail();
     this.validatePhone();
     this.validatePassword();
     this.validateConfirmPassword();
+    this.validateGenero();
+    this.validateFechaNacimiento();
+    this.validateEstadoCivil();
 
-    if (!this.nameError && !this.emailError && !this.phoneError && !this.passwordError && !this.confirmPasswordError) {
+    if (!this.nameError && !this.emailError && !this.phoneError && !this.passwordError && 
+        !this.confirmPasswordError && !this.generoError && !this.fechaNacimientoError && 
+        !this.estadoCivilError) {
       this.isLoading = true;
       
       // Obtener la ciudad seleccionada o la primera de la lista
       const selectedCity = this.selectedCity || (this.cities.length > 0 ? this.cities[0] : '');
+      
+      // Formatear la fecha correctamente (ISO 8601)
+      let formattedDate = null;
+        if (this.fechaNacimiento) {
+          try {
+            // Create a proper Date object
+            const dateObj = new Date(this.fechaNacimiento);
+            // Convert to ISO format to ensure it's correctly parsed by the backend
+            formattedDate = dateObj.toISOString();
+          } catch (e) {
+            console.error('Error formatting date:', e);
+          }
+        }
       
       const userData = {
         nombre: this.name,
         correo: this.email,
         contraseña: this.password,
         telefono: this.phone,
-        ciudad: selectedCity,
+        ciudad: this.selectedCity || (this.cities.length > 0 ? this.cities[0] : ''),
         pais: this.selectedCountry,
+        genero: this.genero,
+        fechaNacimiento: formattedDate,
+        estadoCivil: this.estadoCivil
       };
 
       // Registrar al usuario - el servicio actualizará guarda credenciales en localStorage

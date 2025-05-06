@@ -15,7 +15,9 @@ export interface LoginRequest {
     telefono: string;
     ciudad: string;
     pais: string;
-    actividadesInteres?: string;
+    genero?: string;
+    fechaNacimiento: Date | string;
+    estadoCivil: string;
   }
   
   export interface RegistroProveedorRequest {

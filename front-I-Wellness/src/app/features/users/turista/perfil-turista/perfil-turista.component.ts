@@ -30,7 +30,10 @@ export class PerfilTuristaComponent implements OnInit {
     turistaInfo: {
       telefono: null,
       ciudad: '',
-      pais: ''
+      pais: '',
+      genero: '', 
+      fechaNacimiento: '',
+      estadoCivil: '',
     }
   };
 
@@ -43,6 +46,13 @@ export class PerfilTuristaComponent implements OnInit {
     private usuarioServicio: UsuarioService
   ) {}
 
+  formatearFecha(timestamp: number): string {
+    if (!timestamp) return '';
+    const fecha = new Date(timestamp);
+    return fecha.toISOString().substring(0, 10); // Formato YYYY-MM-DD
+  }
+  
+
   ngOnInit() {
     this.countries = this.countriesData.map((country) => country.name);
 
@@ -53,17 +63,34 @@ export class PerfilTuristaComponent implements OnInit {
   }
 
   cargarPerfil(id: number) {
-    // Asegurarse de que isLoading está en true al comenzar
     this.isLoading = true;
     this.unauthorized = false;
     
     this.usuarioServicio.obtenerPorId(id).subscribe({
       next: (data) => {
         this.usuario = data;
+        
+        console.log("Datos recibidos:", this.usuario);
+        console.log("Estado civil recibido:", this.usuario.turistaInfo?.estadoCivil);
+        
+        // Convertir el timestamp a formato YYYY-MM-DD para el input date
+        if (this.usuario.turistaInfo && this.usuario.turistaInfo.fechaNacimiento) {
+          const fechaTimestamp = this.usuario.turistaInfo.fechaNacimiento;
+          
+          if (typeof fechaTimestamp === 'number' || !isNaN(Number(fechaTimestamp))) {
+            const fecha = new Date(Number(fechaTimestamp));
+            const year = fecha.getFullYear();
+            const month = String(fecha.getMonth() + 1).padStart(2, '0');
+            const day = String(fecha.getDate()).padStart(2, '0');
+            
+            this.usuario.turistaInfo.fechaNacimientoFormateada = `${year}-${month}-${day}`;
+            console.log("Fecha formateada:", this.usuario.turistaInfo.fechaNacimientoFormateada);
+          }
+        }
+        
         this.selectedCountry = this.usuario.turistaInfo?.pais;
         this.onCountryChange();
         this.selectedCity = this.usuario.turistaInfo?.ciudad;
-        // Importante: poner isLoading en false cuando los datos se cargan exitosamente
         this.isLoading = false;
       },
       error: (error) => {
@@ -135,17 +162,40 @@ export class PerfilTuristaComponent implements OnInit {
   }
 
   guardarCambios(): void {
+    // Convertir la fecha formateada a objeto Date para el backend
+    let fechaNacimiento = null;
+    
+    if (this.usuario.turistaInfo.fechaNacimientoFormateada) {
+      try {
+        // Crear un objeto Date desde la cadena YYYY-MM-DD
+        const fechaObj = new Date(this.usuario.turistaInfo.fechaNacimientoFormateada);
+        fechaNacimiento = fechaObj.toISOString();
+        console.log("Fecha a enviar:", fechaNacimiento);
+      } catch (e) {
+        console.error('Error al convertir fecha:', e);
+      }
+    }
+  
+    // Log para verificar estado civil antes de enviar
+    console.log("Estado civil a enviar:", this.usuario.turistaInfo.estadoCivil);
+  
     const datosActualizar = {
       nombre: this.usuario.nombre,
       telefono: this.usuario.turistaInfo.telefono,
       ciudad: this.selectedCity,
       pais: this.selectedCountry,
-      foto: this.usuario.foto
+      foto: this.usuario.foto,
+      genero: this.usuario.turistaInfo.genero,
+      fechaNacimiento: fechaNacimiento, // Usar la fecha convertida
+      estadoCivil: this.usuario.turistaInfo.estadoCivil
     };
   
+    console.log("Datos completos a enviar:", datosActualizar);
+  
     this.usuarioServicio.editarTurista(this.usuario.id, datosActualizar)
-      .subscribe(
-        response => {
+      .subscribe({
+        next: (response) => {
+          console.log("Respuesta del servidor:", response);
           Swal.fire({
             icon: 'success',
             title: '¡Cambios guardados!',
@@ -153,7 +203,7 @@ export class PerfilTuristaComponent implements OnInit {
             confirmButtonColor: '#4a9c9f'
           });
         },
-        error => {
+        error: (error) => {
           console.error('Error al actualizar el usuario', error);
           Swal.fire({
             icon: 'error',
@@ -162,7 +212,7 @@ export class PerfilTuristaComponent implements OnInit {
             confirmButtonColor: '#E82A3C'
           });
         }
-      );
+      });
   }
 
   cargarPerfilPorId(id: number) {

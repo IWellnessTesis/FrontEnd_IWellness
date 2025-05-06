@@ -133,7 +133,10 @@ export class AuthService {
       contraseña: turistaData.contraseña,
       telefono: turistaData.telefono,
       ciudad: turistaData.ciudad,
-      pais: turistaData.pais
+      pais: turistaData.pais,
+      genero: turistaData.genero,
+      fechaNacimiento: turistaData.fechaNacimiento,
+      estadoCivil: turistaData.estadoCivil
     };
   
     return this.http.post<any>(`${this.apiUrl}/registro/Turista`, body, { 
