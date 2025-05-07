@@ -22,7 +22,8 @@ export const turistaGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isAuthenticated() && authService.getCurrentUserRole() === 'Turista') {
+  const role = authService.getCurrentUserRole();
+  if (authService.isAuthenticated() && (role === 'Turista' || role === 'Admin')) {
     return true;
   }
 
@@ -50,7 +51,8 @@ export const proveedorGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isAuthenticated() && authService.getCurrentUserRole() === 'Proveedor') {
+  const role = authService.getCurrentUserRole();
+  if (authService.isAuthenticated() && (role === 'Proveedor' || role === 'Admin')) {
     return true;
   }
 

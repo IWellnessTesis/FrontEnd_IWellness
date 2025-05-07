@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../../services/usuario.service';
 import Swal from 'sweetalert2';
+import { AuthorizationService } from '../../../../core/services/auth/authorization.service';
 
 @Component({
   selector: 'app-perfil-turista',
@@ -43,7 +44,8 @@ export class PerfilTuristaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private usuarioServicio: UsuarioService
+    private usuarioServicio: UsuarioService,
+    private authorizationService: AuthorizationService
   ) {}
 
   formatearFecha(timestamp: number): string {
@@ -158,7 +160,13 @@ export class PerfilTuristaComponent implements OnInit {
   }
 
   navigateTo() {
-    this.router.navigate(['/hometurista']);
+    if (this.authorizationService.isTurista()) {
+      this.router.navigate(['/hometurista']);
+    } else if (this.authorizationService.isAdmin()) {
+      this.router.navigate(['/visitantes']);
+    } else {
+      window.history.back();
+    }
   }
 
   guardarCambios(): void {

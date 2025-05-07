@@ -151,7 +151,7 @@ export class PerfilProveedorComponent implements OnInit {
     if (this.authorizationService.isProveedor()) {
       this.router.navigate(['/homeproveedor']);
     } else if (this.authorizationService.isAdmin()) {
-      this.router.navigate(['/homeadmin']);
+      this.router.navigate(['/proveedores']);
     } else {
       window.history.back();
     }
