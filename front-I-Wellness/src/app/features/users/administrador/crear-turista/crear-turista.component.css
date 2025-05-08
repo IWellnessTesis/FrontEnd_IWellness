@@ -179,3 +179,44 @@ input[type="text"], input[type="email"], input[type="password"], select {
     font-size: 12px;
     margin-top: 5px;
 }
+
+/* Estilos específicos para el campo de fecha */
+.fecha-nacimiento-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fecha-nacimiento-label {
+    margin-left: 5px;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+    background: transparent;
+}
+
+input[type="date"] {
+    color: #333;
+    letter-spacing: 1px;
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    background-color: #f6f3eb;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+/* Estilo para que el placeholder de fecha se vea correctamente */
+input[type="date"]::-webkit-datetime-edit { 
+    color: #888;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    background-color: #f6f3eb;
+    padding: 5px;
+    border-radius: 3px;
+}

@@ -41,9 +41,9 @@ export class CrearTuristaComponent implements OnInit {
   phoneError: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
-  generoerror: string = '';
+  generoError: string = '';
   fechaNacimientoError: string = '';
-  estadoCivilerror: string = '';
+  estadoCivilError: string = '';
 
   // Estado de carga
   isLoading: boolean = false;
@@ -148,9 +148,9 @@ export class CrearTuristaComponent implements OnInit {
   validateGenero() {
     const regex = /^[A-Za-z\s]+$/;
     if (!this.genero.match(regex)) {
-      this.generoerror = 'El genero solo puede contener letras y espacios';
+      this.generoError = 'El genero solo puede contener letras y espacios';
     } else {
-      this.generoerror = '';
+      this.generoError = '';
     }
   } 
 
@@ -180,11 +180,10 @@ export class CrearTuristaComponent implements OnInit {
   }
 
   validateEstadoCivil() {
-    const regex = /^[A-Za-z\s]+$/;
-    if (!this.estadoCivil.match(regex)) {
-      this.estadoCivilerror = 'El estado civil solo puede contener letras y espacios';
+    if (!this.estadoCivil) {
+      this.estadoCivilError = 'Seleccione un estado civil';
     } else {
-      this.estadoCivilerror = '';
+      this.estadoCivilError = '';
     }
   }
 
@@ -195,11 +194,29 @@ export class CrearTuristaComponent implements OnInit {
     this.validatePassword();
     this.validateConfirmPassword();
     this.validatePreferences();
+    this.validateGenero();
+    this.validateFechaNacimiento();
+    this.validateEstadoCivil();
   
-    if (!this.nameError && !this.emailError && !this.phoneError && !this.passwordError && !this.confirmPasswordError) {
+    if (!this.nameError && !this.emailError && !this.phoneError && !this.passwordError && 
+      !this.confirmPasswordError && !this.generoError && !this.fechaNacimientoError && 
+      !this.estadoCivilError) {
       this.isLoading = true;
   
       const selectedCity = this.selectedCity || (this.cities.length > 0 ? this.cities[0] : '');
+
+      // Formatear la fecha correctamente (ISO 8601)
+      let formattedDate = null;
+        if (this.fechaNacimiento) {
+          try {
+            // Create a proper Date object
+            const dateObj = new Date(this.fechaNacimiento);
+            // Convert to ISO format to ensure it's correctly parsed by the backend
+            formattedDate = dateObj.toISOString();
+          } catch (e) {
+            console.error('Error formatting date:', e);
+          }
+        }
   
       const turistaData = {
         nombre: this.name,
@@ -208,6 +225,9 @@ export class CrearTuristaComponent implements OnInit {
         telefono: this.phone,
         ciudad: selectedCity,
         pais: this.selectedCountry,
+        genero: this.genero,
+        fechaNacimiento: formattedDate,
+        estadoCivil: this.estadoCivil
       };
   
 
