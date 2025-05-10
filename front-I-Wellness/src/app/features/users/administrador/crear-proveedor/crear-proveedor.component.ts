@@ -4,23 +4,30 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { AdminService } from '../../../admin/services/admin.service';
 import { Router } from '@angular/router';
+import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
 
 @Component({
   selector: 'app-crear-proveedor',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgxIntlTelInputModule],
   templateUrl: './crear-proveedor.component.html',
   styleUrl: './crear-proveedor.component.css'
 })
 export class CrearProveedorComponent {
+  separateDialCode = false;
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+  preferredCountries: CountryISO[] = [CountryISO.CostaRica, CountryISO.Colombia];
+
    // Campos del formulario
    name: string = '';
    contactPosition: string = '';
-   phone: string = '';
+   phone: any = '';
    password: string = '';
    confirmPassword: string = '';
    companyName: string = '';
    email: string = '';
-   companyNamePhone: string = '';
+   companyNamePhone: any = '';
    coordinateX: string = '';
    coordinateY: string = '';
  
@@ -70,8 +77,13 @@ export class CrearProveedorComponent {
   }
 
   validatePhone() {
-    const phoneRegex = /^[0-9]{7,15}$/;
-    this.phoneError = this.phone.match(phoneRegex) ? '' : 'El teléfono debe tener entre 7 y 15 dígitos numéricos';
+    const phoneNumber = this.phone.internationalNumber;
+    const regex = /^\+?\s?[0-9\s]{7,15}$/;
+    if (!phoneNumber.match(regex)) {
+      this.phoneError = 'El teléfono solo puede contener números (7 a 15 dígitos)';
+    } else {
+      this.phoneError = '';
+    }
   }
 
   validatePassword() {
@@ -92,8 +104,13 @@ export class CrearProveedorComponent {
   }
 
   validatecompanyNamePhone() {
-    const phoneRegex = /^[0-9]{7,15}$/;
-    this.companyNamePhoneError = this.companyNamePhone.match(phoneRegex) ? '' : 'El teléfono de la empresa debe tener entre 7 y 15 dígitos numéricos';
+    const phoneNumber = this.companyNamePhone.internationalNumber;
+    const regex = /^\+?\s?[0-9\s]{7,15}$/;
+    if (!phoneNumber.match(regex)) {
+      this.companyNamePhoneError = 'El teléfono solo puede contener números (7 a 15 dígitos)';
+    } else {
+      this.companyNamePhoneError = '';
+    }
   }
 
   validatecoordinateX() {
@@ -112,11 +129,11 @@ export class CrearProveedorComponent {
       const providerData = {
         nombre: this.name,
         cargoContacto: this.contactPosition,
-        telefono: this.phone,
+        telefono: this.phone.internationalNumber,
         contraseña: this.password,
         nombre_empresa: this.companyName,
         correo: this.email,
-        telefonoEmpresa: this.companyNamePhone,
+        telefonoEmpresa: this.companyNamePhone.internationalNumber,
         coordenadaX: this.coordinateX || '0',
         coordenadaY: this.coordinateY || '0'
       };

@@ -1,20 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import countriesData from '../../../../../assets/countries+cities.json';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import Swal from 'sweetalert2';
+import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
 
 @Component({
   selector: 'app-registro-turista',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgxIntlTelInputModule],
   templateUrl: './registro-turista.component.html',
-  styleUrl: './registro-turista.component.css'
+  styleUrl: './registro-turista.component.css',
+  
 })
 export class RegistroTuristaComponent implements OnInit {
+
+  separateDialCode = false;
+	SearchCountryField = SearchCountryField;
+	CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+	preferredCountries: CountryISO[] = [CountryISO.CostaRica, CountryISO.Colombia];
+  
   // Variables de datos
   countriesData: any[] = countriesData as any[];
   countries: string[] = [];
@@ -25,7 +34,7 @@ export class RegistroTuristaComponent implements OnInit {
   // Campos del formulario
   name: string = '';
   email: string = '';
-  phone: string = '';
+  phone: any = '';
   password: string = '';
   confirmPassword: string = '';
   genero: string = '';
@@ -79,8 +88,9 @@ export class RegistroTuristaComponent implements OnInit {
   }
 
   validatePhone() {
-    const regex = /^[0-9]{7,15}$/;
-    if (!this.phone.match(regex)) {
+    const phoneNumber = this.phone.internationalNumber;
+    const regex = /^\+?\s?[0-9\s]{7,15}$/;
+    if (!phoneNumber.match(regex)) {
       this.phoneError = 'El teléfono solo puede contener números (7 a 15 dígitos)';
     } else {
       this.phoneError = '';
@@ -176,7 +186,7 @@ export class RegistroTuristaComponent implements OnInit {
         nombre: this.name,
         correo: this.email,
         contraseña: this.password,
-        telefono: this.phone,
+        telefono: this.phone.internationalNumber,
         ciudad: this.selectedCity || (this.cities.length > 0 ? this.cities[0] : ''),
         pais: this.selectedCountry,
         genero: this.genero,
