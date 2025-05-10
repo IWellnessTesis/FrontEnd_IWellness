@@ -6,14 +6,25 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario.service';
 import { AuthorizationService } from '../../../../core/services/auth/authorization.service';
+import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
+
 
 @Component({
   selector: 'app-perfil-proveedor',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NgxIntlTelInputModule],
   templateUrl: './perfil-proveedor.component.html',
   styleUrl: './perfil-proveedor.component.css'
 })
 export class PerfilProveedorComponent implements OnInit {
+
+  separateDialCode = false;
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+  preferredCountries: CountryISO[] = [CountryISO.CostaRica, CountryISO.Colombia];
+  telefonoObj: any;
+  telefonoEmpresaObj: any;
+
   proveedor: any = {
     id: null,
     nombre: '',
@@ -56,6 +67,24 @@ export class PerfilProveedorComponent implements OnInit {
       this.rol = localStorage.getItem('rol');
       this.verificarAccesoYCargarPerfil(id);
     });
+  }
+
+  onTelefonoChange(event: any) {
+    this.telefonoObj = event;
+    if (event && event.nationalNumber) {
+      this.proveedor.proveedorInfo.telefono = event.nationalNumber.replace(/\s+/g, '');
+    } else {
+      this.proveedor.proveedorInfo.telefono = '';
+    }
+  }
+
+  onTelefonoEmpresaChange(event: any) {
+    this.telefonoEmpresaObj = event;
+    if (event && event.nationalNumber) {
+      this.proveedor.proveedorInfo.telefonoEmpresa = event.nationalNumber.replace(/\s+/g, '');
+    } else {
+      this.proveedor.proveedorInfo.telefonoEmpresa = '';
+    }
   }
 
   verificarAccesoYCargarPerfil(id: number) {
@@ -182,8 +211,8 @@ export class PerfilProveedorComponent implements OnInit {
   guardarCambios(): void {
     const datosActualizar = {
       nombre: this.proveedor.nombre,
-      telefono: this.proveedor.proveedorInfo?.telefono || '',
-      telefonoEmpresa: this.proveedor.proveedorInfo?.telefonoEmpresa || '',
+      telefono: this.telefonoObj.internationalNumber || '',
+      telefonoEmpresa: this.telefonoEmpresaObj.internationalNumber || '',
       nombre_empresa: this.proveedor.proveedorInfo?.nombre_empresa || '',
       cargoContacto: this.proveedor.proveedorInfo?.cargoContacto || '',
       coordenadaX: this.proveedor.proveedorInfo?.coordenadaX || '',

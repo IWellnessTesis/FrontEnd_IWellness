@@ -42,12 +42,40 @@
 
                 <div class="input-group full-width">
                     <label>Número de Contacto</label>
-                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.telefono" name="telefono">
+                    <ngx-intl-tel-input
+                        [cssClass]="'form-control'"
+                        [preferredCountries]="preferredCountries"
+                        [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true"
+                        [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                        [selectFirstCountry]="false"
+                        [maxLength]="15"
+                        [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode"
+                        name="telefono"
+                        [(ngModel)]="proveedor.proveedorInfo.telefono"
+                        (ngModelChange)="onTelefonoChange($event)">
+                    </ngx-intl-tel-input>
                 </div>
 
                 <div class="input-group full-width">
                     <label>Teléfono de la Empresa</label>
-                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.telefonoEmpresa" name="telefonoEmpresa">
+                    <ngx-intl-tel-input
+                        [cssClass]="'form-control'"
+                        [preferredCountries]="preferredCountries"
+                        [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true"
+                        [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                        [selectFirstCountry]="false"
+                        [maxLength]="15"
+                        [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode"
+                        name="telefonoEmpresa"
+                        [(ngModel)]="proveedor.proveedorInfo.telefonoEmpresa"
+                        (ngModelChange)="onTelefonoEmpresaChange($event)">
+                    </ngx-intl-tel-input>
                 </div>
 
                 <div class="input-group full-width">

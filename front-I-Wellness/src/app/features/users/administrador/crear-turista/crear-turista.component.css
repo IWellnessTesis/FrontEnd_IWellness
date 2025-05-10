@@ -220,3 +220,78 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 5px;
     border-radius: 3px;
 }
+
+::ng-deep ngx-intl-tel-input input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    background: #f6f3eb;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  ::ng-deep .iti {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  ::ng-deep .iti__arrow {
+    display: none !important;
+  }
+  
+  ::ng-deep .iti .dropdown-menu.country-dropdown {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-color: #c7cace;
+    margin-top: -1px;
+  }
+  
+  ::ng-deep .iti .iti__country-list {
+    box-shadow: none;
+    font-size: 14px;
+    margin-left: 0;
+    width: 244px;
+    max-height: 170px;
+  }
+  
+  ::ng-deep .iti__flag-container.open + input {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  ::ng-deep .iti .search-container input {
+    font-size: 14px;
+    border-color: #c7cace;
+    border-radius: 0;
+    padding: 5px 10px;
+  }
+  
+  ::ng-deep .iti .search-container input:focus {
+    outline: none;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    background: #f6f3eb;
+    border-radius: 5px;
+    padding: 5px 10px;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti__flag-container {
+    position: static !important;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep ngx-intl-tel-input input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    padding: 5px;
+  }
