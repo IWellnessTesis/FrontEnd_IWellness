@@ -49,6 +49,10 @@ export class RegistroProveedorComponent implements AfterViewInit {
 
   isLoading: boolean = false;
 
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+
+
   //map
   private map!: L.Map;
   private marker!: L.Marker;
@@ -69,6 +73,14 @@ export class RegistroProveedorComponent implements AfterViewInit {
     });
     this.initMap();
         
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 private initMap(): void {
     // … código previo …

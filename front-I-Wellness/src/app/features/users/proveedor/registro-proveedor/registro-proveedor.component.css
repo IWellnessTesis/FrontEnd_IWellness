@@ -225,4 +225,27 @@ input {
     font-size: 14px;
     padding: 5px;
   }
+
+  .password-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+  }
   
+  .password-container input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Espacio para el botón */
+  }
+  
+  .toggle-password {
+    position: absolute;
+    font-size: 14px;
+    right: 10px;
+    top: 30%;
+    transform: translateY(-30%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #3166A6;
+  }

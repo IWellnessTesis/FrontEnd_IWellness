@@ -51,8 +51,10 @@ export class RegistroTuristaComponent implements OnInit {
   fechaNacimientoError: string = '';
   estadoCivilError: string = '';
   
-  // Estado de carga
+  // Estados
   isLoading: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -67,6 +69,14 @@ export class RegistroTuristaComponent implements OnInit {
     const country = this.countriesData.find(c => c.name === this.selectedCountry);
     this.cities = country ? country.cities : [];
     this.selectedCity = this.cities.length > 0 ? this.cities[0] : '';
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   validateName() {

@@ -60,28 +60,42 @@
           </ngx-intl-tel-input>
           <small *ngIf="phoneError" class="error-message">{{ phoneError }}</small>
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            [(ngModel)]="password"
-            (input)="validatePassword()"
-            required
-          />
-          <small *ngIf="passwordError" class="error-message">{{
-            passwordError
-          }}</small>
+          <div class="password-container">
+            <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                placeholder="Contraseña" 
+                [(ngModel)]="password" 
+                (input)="validatePassword()" 
+                required
+            >
+            <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="toggle-password"
+            >
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+        </div>
+        <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
 
-          <input
-            type="password"
-            placeholder="Repite tu contraseña"
-            [(ngModel)]="confirmPassword"
-            (input)="validateConfirmPassword()"
-            maxlength="55"
-            required
-          />
-          <small *ngIf="confirmPasswordError" class="error-message">{{
-            confirmPasswordError
-          }}</small>
+        <div class="password-container">
+            <input 
+                [type]="showConfirmPassword ? 'text' : 'password'" 
+                placeholder="Repite tu contraseña" 
+                [(ngModel)]="confirmPassword" 
+                (input)="validateConfirmPassword()" 
+                required
+            >
+            <button
+                type="button"
+                (click)="toggleConfirmPasswordVisibility()"
+                class="toggle-password"
+            >
+            {{ showConfirmPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+        </div>
+        <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
+        
         </div>
 
         <!-- Datos de la Empresa -->

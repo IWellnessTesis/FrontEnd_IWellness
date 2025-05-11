@@ -299,3 +299,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         height: 200px;
     }
 }
+
+.password-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .password-container input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Espacio para el botón */
+  }
+  
+  .toggle-password {
+    position: absolute;
+    font-size: 14px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-30%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #3166A6;
+  }
