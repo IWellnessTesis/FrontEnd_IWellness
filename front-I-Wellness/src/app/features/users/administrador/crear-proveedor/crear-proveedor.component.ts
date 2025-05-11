@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { AdminService } from '../../../admin/services/admin.service';
 import { Router } from '@angular/router';
 import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
+import L from 'leaflet';
 
 @Component({
   selector: 'app-crear-proveedor',
@@ -44,11 +45,119 @@ export class CrearProveedorComponent {
    coordinateYError = '';
  
    isLoading = false;
+
+     //map
+     private map!: L.Map;
+     private marker!: L.Marker;
+     searchQuery: string = '';
+     searchResults: any[] = [];
+     selectedResult: any = null;
  
    constructor(
      private adminService: AdminService,
      private router: Router
    ) {}
+
+   ngAfterViewInit(): void {
+   
+       delete (L.Icon.Default.prototype as any)._getIconUrl;
+       
+       L.Icon.Default.mergeOptions({
+         iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+         iconUrl: 'assets/leaflet/marker-icon.png',
+         shadowUrl: 'assets/leaflet/marker-shadow.png',
+       });
+       this.initMap();
+           
+     }
+   private initMap(): void {
+       // … código previo …
+       this.map = L.map('reg-map').setView([10.5, -84.7], 10);
+       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(this.map);
+   
+       this.marker = L.marker([0, 0], { draggable: true })
+         .addTo(this.map)
+         .setOpacity(0);
+   
+       // Click en mapa → mueve marker + actualiza inputs
+       this.map.on('click', (e) => {
+         this.moveMarkerAndUpdateInputs(e.latlng.lat, e.latlng.lng);
+       });
+   
+       // Drag del marker → actualiza inputs
+       this.marker.on('dragend', () => {
+         const { lat, lng } = this.marker.getLatLng();
+         this.moveMarkerAndUpdateInputs(lat, lng);
+       });
+     }
+   
+     searchLocation() {
+     if (!this.searchQuery) return;
+   
+   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(this.searchQuery)}&addressdetails=1&limit=5&countrycodes=cr`;
+   
+     fetch(url, {
+       headers: {
+         'User-Agent': 'I-Wellness-App (tucorreo@example.com)'  // Nominatim requiere esto
+       }
+     })
+       .then(res => res.json())
+       .then(data => {
+         if (data.length > 0) {
+           this.searchResults = data;
+         } else {
+           this.searchResults = [];
+           Swal.fire('No encontrado', 'No se encontraron resultados para tu búsqueda.', 'info');
+         }
+       })
+       .catch(err => {
+         console.error('Error buscando ubicación:', err);
+         Swal.fire('Error', 'Ocurrió un error al buscar la dirección.', 'error');
+       });
+   }
+   
+   handleResultSelection(event: any) {
+     const selected = this.searchResults.find(r => r.display_name === event.target.value);
+     if (selected) {
+       const lat = parseFloat(selected.lat);
+       const lon = parseFloat(selected.lon);
+       this.coordinateX = lat.toFixed(6);
+       this.coordinateY = lon.toFixed(6);
+       this.moveMarkerAndUpdateInputs(lat, lon);
+       this.searchResults = []; // Limpiar opciones
+     }
+     }
+   
+     /** centraliza movimiento y actualización de inputs */
+     private moveMarkerAndUpdateInputs(lat: number, lng: number) {
+       this.marker
+         .setLatLng([lat, lng])
+         .setOpacity(1);
+   
+       this.map.panTo([lat, lng]);
+   
+       this.coordinateX = lat.toFixed(6);
+       this.coordinateY = lng.toFixed(6);
+   
+       this.validatecoordinateX();
+       this.validatecoordinateY();
+     }
+   
+     /** se dispara cuando cambias a mano las coordenadas */
+     onInputCoordsChange() {
+       const lat = parseFloat(this.coordinateX);
+       const lng = parseFloat(this.coordinateY);
+       this.validatecoordinateX();
+       this.validatecoordinateY();
+   
+       if (!isNaN(lat) && !isNaN(lng)) {
+         // mueve el marker y centra el mapa
+         this.marker
+           .setLatLng([lat, lng])
+           .setOpacity(1);
+         this.map.panTo([lat, lng]);
+       }
+     }
  
    validateForm(): boolean {
      this.validateName();

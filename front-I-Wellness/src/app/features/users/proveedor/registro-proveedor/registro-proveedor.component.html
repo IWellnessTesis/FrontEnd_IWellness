@@ -95,7 +95,6 @@
             </button>
         </div>
         <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
-        
         </div>
 
         <!-- Datos de la Empresa -->
@@ -145,28 +144,38 @@
           <small *ngIf="companyNamePhoneError" class="error-message">{{
             companyNamePhoneError
           }}</small>
-
-          <input
-            type="text"
-            [(ngModel)]="coordinateX"
-            (ngModelChange)="onInputCoordsChange()"
-            placeholder="Coordenada X"
+        <input
+            type="password"
+            placeholder="Repite tu contraseña"
+            [(ngModel)]="confirmPassword"
+            (input)="validateConfirmPassword()"
+            maxlength="55"
+            required
           />
-          <small *ngIf="coordinateXError" class="error-message">{{
-            coordinateXError
-          }}</small>
-
-          <input
-            type="text"
-            [(ngModel)]="coordinateY"
-            (ngModelChange)="onInputCoordsChange()"
-            placeholder="Coordenada Y"
-          />
-          <small *ngIf="coordinateYError" class="error-message">{{
-            coordinateYError
+          <small *ngIf="confirmPasswordError" class="error-message">{{
+            confirmPasswordError
           }}</small>
         </div>
       </div>
+      <input
+        type="text"
+        id="search-box"
+        placeholder="Buscar dirección..."
+        (keydown.enter)="searchLocation()"
+        [(ngModel)]="searchQuery"
+        class="form-control mb-2"
+      />
+
+      <select
+        *ngIf="searchResults.length > 0"
+        class="form-control mb-2"
+        (change)="handleResultSelection($event)"
+      >
+      <option disabled selected>Selecciona una dirección</option>
+      <option *ngFor="let result of searchResults" [value]="result.display_name">
+        {{ result.display_name }}
+      </option>
+    </select>
       <div id="reg-map" class="map-container"></div>
 
       <button

@@ -178,6 +178,10 @@ select {
     padding: 5px;
   }
   
+::ng-deep .iti--allow-dropdown input.iti__tel-input,
+.iti--show-selected-dial-code input.iti__tel-input {
+    padding-left: 10px !important;
+}  
 /* Estilos específicos para el campo de fecha */
 .fecha-nacimiento-container {
     margin-top: 10px;
