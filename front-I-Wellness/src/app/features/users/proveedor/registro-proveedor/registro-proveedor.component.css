@@ -225,6 +225,31 @@ input {
     padding: 5px;
   }
 
+
+  .password-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .password-container input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Espacio para el botón */
+  }
+  
+  .toggle-password {
+    position: absolute;
+    font-size: 14px;
+    right: 10px;
+    top: 30%;
+    transform: translateY(-30%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #3166A6;
+  }
+
   ::ng-deep .iti--allow-dropdown input.iti__tel-input,
   .iti--show-selected-dial-code input.iti__tel-input {
     padding-left: 10px !important;
@@ -254,3 +279,4 @@ select.form-control:focus {
     border-color: #48A6A7;
     box-shadow: 0 0 0 2px rgba(72, 166, 167, 0.2);
 }
+
