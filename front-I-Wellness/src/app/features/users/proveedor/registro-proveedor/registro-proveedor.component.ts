@@ -52,6 +52,9 @@ export class RegistroProveedorComponent implements AfterViewInit {
   //map
   private map!: L.Map;
   private marker!: L.Marker;
+  searchQuery: string = '';
+  searchResults: any[] = [];
+  selectedResult: any = null;
 
   constructor(
     private authService: AuthService,
@@ -89,6 +92,43 @@ private initMap(): void {
       const { lat, lng } = this.marker.getLatLng();
       this.moveMarkerAndUpdateInputs(lat, lng);
     });
+  }
+
+  searchLocation() {
+  if (!this.searchQuery) return;
+
+const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(this.searchQuery)}&addressdetails=1&limit=5&countrycodes=cr`;
+
+  fetch(url, {
+    headers: {
+      'User-Agent': 'I-Wellness-App (tucorreo@example.com)'  // Nominatim requiere esto
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.length > 0) {
+        this.searchResults = data;
+      } else {
+        this.searchResults = [];
+        Swal.fire('No encontrado', 'No se encontraron resultados para tu búsqueda.', 'info');
+      }
+    })
+    .catch(err => {
+      console.error('Error buscando ubicación:', err);
+      Swal.fire('Error', 'Ocurrió un error al buscar la dirección.', 'error');
+    });
+}
+
+handleResultSelection(event: any) {
+  const selected = this.searchResults.find(r => r.display_name === event.target.value);
+  if (selected) {
+    const lat = parseFloat(selected.lat);
+    const lon = parseFloat(selected.lon);
+    this.coordinateX = lat.toFixed(6);
+    this.coordinateY = lon.toFixed(6);
+    this.moveMarkerAndUpdateInputs(lat, lon);
+    this.searchResults = []; // Limpiar opciones
+  }
   }
 
   /** centraliza movimiento y actualización de inputs */

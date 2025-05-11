@@ -295,3 +295,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 14px;
     padding: 5px;
   }
+
+::ng-deep .iti--allow-dropdown input.iti__tel-input,
+.iti--show-selected-dial-code input.iti__tel-input {
+    padding-left: 10px !important;
+}
