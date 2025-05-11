@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AdminService } from '../../../admin/services/admin.service';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario.service';
 import { AuthorizationService } from '../../../../core/services/auth/authorization.service';
 import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
+import * as L from 'leaflet';
+import 'leaflet-control-geocoder';
 
 
 @Component({
@@ -15,7 +17,7 @@ import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryFiel
   templateUrl: './perfil-proveedor.component.html',
   styleUrl: './perfil-proveedor.component.css'
 })
-export class PerfilProveedorComponent implements OnInit {
+export class PerfilProveedorComponent implements AfterViewInit {
 
   separateDialCode = false;
   SearchCountryField = SearchCountryField;
@@ -53,6 +55,12 @@ export class PerfilProveedorComponent implements OnInit {
   fotoPreview: string | ArrayBuffer | null = null;
   fotoSeleccionada: File | null = null;
 
+  private map!: L.Map;
+  private marker!: L.Marker;
+  private mapInitialized = false;
+  searchResults: any[] = [];
+
+
   constructor(
     private route: ActivatedRoute,
     private adminService: AdminService,
@@ -61,6 +69,10 @@ export class PerfilProveedorComponent implements OnInit {
     private authorizationService: AuthorizationService
   ) {}
 
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
+  }
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
@@ -68,6 +80,184 @@ export class PerfilProveedorComponent implements OnInit {
       this.verificarAccesoYCargarPerfil(id);
     });
   }
+
+  ngAfterViewChecked(): void {
+  if (!this.mapInitialized && !this.isLoading && !this.unauthorized) {
+    const container = document.getElementById('reg-map');
+    if (container) {
+      this.mapInitialized = true;
+      this.initMap();
+      this.addMarkerAndFetchAddress();
+    }
+  }
+}
+
+  buscarDireccion(): void {
+    const input = document.getElementById('direccionInput') as HTMLInputElement;
+    const direccion = input.value;
+
+    if (!direccion) return;
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&countrycodes=cr`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.length > 0) {
+          // Guardamos los resultados de búsqueda
+          this.searchResults = data;
+
+          // Tomamos el primer resultado
+          const result = data[0]; 
+          const lat = parseFloat(result.lat);
+          const lon = parseFloat(result.lon);
+
+          this.map.setView([lat, lon], 16);
+
+          if (this.marker) {
+            this.marker.setLatLng([lat, lon]);
+          } else {
+            this.marker = L.marker([lat, lon]).addTo(this.map);
+          }
+
+          this.marker.bindPopup(`<b>${result.display_name}</b>`).openPopup();
+
+          // Guardar coordenadas
+          this.proveedor.proveedorInfo.coordenadaX = lat.toString();
+          this.proveedor.proveedorInfo.coordenadaY = lon.toString();
+        } else {
+          alert('Dirección no encontrada');
+        }
+      })
+      .catch(error => {
+        console.error('Error al buscar dirección:', error);
+        alert('Error al buscar dirección');
+      });
+  }
+
+    handleResultSelection(event: any): void {
+    const selectedValue = event.target.value;
+    const selectedResult = this.searchResults.find(result => result.display_name === selectedValue);
+
+    if (selectedResult) {
+      const lat = parseFloat(selectedResult.lat);
+      const lon = parseFloat(selectedResult.lon);
+
+      this.map.setView([lat, lon], 16);
+
+      if (this.marker) {
+        this.marker.setLatLng([lat, lon]);
+      } else {
+        this.marker = L.marker([lat, lon]).addTo(this.map);
+      }
+
+      this.marker.bindPopup(`<b>${selectedResult.display_name}</b>`).openPopup();
+
+      // Guardar coordenadas
+      this.proveedor.proveedorInfo.coordenadaX = lat.toString();
+      this.proveedor.proveedorInfo.coordenadaY = lon.toString();
+    }
+  }
+
+private initMap(): void {
+  const lat = parseFloat(this.proveedor.proveedorInfo.coordenadaX);
+  const lon = parseFloat(this.proveedor.proveedorInfo.coordenadaY);
+
+  this.map = L.map('reg-map').setView([lat, lon], 15);
+
+   // Añadir capa base de OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(this.map);
+
+  if (!isNaN(lat) && !isNaN(lon)) {
+    const customIcon = L.icon({
+      iconUrl: 'assets/leaflet/marker-icon.png',
+      shadowUrl: 'assets/leaflet/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    this.marker = L.marker([lat, lon], { icon: customIcon }).addTo(this.map);
+    this.map.setView([lat, lon], 13);
+
+    // Obtener dirección
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+      .then(response => response.json())
+      .then(data => {
+        const placeName = data.display_name || 'Lugar no encontrado';
+        this.marker.bindPopup(`<b>${placeName}</b>`).openPopup();
+      });
+  }
+
+  // Evento click en el mapa para seleccionar nueva ubicación
+  this.map.on('click', (e: L.LeafletMouseEvent) => {
+    const newLat = e.latlng.lat;
+    const newLon = e.latlng.lng;
+
+    // Eliminar marcador anterior si existe
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+    }
+
+    const customIcon = L.icon({
+      iconUrl: 'assets/leaflet/marker-icon.png',
+      shadowUrl: 'assets/leaflet/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    // Añadir nuevo marcador
+    this.marker = L.marker([newLat, newLon], { icon: customIcon }).addTo(this.map);
+
+    // Obtener dirección
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${newLat}&lon=${newLon}`)
+      .then(response => response.json())
+      .then(data => {
+        const placeName = data.display_name || 'Lugar no encontrado';
+        this.marker.bindPopup(`<b>${placeName}</b>`).openPopup();
+      });
+
+    // Actualizar coordenadas del proveedor
+    this.proveedor.proveedorInfo.coordenadaX = newLat.toString();
+    this.proveedor.proveedorInfo.coordenadaY = newLon.toString();
+  });
+}
+
+
+private addMarkerAndFetchAddress(): void {
+  const lat = parseFloat(this.proveedor.proveedorInfo.coordenadaX);
+  const lon = parseFloat(this.proveedor.proveedorInfo.coordenadaY);
+
+  // Definir un ícono personalizado
+  const customIcon = L.icon({
+    iconUrl: 'assets/leaflet/marker-icon.png',
+    shadowUrl: 'assets/leaflet/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  // Eliminar marcador anterior si ya existe
+  if (this.marker) {
+    this.map.removeLayer(this.marker);
+  }
+
+  // Crear nuevo marcador y guardarlo en this.marker
+  this.marker = L.marker([lat, lon], { icon: customIcon }).addTo(this.map);
+
+  // Obtener la dirección y mostrarla en el popup
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+    .then(response => response.json())
+    .then(data => {
+      const placeName = data.display_name || 'Lugar no encontrado';
+      this.marker.bindPopup(`<b>${placeName}</b>`).openPopup();
+    })
+    .catch(err => console.error(err));
+}
 
   onTelefonoChange(event: any) {
     this.telefonoObj = event;

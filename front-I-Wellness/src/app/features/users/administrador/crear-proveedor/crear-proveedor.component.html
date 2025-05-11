@@ -47,9 +47,6 @@
                     <input type="password" placeholder="Contraseña" [(ngModel)]="password" (input)="validatePassword()" required>
                     <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
 
-                    <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" maxlength="55" required>
-                    <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
-
                 </div>
                 
                 <!-- Datos de la Empresa -->
@@ -80,16 +77,31 @@
                         required
                         (input)="validatecompanyNamePhone()">
                     </ngx-intl-tel-input>
-                    <small *ngIf="companyNamePhoneError" class="error-message">{{ companyNamePhoneError }}</small>
-
-                    <input type="text" placeholder="Coordenadas eje X" [(ngModel)]="coordinateX" (input)="validatecoordinateX()" maxlength="20" required>
-                    <small *ngIf="coordinateXError" class="error-message">{{ coordinateXError }}</small>
-
-                    <input type="text" placeholder="Coordenadas eje Y" [(ngModel)]="coordinateY" (input)="validatecoordinateY()" maxlength="20" required>
-                    <small *ngIf="coordinateYError" class="error-message">{{ coordinateYError }}</small>
+                    
+                    <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" maxlength="55" required>
+                    <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
                 </div>
             </div>
+            <input
+        type="text"
+        id="search-box"
+        placeholder="Buscar dirección..."
+        (keydown.enter)="searchLocation()"
+        [(ngModel)]="searchQuery"
+        class="form-control mb-2"
+      />
 
+      <select
+        *ngIf="searchResults.length > 0"
+        class="form-control mb-2"
+        (change)="handleResultSelection($event)"
+      >
+      <option disabled selected>Selecciona una dirección</option>
+      <option *ngFor="let result of searchResults" [value]="result.display_name">
+        {{ result.display_name }}
+      </option>
+    </select>
+      <div id="reg-map" class="map-container"></div>
 
             <button class="register-btn" (click)="agregarProveedor()" [disabled]="hasErrors()">Crear cuenta</button>
             </div>
