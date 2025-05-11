@@ -144,17 +144,6 @@
           <small *ngIf="companyNamePhoneError" class="error-message">{{
             companyNamePhoneError
           }}</small>
-        <input
-            type="password"
-            placeholder="Repite tu contraseña"
-            [(ngModel)]="confirmPassword"
-            (input)="validateConfirmPassword()"
-            maxlength="55"
-            required
-          />
-          <small *ngIf="confirmPasswordError" class="error-message">{{
-            confirmPasswordError
-          }}</small>
         </div>
       </div>
       <input

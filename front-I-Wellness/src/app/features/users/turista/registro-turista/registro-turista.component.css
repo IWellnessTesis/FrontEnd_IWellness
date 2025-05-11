@@ -307,7 +307,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .password-container {
     position: relative;
     width: 100%;
-    margin-bottom: 15px;
   }
   
   .password-container input {
