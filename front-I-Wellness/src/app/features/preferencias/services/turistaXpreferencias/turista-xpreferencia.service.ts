@@ -20,7 +20,8 @@ export class TuristaXPreferenciaService {
 
   // Obtener todos los registros de turistaXPreferencia
   obtenerTodos(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/all`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get<any>(`${this.apiUrl}/all`, { headers });
   }
 
   // Crear una nueva relación de Turista X Preferencia
@@ -31,22 +32,26 @@ export class TuristaXPreferenciaService {
 
   // Actualizar una relación de Turista X Preferencia
   actualizar(turistaXPreferencia: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/editar`, turistaXPreferencia);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.put<any>(`${this.apiUrl}/editar`, turistaXPreferencia, { headers });
   }
 
   // Eliminar una relación de Turista X Preferencia
   eliminar(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.delete<any>(`${this.apiUrl}/eliminar/${id}`, { headers });
   }
 
   // Obtener las relaciones por ID de turista
   obtenerPorTurista(idUsuario: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/turista/${idUsuario}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get<any>(`${this.apiUrl}/turista/${idUsuario}`, { headers });
   }
 
   // Obtener las relaciones por ID de preferencia
   obtenerPorPreferencia(idPreferencia: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/preferencia/${idPreferencia}`);
+    const headers = this.obtenerHeaders(); // Agregar token en los headers
+    return this.http.get<any>(`${this.apiUrl}/preferencia/${idPreferencia}`, { headers });
   }
 
   // Eliminar todas las relaciones por ID de turista

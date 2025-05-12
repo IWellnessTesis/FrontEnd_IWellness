@@ -1,18 +1,39 @@
 <div class="dashboard-main-card">
-  <h1 class="dashboard-title">Análisis de servicios en I-Wellness</h1>
+  <h1 class="dashboard-title">Dashboard General de I-Wellness</h1>
   <div class="kpi-row">
     <div class="kpi-card">
       <div class="kpi-title">Turistas Registrados</div>
       <div class="kpi-value">{{ totalTuristas }}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-title">País más frecuente</div>
-      <div class="kpi-value">{{ topPais }}</div>
-      <div class="kpi-subvalue">Visitas: {{ topPaisTotal }}</div>
+      <div class="kpi-title">Empresas Registradas</div>
+      <div class="kpi-value">{{ totalEmpresas }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Servicios Activos</div>
+      <div class="kpi-value">{{ serviciosActivos }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Servicios Inactivos</div>
+      <div class="kpi-value">{{ serviciosInactivos }}</div>
     </div>
   </div>
   
   <div class="dashboard-grid">
+    <div class="dashboard-card">
+      <h2>Preferencias por Género</h2>
+      <div class="chart-wrapper genero-chart-wrapper">
+        <ngx-charts-bar-vertical-2d
+        [results]="generoChartData"
+        [scheme]="colorScheme"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showDataLabel]="true"
+        [xAxisTickFormatting]="xAxisTickFormatting">
+      </ngx-charts-bar-vertical-2d>
+      </div>
+    </div>
     <div class="dashboard-card">
       <h2>Preferencias por Estado Civil</h2>
       <div class="chart-wrapper">
@@ -41,27 +62,17 @@
       </div>
     </div>
     <div class="dashboard-card">
-      <h2>Distribución de Género</h2>
-      <div class="chart-wrapper">
-        <ngx-charts-pie-chart
-          [results]="generoTuristasChart"
-          [scheme]="'vivid'"
-          [legend]="true"
-          [labels]="true">
-        </ngx-charts-pie-chart>
-      </div>
-    </div>
-    <div class="dashboard-card">
-      <h2>Servicios más Solicitados</h2>
+      <h2>Servicios por Empresa</h2>
       <div class="chart-wrapper">
         <ngx-charts-bar-horizontal
-          [results]="serviciosPopularesChart"
-          [scheme]="'cool'"
-          [xAxis]="true"
-          [yAxis]="true"
-          [legend]="false"
-          [showDataLabel]="true">
-        </ngx-charts-bar-horizontal>
+        [results]="proveedoresChart"
+        [scheme]="colorScheme"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showDataLabel]="true"
+        [xAxisTickFormatting]="xAxisTickFormatting">
+      </ngx-charts-bar-horizontal>
       </div>
     </div>
   </div>

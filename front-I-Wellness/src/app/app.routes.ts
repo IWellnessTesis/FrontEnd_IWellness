@@ -28,6 +28,7 @@ import { CrearTuristaComponent } from './features/users/administrador/crear-turi
 import { CrearProveedorComponent } from './features/users/administrador/crear-proveedor/crear-proveedor.component';
 import { PerfilProveedorComponent } from './features/users/proveedor/perfil-proveedor/perfil-proveedor.component';
 import { authGuard, turistaGuard, proveedorGuard, adminGuard } from './core/guards/auth.guard';
+import { DashboardAdminComponent } from './features/users/administrador/dashboard-admin/dashboard-admin.component';
 
 export const routes: Routes = [
     // Rutas públicas
@@ -67,6 +68,7 @@ export const routes: Routes = [
     { path: 'proveedores', component: ProveedoresComponent, canActivate: [adminGuard] },
     { path: 'crearturista', component: CrearTuristaComponent, canActivate: [adminGuard] },
     { path: 'crearproveedor', component: CrearProveedorComponent, canActivate: [adminGuard] },
+    { path: 'dashboard-admin', component: DashboardAdminComponent, canActivate: [adminGuard] },
     
     // Ruta comodín - redirige a home
     { path: '**', redirectTo: ''}, 
