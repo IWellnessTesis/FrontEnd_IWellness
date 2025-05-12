@@ -13,23 +13,16 @@
         </section>
         
         <section>
-          <h3>Popular</h3>
-          <div class="card-container">
-            <div class="card"> <img src="https://www.revistaviajesdigital.com/images/Trekking-Caminata-Arenal-1968-5.jpg"><span>Caminata grupal</span></div>
-            <div class="card"> <img src="https://hotelarenalspring.com/wp-content/uploads/2023/05/DSC_0002-1024x683.jpg"><span>Yoga en naturaleza</span></div>
-            <div class="card"> <img src="https://photos.tpn.to/lk/qm/rs/oo/1600x900.jpg"><span>Paseo turístico</span></div>
-            <div class="card"> <img src="https://media-cdn.tripadvisor.com/media/photo-s/18/3d/71/3d/en-nuestro-viaje-a-costa.jpg"><span>Muestra de comida tipica</span></div>
+          <div *ngFor="let grupo of serviciosAgrupadosPorPreferencia">
+            <h3>{{ grupo.preferencia.nombre }}</h3>
+            <div class="card-container">
+              <div *ngFor="let servicio of grupo.servicios" class="card"  (click)="navigateToDetalle(servicio._idServicio)">
+              <img [src]="servicio.imagen" [alt]="servicio.nombre">
+              <span>{{ servicio.nombre }}</span>
+              </div>
+            </div>
           </div>
         </section>
-        
-        <section>
-          <h3>Mejor Calificados</h3>
-          <div class="card-container">
-            <div class="card"> <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/08/ad/33/d2.jpg"><span>Caminata con guía</span></div>
-            <div class="card"> <img src="https://images.trvl-media.com/lodging/3000000/2150000/2145600/2145540/02996401.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill"><span>Hidroterapia para 2</span></div>
-            <div class="card"> <img src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/377865693.jpg?k=54f59105888e088ab4df9fa9527c8aa6f8949e3255e2236b8e9f88f08b60e373&o=&hp=1"><span>Meditación guiada</span></div>
-            <div class="card"> <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/96/b8/da/volcano-lodge-springs.jpg?w=1200&h=-1&s=1"><span>Balnearios</span></div>
-          </div>
-        </section>
+      
       </div>
     </main>
