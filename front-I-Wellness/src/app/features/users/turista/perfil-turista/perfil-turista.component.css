@@ -77,8 +77,12 @@ body {
 }
 
 /* Estilos específicos para cada campo */
-.genero, .fecha, .estadocivil {
+.genero, .fecha, .estado {
     position: relative;
+}
+
+.genero label, .fecha label, .estado label {
+    font-weight: bold;
 }
 
 /* Añadir un poco de espacio adicional */
@@ -178,3 +182,75 @@ body {
 .btn-primary:hover {
     background-color: #3B8E8E;
 }
+  
+  ::ng-deep .iti {
+    display: block;
+  }
+  
+  ::ng-deep .iti__arrow {
+    display: none !important;
+  }
+  
+  ::ng-deep .iti .dropdown-menu.country-dropdown {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-color: #c7cace;
+    margin-top: -1px;
+  }
+  
+  ::ng-deep .iti .iti__country-list {
+    box-shadow: none;
+    font-size: 14px;
+    margin-left: 0;
+    width: 244px;
+    max-height: 170px;
+  }
+  
+  ::ng-deep .iti__flag-container.open + input {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  ::ng-deep .iti .search-container input {
+    font-size: 14px;
+    border-color: #c7cace;
+    border-radius: 0;
+    padding: 5px 10px;
+  }
+  
+  ::ng-deep .iti .search-container input:focus {
+    outline: none;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti__flag-container {
+    position: static !important;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep ngx-intl-tel-input input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    padding: 5px;
+  }
+
+  ::ng-deep ngx-intl-tel-input .iti input.iti__tel-input{
+      padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+::ng-deep .iti--allow-dropdown input.iti__tel-input,
+.iti--show-selected-dial-code input.iti__tel-input {
+    padding-left: 10px !important;
+}
+

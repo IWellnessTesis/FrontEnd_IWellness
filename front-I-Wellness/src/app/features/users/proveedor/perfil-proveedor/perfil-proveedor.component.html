@@ -42,12 +42,40 @@
 
                 <div class="input-group full-width">
                     <label>Número de Contacto</label>
-                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.telefono" name="telefono">
+                    <ngx-intl-tel-input
+                        [cssClass]="'form-control'"
+                        [preferredCountries]="preferredCountries"
+                        [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true"
+                        [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                        [selectFirstCountry]="false"
+                        [maxLength]="15"
+                        [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode"
+                        name="telefono"
+                        [(ngModel)]="proveedor.proveedorInfo.telefono"
+                        (ngModelChange)="onTelefonoChange($event)">
+                    </ngx-intl-tel-input>
                 </div>
 
                 <div class="input-group full-width">
                     <label>Teléfono de la Empresa</label>
-                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.telefonoEmpresa" name="telefonoEmpresa">
+                    <ngx-intl-tel-input
+                        [cssClass]="'form-control'"
+                        [preferredCountries]="preferredCountries"
+                        [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true"
+                        [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                        [selectFirstCountry]="false"
+                        [maxLength]="15"
+                        [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode"
+                        name="telefonoEmpresa"
+                        [(ngModel)]="proveedor.proveedorInfo.telefonoEmpresa"
+                        (ngModelChange)="onTelefonoEmpresaChange($event)">
+                    </ngx-intl-tel-input>
                 </div>
 
                 <div class="input-group full-width">
@@ -61,14 +89,20 @@
                 </div>
 
                 <div class="input-group full-width">
-                    <label>Coordenada X</label>
-                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.coordenadaX" name="coordenadaX">
+                <label>Ubicacion</label>
+                <input id="direccionInput" type="text" placeholder="Buscar dirección..." />
+                <button (click)="buscarDireccion()" class="save">Buscar</button>
                 </div>
 
-                <div class="input-group full-width">
-                    <label>Coordenada Y</label>
-                    <input type="text" [(ngModel)]="proveedor.proveedorInfo.coordenadaY" name="coordenadaY">
-                </div>
+                <!-- Desplegable que solo se muestra si hay resultados de búsqueda -->
+                <select *ngIf="searchResults.length > 0" class="form-control mt-2" (change)="handleResultSelection($event)">
+                <option disabled selected>Selecciona una dirección</option>
+                <option *ngFor="let result of searchResults" [value]="result.display_name">
+                    {{ result.display_name }}
+                </option>
+                </select>
+
+                <div id="reg-map" class="map-container"></div>
 
                 <div class="buttons">
                     <button class="cancel" (click)="navigateTo()">Cancelar</button>

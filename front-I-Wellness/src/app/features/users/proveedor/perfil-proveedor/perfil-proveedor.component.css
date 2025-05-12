@@ -1,3 +1,5 @@
+
+
 body {
     font-family: Arial, sans-serif;
     background: transparent;
@@ -240,7 +242,7 @@ body {
     width: 100%;
 }
 
-.btn-primary {
+.btn-primary, .save {
     background-color: #48A6A7;
     color: white;
     padding: 10px 20px;
@@ -250,6 +252,112 @@ body {
     margin-top: 15px;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .save:hover {
     background-color: #3B8E8E;
 }
+
+  ::ng-deep .iti {
+    display: block;
+  }
+  
+  ::ng-deep .iti__arrow {
+    display: none !important;
+  }
+  
+  ::ng-deep .iti .dropdown-menu.country-dropdown {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-color: #c7cace;
+    margin-top: -1px;
+  }
+  
+  ::ng-deep .iti .iti__country-list {
+    box-shadow: none;
+    font-size: 14px;
+    margin-left: 0;
+    width: 244px;
+    max-height: 170px;
+  }
+  
+  ::ng-deep .iti__flag-container.open + input {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  ::ng-deep .iti .search-container input {
+    font-size: 14px;
+    border-color: #c7cace;
+    border-radius: 0;
+    padding: 5px 10px;
+  }
+  
+  ::ng-deep .iti .search-container input:focus {
+    outline: none;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti__flag-container {
+    position: static !important;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep ngx-intl-tel-input input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    padding: 5px;
+  }
+
+  ::ng-deep ngx-intl-tel-input .iti input.iti__tel-input{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+    ::ng-deep .iti--allow-dropdown input.iti__tel-input,
+    .iti--show-selected-dial-code input.iti__tel-input {
+        padding-left: 10px !important;
+    }
+
+  .map-container {
+    height: 300px;   
+    width: 100%;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    margin-bottom: 0.5rem;
+  }
+
+  select.form-control {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+select.form-control:focus {
+    border-color: #48A6A7;
+    outline: none;
+}
+
+option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+select.form-control:hover,
+select.form-control:focus {
+    border-color: #3B8E8E;
+    background-color: #f9f9f9;
+}
+

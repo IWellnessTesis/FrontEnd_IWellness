@@ -1,0 +1,15 @@
+<main>
+      <h2>{{ nombreEmpresa }} </h2>
+      <div class="recommendations">
+        <section>
+          <div class="card-container">
+            <div class="card" *ngFor="let servicio of servicios" (click)="navigateToDetalle(servicio._idServicio)">
+              <img [src]="servicio.imagen" [alt]="servicio.nombre">
+              <span>{{ servicio.nombre }}</span>
+            </div>
+          </div>
+        </section>
+        
+      
+      </div>
+    </main>

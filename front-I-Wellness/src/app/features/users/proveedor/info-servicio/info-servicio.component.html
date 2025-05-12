@@ -6,8 +6,11 @@
     <div class="service-meta">
       <p class="service-description">{{ servicio.descripcion }}</p>
       <p class="service-price" *ngIf="servicio.precio">
-        💰 <strong>Precio:</strong> {{ servicio.precio | currency:'USD' }}
+        💰 <strong>Precio (USD):</strong> {{ servicio.precio | currency:'USD' }}
       </p>
+      <p class="service-price" *ngIf="servicio.precio && tipoCambio">
+        💰 <strong>Precio (CRC):</strong> {{ servicio.precio * tipoCambio | currency:'CRC' }}
+      </p>  
       <p class="service-hours" *ngIf="servicio.horario">
         ⏰ <strong>Horario:</strong> {{ servicio.horario }}
       </p>

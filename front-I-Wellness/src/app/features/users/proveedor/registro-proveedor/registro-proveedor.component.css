@@ -56,7 +56,6 @@ body {
     padding: 40px;
     text-align: center;
     max-height: 90vh;
-  overflow-y: auto;    
 }
 
 .title {
@@ -144,10 +143,139 @@ input {
     margin-top: 10px;
 }
 .map-container {
-    height: 200px;   /* Ajusta al espacio que necesites */
+    height: 200px;   
     width: 100%;
     margin-top: 0.5rem;
     border: 1px solid #ccc;
     margin-bottom: 0.5rem;
   }
   
+::ng-deep ngx-intl-tel-input input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    background: #f6f3eb;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  ::ng-deep .iti {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  ::ng-deep .iti__arrow {
+    display: none !important;
+  }
+  
+  ::ng-deep .iti .dropdown-menu.country-dropdown {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-color: #c7cace;
+    margin-top: -1px;
+  }
+  
+  ::ng-deep .iti .iti__country-list {
+    box-shadow: none;
+    font-size: 14px;
+    margin-left: 0;
+    width: 244px;
+    max-height: 170px;
+  }
+  
+  ::ng-deep .iti__flag-container.open + input {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  ::ng-deep .iti .search-container input {
+    font-size: 14px;
+    border-color: #c7cace;
+    border-radius: 0;
+    padding: 5px 10px;
+  }
+  
+  ::ng-deep .iti .search-container input:focus {
+    outline: none;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    background: #f6f3eb;
+    border-radius: 5px;
+    padding: 5px 10px;
+  }
+  
+  ::ng-deep ngx-intl-tel-input .iti__flag-container {
+    position: static !important;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep ngx-intl-tel-input input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    padding: 5px;
+  }
+
+
+  .password-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .password-container input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Espacio para el botón */
+  }
+  
+  .toggle-password {
+    position: absolute;
+    font-size: 14px;
+    right: 10px;
+    top: 30%;
+    transform: translateY(-30%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #3166A6;
+  }
+
+  ::ng-deep .iti--allow-dropdown input.iti__tel-input,
+  .iti--show-selected-dial-code input.iti__tel-input {
+    padding-left: 10px !important;
+  }
+  
+  select.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #EAE7DC;
+    border-radius: 5px;
+    background: #F7F3EC;
+    font-size: 14px;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='7' viewBox='0 0 10 7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2348A6A7' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 7px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+select.form-control:focus {
+    outline: none;
+    border-color: #48A6A7;
+    box-shadow: 0 0 0 2px rgba(72, 166, 167, 0.2);
+}
+

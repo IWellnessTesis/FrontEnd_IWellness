@@ -42,7 +42,21 @@
 
                 <div class="input-group full-width">
                     <label>Número de Contacto</label>
-                    <input type="text" [(ngModel)]="usuario.turistaInfo.telefono" name="telefono">
+                    <ngx-intl-tel-input
+                        [cssClass]="'form-control'"
+                        [preferredCountries]="preferredCountries"
+                        [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true"
+                        [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                        [selectFirstCountry]="false"
+                        [maxLength]="15"
+                        [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode"
+                        name="telefono"
+                        [(ngModel)]="usuario.turistaInfo.telefono"
+                        (ngModelChange)="onTelefonoChange($event)">
+                    </ngx-intl-tel-input>
                 </div>
 
                 <div class="genero full-width">

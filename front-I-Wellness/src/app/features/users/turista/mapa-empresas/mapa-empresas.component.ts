@@ -2,6 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
 import { UsuarioService } from '../../services/usuario.service';
 import { usuarios } from '../../../../shared/models/usuarios';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mapa-empresas',
@@ -11,7 +12,7 @@ import { usuarios } from '../../../../shared/models/usuarios';
 export class MapaEmpresasComponent implements AfterViewInit {
   private map!: L.Map;
 
-  constructor(private usuarioServicio: UsuarioService) {}
+  constructor(private usuarioServicio: UsuarioService, private router: Router) {}
 
   ngAfterViewInit(): void {
     // ← elimina la búsqueda por defecto
@@ -78,13 +79,25 @@ export class MapaEmpresasComponent implements AfterViewInit {
       if (raw) {
         const empresa = {
           nombre: raw.nombre_empresa,
-          telefono: raw.telefono
+          foto: p.foto,
+          id: p.id
         };
       
-        L.marker([lat, lng]).addTo(this.map).bindPopup(`
-          <strong>${empresa.nombre}</strong><br>
-          ${empresa.telefono}
-        `);
+        const popupContent = `
+          <div class="popup-card">
+            <a href="javascript:void(0);" onclick="window.sessionStorage.setItem('nombreEmpresa', '${empresa.nombre}'); window.location.href='/proveedor/${p.id}';" style="text-decoration: none; color: inherit;">
+              <div class="popup-img-container">
+              <img src="${empresa.foto}" alt="${empresa.nombre}" class="popup-img" />
+              </div>
+              <h3 class="popup-title">${empresa.nombre}</h3>
+            </a>
+          </div>
+        `;
+
+        const marker = L.marker([lat, lng])
+        .addTo(this.map)
+        .bindPopup(popupContent);
+
       }
     });
   }

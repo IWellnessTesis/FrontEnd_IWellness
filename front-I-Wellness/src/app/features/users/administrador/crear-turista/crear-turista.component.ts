@@ -8,16 +8,23 @@ import { AdminService } from '../../../admin/services/admin.service';
 import { TuristaXPreferenciaService } from '../../../preferencias/services/turistaXpreferencias/turista-xpreferencia.service';
 import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
 import Swal from 'sweetalert2';
+import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
 
 
 @Component({
   selector: 'app-crear-turista',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgxIntlTelInputModule],
   templateUrl: './crear-turista.component.html',
   styleUrl: './crear-turista.component.css'
 })
 export class CrearTuristaComponent implements OnInit {
+  separateDialCode = false;
+	SearchCountryField = SearchCountryField;
+	CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+	preferredCountries: CountryISO[] = [CountryISO.CostaRica, CountryISO.Colombia];
+
   // Variables de datos
   countriesData: any[] = countriesData as any[];
   countries: string[] = [];
@@ -28,7 +35,7 @@ export class CrearTuristaComponent implements OnInit {
   // Campos del formulario
   name: string = '';
   email: string = '';
-  phone: string = '';
+  phone: any = '';
   password: string = '';
   confirmPassword: string = '';
   genero: string = '';
@@ -120,8 +127,9 @@ export class CrearTuristaComponent implements OnInit {
   }
 
   validatePhone() {
-    const regex = /^[0-9]{7,15}$/;
-    if (!this.phone.match(regex)) {
+    const phoneNumber = this.phone.internationalNumber;
+    const regex = /^\+?\s?[0-9\s]{7,15}$/;
+    if (!phoneNumber.match(regex)) {
       this.phoneError = 'El teléfono solo puede contener números (7 a 15 dígitos)';
     } else {
       this.phoneError = '';
@@ -222,7 +230,7 @@ export class CrearTuristaComponent implements OnInit {
         nombre: this.name,
         correo: this.email,
         contraseña: this.password,
-        telefono: this.phone,
+        telefono: this.phone.internationalNumber,
         ciudad: selectedCity,
         pais: this.selectedCountry,
         genero: this.genero,

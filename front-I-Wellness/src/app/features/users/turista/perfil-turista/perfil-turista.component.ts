@@ -6,15 +6,24 @@ import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../../services/usuario.service';
 import Swal from 'sweetalert2';
 import { AuthorizationService } from '../../../../core/services/auth/authorization.service';
+import { CountryISO, NgxIntlTelInputModule, PhoneNumberFormat, SearchCountryField} from 'ngx-intl-tel-input';
 
 @Component({
   selector: 'app-perfil-turista',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NgxIntlTelInputModule],
   templateUrl: './perfil-turista.component.html',
   styleUrl: './perfil-turista.component.css',
 })
 export class PerfilTuristaComponent implements OnInit {
+
+  separateDialCode = false;
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+  preferredCountries: CountryISO[] = [CountryISO.CostaRica, CountryISO.Colombia];
+  telefonoObj: any;
+
   countriesData: any[] = countriesData;
   countries: string[] = [];
   cities: string[] = [];
@@ -37,7 +46,7 @@ export class PerfilTuristaComponent implements OnInit {
       estadoCivil: '',
     }
   };
-
+  
   fotoPreview: string | ArrayBuffer | null = null;
   fotoSeleccionada: File | null = null;
 
@@ -64,6 +73,15 @@ export class PerfilTuristaComponent implements OnInit {
     });
   }
 
+  onTelefonoChange(event: any) {
+    this.telefonoObj = event;
+    if (event && event.nationalNumber) {
+      this.usuario.turistaInfo.telefono = event.nationalNumber.replace(/\s+/g, '');
+    } else {
+      this.usuario.turistaInfo.telefono = '';
+    }
+  }
+
   cargarPerfil(id: number) {
     this.isLoading = true;
     this.unauthorized = false;
@@ -71,9 +89,6 @@ export class PerfilTuristaComponent implements OnInit {
     this.usuarioServicio.obtenerPorId(id).subscribe({
       next: (data) => {
         this.usuario = data;
-        
-        console.log("Datos recibidos:", this.usuario);
-        console.log("Estado civil recibido:", this.usuario.turistaInfo?.estadoCivil);
         
         // Convertir el timestamp a formato YYYY-MM-DD para el input date
         if (this.usuario.turistaInfo && this.usuario.turistaInfo.fechaNacimiento) {
@@ -189,7 +204,7 @@ export class PerfilTuristaComponent implements OnInit {
   
     const datosActualizar = {
       nombre: this.usuario.nombre,
-      telefono: this.usuario.turistaInfo.telefono,
+      telefono: this.telefonoObj.internationalNumber,
       ciudad: this.selectedCity,
       pais: this.selectedCountry,
       foto: this.usuario.foto,
