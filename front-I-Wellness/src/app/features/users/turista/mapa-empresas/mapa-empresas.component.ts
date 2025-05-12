@@ -78,13 +78,19 @@ export class MapaEmpresasComponent implements AfterViewInit {
       if (raw) {
         const empresa = {
           nombre: raw.nombre_empresa,
-          telefono: raw.telefono
+          foto: p.foto
         };
       
-        L.marker([lat, lng]).addTo(this.map).bindPopup(`
-          <strong>${empresa.nombre}</strong><br>
-          ${empresa.telefono}
-        `);
+        const popupContent = `
+          <div class="popup-card">
+            <div class="popup-img-container">
+              <img src="${empresa.foto}" alt="${empresa.nombre}" class="popup-img" />
+            </div>
+            <h3 class="popup-title">${empresa.nombre}</h3>
+          </div>
+        `;
+
+        L.marker([lat, lng]).addTo(this.map).bindPopup(popupContent);
       }
     });
   }
