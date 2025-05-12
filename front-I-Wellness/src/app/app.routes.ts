@@ -28,6 +28,7 @@ import { CrearTuristaComponent } from './features/users/administrador/crear-turi
 import { CrearProveedorComponent } from './features/users/administrador/crear-proveedor/crear-proveedor.component';
 import { PerfilProveedorComponent } from './features/users/proveedor/perfil-proveedor/perfil-proveedor.component';
 import { authGuard, turistaGuard, proveedorGuard, adminGuard } from './core/guards/auth.guard';
+import { ServiciosProveedorComponent } from './features/users/proveedor/servicios-proveedor/servicios-proveedor.component';
 
 export const routes: Routes = [
     // Rutas públicas
@@ -49,6 +50,7 @@ export const routes: Routes = [
     { path: 'headerturista', component: HeaderTuristaComponent, canActivate: [turistaGuard] },
     { path: 'mapaempresas', component: MapaEmpresasComponent, canActivate: [turistaGuard] },
     { path: 'editpreferencias/:id', component: EditPreferenciasComponent, canActivate: [turistaGuard] },
+    { path: 'proveedor/:id', component: ServiciosProveedorComponent, canActivate: [turistaGuard] },
     
     // Rutas específicas para Proveedores
     { path: 'homeproveedor', component: HomeProveedorComponent, canActivate: [proveedorGuard] },
