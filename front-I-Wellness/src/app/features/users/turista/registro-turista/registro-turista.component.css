@@ -15,12 +15,13 @@ body {
 }
 
 .container {
+    margin-top: 0.6%;
     display: flex;
     width: 900px;
-    height: wrap-content;
+    max-height: 85%;
     background: white;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
     overflow: hidden;
 }
 
@@ -57,12 +58,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-y: auto;  
 }
 
 .title {
     text-align: center;
     font-size: 22px;
     margin-bottom: 15px;
+    padding-top: 50%;
 }
 
 .turista {
@@ -326,3 +329,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     color: #3166A6;
   }
+  
+.section-title {
+    background-color: #2F5EA7;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
