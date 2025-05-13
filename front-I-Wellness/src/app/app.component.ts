@@ -4,7 +4,6 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { HeaderAdminComponent } from './features/users/administrador/header-admin/header-admin.component';
 import { HeaderProveedorComponent } from './features/users/proveedor/header-proveedor/header-proveedor.component';
 import { HeaderTuristaComponent } from './features/users/turista/header-turista/header-turista.component';
-import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
 
 @Component({
@@ -14,7 +13,6 @@ import { HeaderComponent } from './layout/header/header.component';
     CommonModule,
     RouterModule,
     HeaderComponent,
-    FooterComponent,
     HeaderProveedorComponent,
     HeaderTuristaComponent,
     HeaderAdminComponent,
@@ -25,8 +23,7 @@ import { HeaderComponent } from './layout/header/header.component';
 export class AppComponent {
   title: string = 'front-I-Wellness';
   headerType: string = 'default';
-  //se muestra footer o no se muestra
-  showFooter: boolean = false;
+ 
 
   constructor(private router: Router) {
 
@@ -51,10 +48,6 @@ export class AppComponent {
           this.headerType = 'default';
         }
   
-        // Lógica para mostrar el footer (si es necesario)
-        const allowedRoutes = ['/', '/temas', '/analisis'];
-        const url = event.url;
-        this.showFooter = allowedRoutes.includes(url);
       }
     });
   }

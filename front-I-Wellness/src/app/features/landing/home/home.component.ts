@@ -26,6 +26,7 @@ export class HomeComponent {
 
   showLegend = true;
   legendPosition: LegendPosition = LegendPosition.Below;
+  mostrarInfoExtra = false;
 
   constructor() {}
 
@@ -64,6 +65,8 @@ export class HomeComponent {
     }
   ];
   
-  
+  onLeerMas(): void {
+    this.mostrarInfoExtra = true;   // también podrías alternar: this.mostrarInfoExtra = !this.mostrarInfoExtra;
+  }
 
 }

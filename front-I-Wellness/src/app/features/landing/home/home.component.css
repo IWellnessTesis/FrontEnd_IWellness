@@ -376,3 +376,12 @@ section img:hover {
 }
 
 
+ .small-text {
+      font-size: 0.8rem;
+    }
+
+    #info-extra {
+      display: none;
+      margin-top: 1rem;
+      font-style: italic;
+    }

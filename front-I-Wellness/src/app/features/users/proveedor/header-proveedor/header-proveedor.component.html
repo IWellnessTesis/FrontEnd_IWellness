@@ -3,14 +3,7 @@
       <a href="/homeproveedor" class="nav-link active">Tus servicios</a>
       <a href="/dashboard" class="nav-link">Dashboard</a>
     </div>
-  
-    <div class="nav-center">
-      <input type="text" placeholder="Buscar" class="search-input">
-      <button class="search-btn">
-        <i class="fas fa-search"></i>
-      </button>
-    </div>
-  
+
     <div class="nav-right">
       <div class="profile-container">
         <img [src]="usuario.foto" alt="Profile Picture" class="profile-pic" alt="User" (click)="navigateTo('perfilproveedor', usuario.id)">
