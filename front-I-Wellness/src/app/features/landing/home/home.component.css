@@ -62,7 +62,7 @@ body {
 /* KPIs Section */
 .kpi-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* Cambia 4 por 5 */
     gap: 2.5rem;
     margin-bottom: 3rem;
 }

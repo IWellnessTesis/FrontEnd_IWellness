@@ -25,7 +25,7 @@
       <div class="chart-wrapper genero-chart-wrapper">
         <ngx-charts-bar-vertical-2d
         [results]="generoChartData"
-        [scheme]="colorScheme"
+        [scheme]="colorSchemeGenero"
         [xAxis]="true"
         [yAxis]="true"
         [legend]="true"
@@ -53,7 +53,7 @@
       <div class="chart-wrapper">
         <ngx-charts-bar-horizontal
           [results]="interesesChart"
-          [scheme]="'vivid'"
+          [scheme]="colorScheme"
           [xAxis]="true"
           [yAxis]="true"
           [legend]="false"

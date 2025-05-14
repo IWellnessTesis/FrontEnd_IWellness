@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts'; // Importar NgxChartsModule
 import { ViewEncapsulation } from '@angular/core';
+import {jwtDecode} from 'jwt-decode';
 
 // Definir una interfaz para los datos de servicio
 interface Preferencia {
@@ -37,6 +38,8 @@ export class DashboardComponent implements OnInit {
   generoTuristasChart: any[] = [];
   serviciosPopularesChart: any[] = [];
 
+  nombreEmpresa: string = '';
+  serviciosActivos = 0;
   colorScheme: Color = {
     name: 'customScheme',
     selectable: true,
@@ -50,6 +53,40 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarGraficasProveedor();
+
+    // Obtener idProveedor del JWT
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No hay token en localStorage. Redirigiendo al login...');
+      return;
+    }
+    const decoded: any = jwtDecode(token!);
+    const idProveedor = decoded.idProveedor;
+
+    if (!idProveedor) {
+      console.error('El token no contiene idProveedor.');
+      return;
+    }
+
+    // dashboard.component.ts
+    this.http.get<any>(`http://localhost:5000/api/dashboard-proveedor?idProveedor=${idProveedor}`)
+    .subscribe(data => {
+      this.nombreEmpresa = data.nombre_empresa;
+    });
+
+
+    this.http.get<any>('http://localhost:5000/api/dashboard-admin').subscribe(data => {
+      console.log('Datos recibidos:', data); // DEBUG
+      this.serviciosActivos = data.activos;
+      
+      // Preparar datos para el gráfico de barras
+      this.barChartData = [
+        { name: 'Activos', value: data.activos },
+        { name: 'Inactivos', value: data.inactivos }
+      ];
+    }, error => {
+      console.error('Error al obtener datos del backend', error); // DEBUG
+    });
 
   }
 
@@ -137,6 +174,8 @@ export class DashboardComponent implements OnInit {
       .sort((a, b) => b.value - a.value)
       .slice(0, 10); // Tomar solo los top 10
   });
+
+  
 
 }
 }

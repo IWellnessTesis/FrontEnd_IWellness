@@ -1,5 +1,6 @@
 <div class="dashboard-main-card">
-  <h1 class="dashboard-title">Análisis de servicios en I-Wellness</h1>
+  <h1 class="dashboard-title">¡Hola, {{ nombreEmpresa }}!</h1>
+  <h2 class="dashboard-title">Datos Generales de I-Wellness</h2>
   <div class="kpi-row">
     <div class="kpi-card">
       <div class="kpi-title">Turistas Registrados</div>
@@ -10,7 +11,13 @@
       <div class="kpi-value">{{ topPais }}</div>
       <div class="kpi-subvalue">Visitas: {{ topPaisTotal }}</div>
     </div>
+    <div class="kpi-card">
+    <div class="kpi-title">Servicios Totales</div>
+    <div class="kpi-value">{{ serviciosActivos }}</div>
   </div>
+    
+  </div>
+  
   
   <div class="dashboard-grid">
     <div class="dashboard-card">
@@ -65,4 +72,5 @@
       </div>
     </div>
   </div>
+  <h2 class="dashboard-title">Datos Especificos de {{ nombreEmpresa }}</h2>
 </div>

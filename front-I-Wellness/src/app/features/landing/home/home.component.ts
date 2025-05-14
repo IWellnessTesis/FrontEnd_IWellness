@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PieChartModule } from '@swimlane/ngx-charts';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./home.component.css'],
   animations: []
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+
+  nacionalidadesData: any[] = [];
+  nacionalidadTop: string = '';
+  totalTuristas: number = 0;
 
   //DASHBOARD
   //PRODUCTOS
@@ -27,19 +32,22 @@ export class HomeComponent {
   showLegend = true;
   legendPosition: LegendPosition = LegendPosition.Below;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.http.get<any[]>('http://localhost:5000/api/turistas-nacionalidad')
+    .subscribe(data => {
+      this.nacionalidadesData = data;
 
-  //NACIONALIDADES
-  nacionalidadesData = [
-    { name: 'Costa Rica', value: 3 },
-    { name: 'América del Norte', value: 3 },
-    { name: 'América del Sur', value: 1 },
-    { name: 'Europa Occidental', value: 3 },
-    { name: 'Europa del Sur', value: 2},
-    { name: 'Asia Oriental', value: 1}
-  ];
+      // Calcular la nacionalidad con más visitantes
+      if (data && data.length > 0) {
+        const top = data.reduce((prev, curr) => curr.value > prev.value ? curr : prev);
+        this.nacionalidadTop = top.name;
+        this.totalTuristas = data.reduce((acc, curr) => acc + curr.value, 0);
+      }
+    });
+  }
+
 
   //ACTIVIDADES
   actividadesVisitantesData = [

@@ -75,7 +75,14 @@ export class DashboardAdminComponent implements OnInit {
     name: 'customScheme',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#6C63FF', '#20c997', '#fd7e14', '#ffc107', '#343a40']
+    domain: ['#FF9843', '#FFDD95', '#86A7FC', '#3468C0', '#60B5FF']
+  };
+
+  colorSchemeGenero: Color = {
+    name: 'customSchemeGenero',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#3468C0', '#86A7FC']
   };
 
   xAxisTickFormatting = (label: string) => label; // No rota, muestra completo si cabe
@@ -88,7 +95,6 @@ export class DashboardAdminComponent implements OnInit {
   ngOnInit(): void {
     this.cargarDatos();
     this.getServiciosData();
-    this.cargarUbicaciones();
     this.cargarTopProveedoresActivos();
     this.cargarTuristasGenero();
   }
@@ -192,17 +198,23 @@ export class DashboardAdminComponent implements OnInit {
       console.log('Datos recibidos Turista:', data); // DEBUG
       this.totalTuristas = data.total;
     });
+
+
+
+
   }
 
   getServiciosData() {
-    this.http.get<Servicio[]>('http://localhost:5000/api/servicios').subscribe(data => {
+    this.http.get<any>('http://localhost:5000/api/dashboard-admin').subscribe(data => {
       console.log('Datos recibidos:', data); // DEBUG
-      this.servicios = data;
-      this.prepareBarChartData();
-
-      // Calcular KPIs
-      this.serviciosActivos = data.filter(s => s.estado_texto === 'Activo').length;
-      this.serviciosInactivos = data.filter(s => s.estado_texto === 'Inactivo').length;
+      this.serviciosActivos = data.activos;
+      this.serviciosInactivos = data.inactivos;
+      
+      // Preparar datos para el gráfico de barras
+      this.barChartData = [
+        { name: 'Activos', value: data.activos },
+        { name: 'Inactivos', value: data.inactivos }
+      ];
     }, error => {
       console.error('Error al obtener datos del backend', error); // DEBUG
     });
@@ -220,23 +232,7 @@ export class DashboardAdminComponent implements OnInit {
     }));
   }
 
-  cargarUbicaciones() {
-    this.http.get<Ubicacion[]>('http://localhost:5000/api/ubicaciones-proveedores').subscribe(data => {
-      this.ubicaciones = data;
-    });
-  }
 
-  onMapReady(map: L.Map) {
-    // Agregar marcadores al mapa
-    this.ubicaciones.forEach(ubicacion => {
-      const marker = L.marker([ubicacion.coordenadaY, ubicacion.coordenadaX])
-        .bindPopup(`
-          <strong>${ubicacion.serviceName}</strong><br>
-          Estado: ${ubicacion.estado_texto}
-        `);
-      marker.addTo(map);
-    });
-  }
 
   cargarTopProveedoresActivos() {
     this.http.get<any[]>('http://localhost:5000/api/top-proveedores-activos').subscribe(data => {
