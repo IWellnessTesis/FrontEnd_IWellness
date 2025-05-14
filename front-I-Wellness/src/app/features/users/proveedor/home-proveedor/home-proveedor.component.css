@@ -21,6 +21,7 @@ body {
     padding: 20px;
     text-align: left;
     color: white;
+    margin-top: 7%;
 }
 
 /* Caja de servicios */
@@ -31,6 +32,8 @@ body {
     padding: 20px;
     border-radius: 0 0 10px 10px;
     gap: 15px;
+    max-height: 65%;
+    overflow-y: auto;
 }
 
 /* Contenedor del botón para que quede arriba */
@@ -191,3 +194,17 @@ body {
   .slider.round:before {
     border-radius: 50%;
   }
+.services-box::-webkit-scrollbar {
+  width: 8px;      
+  border-radius: 10px;        
+}
+
+.services-box::-webkit-scrollbar-track {
+  background: #f5f4f1; 
+   border-radius: 10px;        
+}
+
+.services-box::-webkit-scrollbar-thumb {
+  background: #cdcac2;     
+  border-radius: 10px;
+}

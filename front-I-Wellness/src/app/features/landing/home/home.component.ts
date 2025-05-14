@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
 
   showLegend = true;
   legendPosition: LegendPosition = LegendPosition.Below;
+  mostrarInfoExtra = false;
 
   constructor(private http: HttpClient) {}
 
@@ -72,6 +73,8 @@ export class HomeComponent implements OnInit {
     }
   ];
   
-  
+  onLeerMas(): void {
+    this.mostrarInfoExtra = true;   // también podrías alternar: this.mostrarInfoExtra = !this.mostrarInfoExtra;
+  }
 
 }
