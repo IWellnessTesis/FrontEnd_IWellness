@@ -16,15 +16,33 @@
       </p>
     </div>
   </div>
-  <!--
-  <div class="rating">
-    <p><strong>Calificación promedio:</strong> {{ averageRating }} ⭐</p>
-  </div>
-  
-  <div class="reviews">
-    <h3>Reseñas de usuarios:</h3>
-    <div *ngFor="let review of reviews" class="review">
-      <p><strong>{{ review.name }}</strong>: {{ review.comment }} ({{ review.rating }} ⭐)</p>
+
+  <div *ngIf="usuario && servicio" class="reserva-container">
+    <h3>Reservar este servicio</h3>
+
+    <div class="reserva-campos">
+      <mat-form-field appearance="fill">
+        <mat-label>📅 Selecciona una fecha</mat-label>
+        <input matInput 
+              [matDatepicker]="picker"
+              [(ngModel)]="fechaSeleccionada" 
+              [min]="minFechaObj"
+              [matDatepickerFilter]="filtrarDiasDisponibles"
+              required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>⏰ Selecciona una hora:</mat-label>
+        <input matInput [matTimepicker]="timepicker" [(ngModel)]="horaSeleccionada" required />
+        <mat-timepicker-toggle matSuffix [for]="timepicker"></mat-timepicker-toggle>
+        <mat-timepicker #timepicker></mat-timepicker>
+      </mat-form-field>
+
+      <button (click)="hacerReserva()" class="btn-reservar">
+        Reservar
+      </button>
     </div>
-  </div>-->
+  </div>
 </div>

@@ -55,7 +55,6 @@ export class UsuarioService {
 
   obtenerProveedores(): Observable<any> {
     const headers = this.obtenerHeaders(); // Agregar token en los headers
-    console.log('obteniendo proveedores desde el servicio');
     return this.http.get(`${API_URL}/proveedores`, { headers });
   }
 
