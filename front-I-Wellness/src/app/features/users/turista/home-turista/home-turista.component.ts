@@ -52,7 +52,7 @@ ngOnInit(): void {
       this.servicios = servicios;
       this.preferencias = preferencias;
       this.preferenciasServicio = preferenciasServicio;
-      this.usuario = JSON.parse(usuario);  // Asumiendo que el usuario es una cadena JSON
+      this.usuario = JSON.parse(usuario); 
 
       // Llamar a las funciones necesarias después de obtener los datos
       this.cargarPreferenciasUsuario();  
