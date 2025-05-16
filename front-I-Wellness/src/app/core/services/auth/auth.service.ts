@@ -97,7 +97,8 @@ export class AuthService {
       coordenadaY: proveedorData.coordenadaY,
       cargoContacto: proveedorData.cargoContacto,
       telefono: proveedorData.telefono,
-      telefonoEmpresa: proveedorData.telefonoEmpresa
+      telefonoEmpresa: proveedorData.telefonoEmpresa,
+      foto: proveedorData.foto
     };
   
     return this.http.post<any>(`${this.apiUrl}/registro/Proveedor`, body, { 
@@ -136,9 +137,12 @@ export class AuthService {
       pais: turistaData.pais,
       genero: turistaData.genero,
       fechaNacimiento: turistaData.fechaNacimiento,
-      estadoCivil: turistaData.estadoCivil
+      estadoCivil: turistaData.estadoCivil,
+      foto: turistaData.foto
     };
   
+    console.log("turista: ",body)
+
     return this.http.post<any>(`${this.apiUrl}/registro/Turista`, body, { 
       headers,
       responseType: 'text' as 'json'

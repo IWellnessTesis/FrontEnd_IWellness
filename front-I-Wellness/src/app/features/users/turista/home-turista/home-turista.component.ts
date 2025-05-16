@@ -8,10 +8,11 @@ import { ServicioXPreferenciaService } from '../../../preferencias/services/serv
 import { CommonModule } from '@angular/common';
 import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
 import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home-turista',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home-turista.component.html',
   styleUrl: './home-turista.component.css'
 })
@@ -25,6 +26,13 @@ export class HomeTuristaComponent {
   serviciosFiltrados: any;
   preferencias: any;
   serviciosAgrupadosPorPreferencia :any;
+
+  scrollStates: { [key: string]: { canScrollLeft: boolean; canScrollRight: boolean } } = {};
+
+  searchTerm: string = '';
+  serviciosFiltradosBusqueda: any[] = [];
+
+
 
   constructor(
     private router: Router, 
@@ -57,6 +65,15 @@ ngOnInit(): void {
       // Llamar a las funciones necesarias después de obtener los datos
       this.cargarPreferenciasUsuario();  
       this.agruparServiciosPorTodasLasPreferencias();
+
+      
+      // Esperar a que el DOM se actualice
+      setTimeout(() => {
+        this.onScroll('para-ti');
+        this.serviciosAgrupadosPorPreferencia.forEach((_: any, i: number) =>
+          this.onScroll('grupo-' + i)
+        );
+      }, 500);
     },
     error: (err) => {
       console.error('Error al cargar los datos:', err);
@@ -122,11 +139,53 @@ cargarPreferenciasUsuario() {
         )
       );
     });
-
   }
 
   navigateToDetalle(id: number) {
     this.router.navigate(['/infoservicio/', id]);
   }
   
+  scrollLeft(id: string) {
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollTo({ left: container.scrollLeft - 300, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight(id: string) {
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollTo({ left: container.scrollLeft + 300, behavior: 'smooth' });
+    }
+  }
+
+
+
+  onScroll(containerId: string) {
+    const container = document.getElementById(containerId);
+    if (container) {
+      this.scrollStates[containerId] = {
+        canScrollLeft: container.scrollLeft > 0,
+        canScrollRight: container.scrollLeft + container.offsetWidth < container.scrollWidth
+      };
+    }
+  }
+
+  filtrarServiciosPorBusqueda() {
+  if (!this.searchTerm.trim()) {
+    // Si no hay término, mostrar todos los filtrados por preferencias
+    this.serviciosFiltradosBusqueda = this.serviciosFiltrados;
+  } else {
+    const term = this.searchTerm.toLowerCase();
+    this.serviciosFiltradosBusqueda = this.serviciosFiltrados.filter((servicio: any) =>
+      servicio.nombre.toLowerCase().includes(term)
+    );
+  }
 }
+hayBusquedaActiva(): boolean {
+  return this.searchTerm.trim().length > 0;
+}
+
+}
+
+

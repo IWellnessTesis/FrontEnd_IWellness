@@ -40,6 +40,8 @@ export class RegistroTuristaComponent implements OnInit {
   genero: string = '';
   fechaNacimiento: string = '';
   estadoCivil: string = '';
+  imagenPerfil: string = '';
+  defaultImg: string = 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'; 
 
   // Mensajes de error
   nameError: string = '';
@@ -201,7 +203,8 @@ export class RegistroTuristaComponent implements OnInit {
         pais: this.selectedCountry,
         genero: this.genero,
         fechaNacimiento: formattedDate,
-        estadoCivil: this.estadoCivil
+        estadoCivil: this.estadoCivil,
+        foto: this.imagenPerfil || this.defaultImg
       };
 
       // Registrar al usuario - el servicio actualizará guarda credenciales en localStorage
@@ -270,4 +273,15 @@ export class RegistroTuristaComponent implements OnInit {
       });
     }
   }
+
+onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagenPerfil = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
 }

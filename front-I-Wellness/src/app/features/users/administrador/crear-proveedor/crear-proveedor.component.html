@@ -47,6 +47,9 @@
                     <input type="password" placeholder="Contraseña" [(ngModel)]="password" (input)="validatePassword()" required>
                     <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
 
+                    <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" maxlength="55" required>
+                    <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
+
                 </div>
                 
                 <!-- Datos de la Empresa -->
@@ -77,9 +80,12 @@
                         required
                         (input)="validatecompanyNamePhone()">
                     </ngx-intl-tel-input>
+
+                    <label for="foto">Foto de la persona</label>
+                    <input class="foto" type="file" id="foto" accept="image/*" (change)="onFileSelected($event)" />
+                    <div *ngIf="fotoError" class="error-message">{{ fotoError }}</div>
                     
-                    <input type="password" placeholder="Repite tu contraseña" [(ngModel)]="confirmPassword" (input)="validateConfirmPassword()" maxlength="55" required>
-                    <small *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</small>
+
                 </div>
             </div>
             <input

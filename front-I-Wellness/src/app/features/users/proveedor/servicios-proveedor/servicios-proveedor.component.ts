@@ -15,6 +15,9 @@ export class ServiciosProveedorComponent {
     servicios: any;
     nombreEmpresa: any;
 
+    scrollStates: { [key: string]: { canScrollLeft: boolean; canScrollRight: boolean } } = {};
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router, 
@@ -31,6 +34,13 @@ export class ServiciosProveedorComponent {
         next: (data) => {
           this.servicios = data;
           console.log('servicios:', this.servicios);
+
+                setTimeout(() => {
+        this.onScroll('para-ti');
+        this.servicios.forEach((_: any, i: number) =>
+          this.onScroll('grupo-' + i)
+        );
+      }, 500);
         },
         error: (err) => console.error('Error al obtener los servicios', err),
       });
@@ -39,5 +49,31 @@ export class ServiciosProveedorComponent {
 
     navigateToDetalle(id: number) {
     this.router.navigate(['/infoservicio/', id]);
+  }
+
+  scrollLeft(id: string) {
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollTo({ left: container.scrollLeft - 300, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight(id: string) {
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollTo({ left: container.scrollLeft + 300, behavior: 'smooth' });
+    }
+  }
+
+
+
+  onScroll(containerId: string) {
+    const container = document.getElementById(containerId);
+    if (container) {
+      this.scrollStates[containerId] = {
+        canScrollLeft: container.scrollLeft > 0,
+        canScrollRight: container.scrollLeft + container.offsetWidth < container.scrollWidth
+      };
+    }
   }
 }

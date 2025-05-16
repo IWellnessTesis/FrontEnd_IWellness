@@ -31,6 +31,7 @@ export class CrearProveedorComponent {
    companyNamePhone: any = '';
    coordinateX: string = '';
    coordinateY: string = '';
+   foto: string = ''; 
  
    // Errores
    nameError = '';
@@ -43,6 +44,7 @@ export class CrearProveedorComponent {
    companyNamePhoneError = '';
    coordinateXError = '';
    coordinateYError = '';
+   fotoError: string = '';
  
    isLoading = false;
 
@@ -169,12 +171,26 @@ export class CrearProveedorComponent {
      this.validatecompanyNamePhone();
      this.validatecoordinateX();
      this.validatecoordinateY();
+     this.validateFoto(); 
+
      return !this.hasErrors();
    }
  
-   hasErrors(): boolean {
-     return !!(this.nameError || this.contactPositionError || this.phoneError || this.passwordError || this.companyNameError || this.emailError || this.companyNamePhoneError || this.coordinateXError || this.coordinateYError);
-   }
+hasErrors(): boolean {
+  return !!(
+    this.nameError ||
+    this.contactPositionError ||
+    this.phoneError ||
+    this.passwordError ||
+    this.confirmPasswordError ||
+    this.companyNameError ||
+    this.emailError ||
+    this.companyNamePhoneError ||
+    this.coordinateXError ||
+    this.coordinateYError ||
+    this.fotoError
+  );
+}
  
   // Validaciones
   validateName() {
@@ -231,6 +247,10 @@ export class CrearProveedorComponent {
     const coordinateRegex = /^-?\d{1,3}\.\d+$/;
     this.coordinateYError = this.coordinateY.match(coordinateRegex) ? '' : 'Ingrese la coordenada Y correctamente';
   }
+
+    validateFoto() {
+  this.fotoError = this.foto ? '' : 'Debe subir una imagen.';
+}
  
   agregarProveedor() {
     if (this.validateForm()) {
@@ -244,7 +264,8 @@ export class CrearProveedorComponent {
         correo: this.email,
         telefonoEmpresa: this.companyNamePhone.internationalNumber,
         coordenadaX: this.coordinateX || '0',
-        coordenadaY: this.coordinateY || '0'
+        coordenadaY: this.coordinateY || '0',
+        foto: this.foto
       };
   
       this.adminService.crearProveedor(providerData).subscribe({
@@ -277,5 +298,17 @@ export class CrearProveedorComponent {
       });
     }
   }
+
+  onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.foto = reader.result as string;
+      this.fotoError = ''; 
+    };
+    reader.readAsDataURL(file);
+  }
+}
   
 }

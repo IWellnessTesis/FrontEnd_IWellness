@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-info-servicio',
@@ -31,6 +32,7 @@ export class InfoServicioComponent {
 
   servicio: any;
   usuario: any;
+  proveedor: any;
   tipoCambio: number = 0;
 
   servicioSeleccionado: any;
@@ -55,11 +57,11 @@ export class InfoServicioComponent {
     private servicioService: ServicioService,
     private tipoCambioService: TipoCambioService,
     private reservaService: ReservaService,
-    private authService: AuthService
+    private authService: AuthService,
+    private usuarioService: UsuarioService
   ) {}
 
 ngOnInit(): void {
-
   const hoy = new Date();
   hoy.setDate(hoy.getDate() + 1);
 
@@ -78,26 +80,47 @@ ngOnInit(): void {
     });
   }
 
-    this.route.paramMap.subscribe(params => {
-      const id = Number(params.get('id'));
-      this.servicioService.buscarPorId(id).subscribe({
-        next: data => {
-          this.servicio = data;
-          this.horariosDisponibles = this.servicio.horario;
-        }
-      });
-    });
+  this.route.paramMap.subscribe(params => {
+    const id = Number(params.get('id'));
+    this.servicioService.buscarPorId(id).subscribe({
+      next: data => {
+        this.servicio = data;
+        console.log(this.servicio);
+        this.horariosDisponibles = this.servicio.horario;
 
-    this.tipoCambioService.obtenerTipoCambioUSD().subscribe({
-      next: cambio => {
-        this.tipoCambio = cambio;
-        console.log('Tipo de cambio obtenido:', cambio);
+        // Luego de obtener el servicio, obtener proveedores
+        this.usuarioService.obtenerProveedores().subscribe({
+          next: proveedores => {
+            // Buscar el proveedor cuyo _id coincida con el _idProveedor del servicio
+            const proveedor = proveedores.find((p: any) => p.id === this.servicio._idProveedor);
+            if (proveedor) {
+              this.proveedor = proveedor;
+              console.log('Proveedor encontrado:', this.proveedor);
+            } else {
+              console.warn('No se encontró un proveedor con ese _id');
+            }
+          },
+          error: err => {
+            console.error('Error al obtener los proveedores:', err);
+          }
+        });
       },
       error: err => {
-        console.error('Error al obtener el tipo de cambio', err);
+        console.error('Error al obtener el servicio:', err);
       }
     });
-  }
+  });
+
+  this.tipoCambioService.obtenerTipoCambioUSD().subscribe({
+    next: cambio => {
+      this.tipoCambio = cambio;
+    },
+    error: err => {
+      console.error('Error al obtener el tipo de cambio', err);
+    }
+  });
+}
+
 
   formatearHora(horas: Date): string {
     const hora = horas; // tipo Date

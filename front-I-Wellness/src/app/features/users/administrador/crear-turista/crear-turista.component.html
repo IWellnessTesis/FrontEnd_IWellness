@@ -10,6 +10,11 @@
             <h2 class="title"><span class="turista">Crear</span> <span class="registro"> Turista</span></h2>
 
             <button class="btn-section">Datos de contacto</button>
+
+            <label class="file-upload-label">
+              <input type="file" accept="image/*" (change)="onFileSelected($event)">
+              <span>Subir foto de perfil (opcional)</span>
+            </label>
             
             <input type="text" placeholder="Nombre" [(ngModel)]="name" (input)="validateName()" maxlength="35" required>
             <small *ngIf="nameError" class="error-message">{{ nameError }}</small>

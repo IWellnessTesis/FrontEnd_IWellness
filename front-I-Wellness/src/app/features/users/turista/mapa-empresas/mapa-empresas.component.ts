@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 })
 export class MapaEmpresasComponent implements AfterViewInit {
   private map!: L.Map;
+  private tooltips: L.Tooltip[] = [];
+
 
   constructor(private usuarioServicio: UsuarioService, private router: Router) {}
 
@@ -45,60 +47,74 @@ export class MapaEmpresasComponent implements AfterViewInit {
   }
 
   private pintarProveedores(lista: usuarios[]): void {
-    lista.forEach((p) => {
-      console.log('Proveedor raw:', p);
+  this.tooltips = []; // Reinicia la lista
+  lista.forEach((p) => {
+    const info = Object.values(p).find(
+      (v) => v && typeof v === 'object' && 'coordenadaX' in v && 'coordenadaY' in v
+    ) as { coordenadaX: string; coordenadaY: string } | undefined;
 
-      // 1) Miramos cada valor del objeto `p` y buscamos el que tenga coordenadas:
-      const info = Object.values(p).find(
-        (v) =>
-          v != null &&
-          typeof v === 'object' &&
-          'coordenadaX' in v &&
-          'coordenadaY' in v
-      ) as { coordenadaX: string; coordenadaY: string } | undefined;
+    if (!info) return;
 
-      if (!info) {
-        console.warn('No encontré coordenadas en', p);
-        return;
-      }
+    const lat = parseFloat(info.coordenadaX);
+    const lng = parseFloat(info.coordenadaY);
+    if (isNaN(lat) || isNaN(lng)) return;
 
-      // 2) Parseamos y validamos
-      const lat = parseFloat(info.coordenadaX);
-      const lng = parseFloat(info.coordenadaY);
-      if (isNaN(lat) || isNaN(lng)) {
-        console.warn('Coordenadas inválidas en', info);
-        return;
-      }
+    const raw = Object.values(p).find(v =>
+      v && typeof v === 'object' && 'nombre_empresa' in v && 'telefono' in v
+    );
 
-      const raw = Object.values(p).find(v =>
-        v && typeof v === 'object'
-        && 'nombre_empresa' in v
-        && 'telefono' in v
-      );
-      
-      if (raw) {
-        const empresa = {
-          nombre: raw.nombre_empresa,
-          foto: p.foto,
-          id: p.id
-        };
-      
-        const popupContent = `
-          <div class="popup-card">
-            <a href="javascript:void(0);" onclick="window.sessionStorage.setItem('nombreEmpresa', '${empresa.nombre}'); window.location.href='/proveedor/${p.id}';" style="text-decoration: none; color: inherit;">
-              <div class="popup-img-container">
+    if (raw) {
+      const empresa = {
+        nombre: raw.nombre_empresa,
+        foto: p.foto,
+        id: p.id
+      };
+
+      const popupContent = `
+        <div class="popup-card">
+          <a href="javascript:void(0);" onclick="window.sessionStorage.setItem('nombreEmpresa', '${empresa.nombre}'); window.location.href='/proveedor/${p.id}';">
+            <div class="popup-img-container">
               <img src="${empresa.foto}" alt="${empresa.nombre}" class="popup-img" />
-              </div>
-              <h3 class="popup-title">${empresa.nombre}</h3>
-            </a>
-          </div>
-        `;
+            </div>
+            <h3 class="popup-title">${empresa.nombre}</h3>
+          </a>
+        </div>
+      `;
 
-        const marker = L.marker([lat, lng])
+      const marker = L.marker([lat, lng])
         .addTo(this.map)
         .bindPopup(popupContent);
 
+      const tooltipInstance = marker.bindTooltip(empresa.nombre, {
+        permanent: true,
+        direction: 'bottom',
+        offset: [0, 10],
+        className: 'custom-tooltip'
+      }).getTooltip();
+
+      if (tooltipInstance) {
+        this.tooltips.push(tooltipInstance);
+      }
+    }
+  });
+
+  this.adjustTooltipsVisibility();
+}
+
+private adjustTooltipsVisibility(): void {
+  this.map.on('zoomend moveend', () => {
+    const zoom = this.map.getZoom();
+
+    this.tooltips.forEach((tooltip) => {
+      const el = tooltip.getElement();
+      if (el) {
+        if (zoom < 12) {
+          el.style.display = 'none';
+        } else {
+          el.style.display = 'block';
+        }
       }
     });
-  }
+  });
+}
 }

@@ -142,7 +142,6 @@ input {
 .error-message {
     color: red;
     font-size: 14px;
-    margin-top: 10px;
 }
 .map-container {
     height: 200px;   
@@ -279,5 +278,9 @@ select.form-control:focus {
     outline: none;
     border-color: #48A6A7;
     box-shadow: 0 0 0 2px rgba(72, 166, 167, 0.2);
+}
+
+.foto {
+  color: #000;
 }
 
