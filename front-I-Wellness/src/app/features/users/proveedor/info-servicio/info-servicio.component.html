@@ -17,6 +17,24 @@
     </div>
   </div>
 
+  <div class="proveedor-info" *ngIf="proveedor">
+  <h3>🏨 Servicio ofrecido por</h3>
+  <div class="proveedor-contenido">
+    <img *ngIf="proveedor.foto" 
+         [src]="proveedor.foto" 
+         alt="{{ proveedor.nombre }}" 
+         class="proveedor-foto">
+    
+    <div class="proveedor-detalles">
+      <p><strong>Empresa:</strong> {{ proveedor.proveedor.nombre_empresa }}</p>
+      <p><strong>Contacto:</strong> {{ proveedor.nombre }}</p>
+      <p><strong>Cargo:</strong> {{ proveedor.proveedor.cargoContacto }}</p>
+      <p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+    </div>
+  </div>
+</div>
+
+
   <div *ngIf="usuario && servicio" class="reserva-container">
     <h3>Reservar este servicio</h3>
 
