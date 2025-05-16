@@ -8,10 +8,11 @@ import { ServicioXPreferenciaService } from '../../../preferencias/services/serv
 import { CommonModule } from '@angular/common';
 import { PreferenciasService } from '../../../preferencias/services/preferencias/preferencias.service';
 import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home-turista',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home-turista.component.html',
   styleUrl: './home-turista.component.css'
 })
@@ -27,6 +28,10 @@ export class HomeTuristaComponent {
   serviciosAgrupadosPorPreferencia :any;
 
   scrollStates: { [key: string]: { canScrollLeft: boolean; canScrollRight: boolean } } = {};
+
+  searchTerm: string = '';
+  serviciosFiltradosBusqueda: any[] = [];
+
 
 
   constructor(
@@ -134,7 +139,6 @@ cargarPreferenciasUsuario() {
         )
       );
     });
-
   }
 
   navigateToDetalle(id: number) {
@@ -166,4 +170,22 @@ cargarPreferenciasUsuario() {
       };
     }
   }
+
+  filtrarServiciosPorBusqueda() {
+  if (!this.searchTerm.trim()) {
+    // Si no hay término, mostrar todos los filtrados por preferencias
+    this.serviciosFiltradosBusqueda = this.serviciosFiltrados;
+  } else {
+    const term = this.searchTerm.toLowerCase();
+    this.serviciosFiltradosBusqueda = this.serviciosFiltrados.filter((servicio: any) =>
+      servicio.nombre.toLowerCase().includes(term)
+    );
+  }
 }
+hayBusquedaActiva(): boolean {
+  return this.searchTerm.trim().length > 0;
+}
+
+}
+
+
