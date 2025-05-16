@@ -30,6 +30,7 @@ import { PerfilProveedorComponent } from './features/users/proveedor/perfil-prov
 import { authGuard, turistaGuard, proveedorGuard, adminGuard } from './core/guards/auth.guard';
 import { ServiciosProveedorComponent } from './features/users/proveedor/servicios-proveedor/servicios-proveedor.component';
 import { VerReservasComponent } from './features/users/turista/ver-reservas/ver-reservas.component';
+import { RestablecerComponent } from './features/landing/restablecer/restablecer.component';
 
 export const routes: Routes = [
     // Rutas públicas
@@ -39,10 +40,12 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'registroturista', component: RegistroTuristaComponent},
     { path: 'recuperar', component: RecuperarComponent},
+    { path: 'restablecer', component: RestablecerComponent },
     { path: 'registroproveedor', component: RegistroProveedorComponent},
     
     // Rutas compartidas - accesibles a todos los usuarios autenticados
     { path: 'infoservicio/:id', component: InfoServicioComponent, canActivate: [authGuard] },
+   
     
     // Rutas específicas para Turistas
     { path: 'formulariogustos', component: FormulariogustosComponent, canActivate: [turistaGuard] },
