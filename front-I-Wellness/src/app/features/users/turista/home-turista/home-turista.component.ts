@@ -26,6 +26,9 @@ export class HomeTuristaComponent {
   preferencias: any;
   serviciosAgrupadosPorPreferencia :any;
 
+  scrollStates: { [key: string]: { canScrollLeft: boolean; canScrollRight: boolean } } = {};
+
+
   constructor(
     private router: Router, 
     private servicioService: ServicioService, 
@@ -57,6 +60,15 @@ ngOnInit(): void {
       // Llamar a las funciones necesarias después de obtener los datos
       this.cargarPreferenciasUsuario();  
       this.agruparServiciosPorTodasLasPreferencias();
+
+      
+      // Esperar a que el DOM se actualice
+      setTimeout(() => {
+        this.onScroll('para-ti');
+        this.serviciosAgrupadosPorPreferencia.forEach((_: any, i: number) =>
+          this.onScroll('grupo-' + i)
+        );
+      }, 500);
     },
     error: (err) => {
       console.error('Error al cargar los datos:', err);
@@ -129,4 +141,29 @@ cargarPreferenciasUsuario() {
     this.router.navigate(['/infoservicio/', id]);
   }
   
+  scrollLeft(id: string) {
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollTo({ left: container.scrollLeft - 300, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight(id: string) {
+    const container = document.getElementById(id);
+    if (container) {
+      container.scrollTo({ left: container.scrollLeft + 300, behavior: 'smooth' });
+    }
+  }
+
+
+
+  onScroll(containerId: string) {
+    const container = document.getElementById(containerId);
+    if (container) {
+      this.scrollStates[containerId] = {
+        canScrollLeft: container.scrollLeft > 0,
+        canScrollRight: container.scrollLeft + container.offsetWidth < container.scrollWidth
+      };
+    }
+  }
 }

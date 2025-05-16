@@ -4,22 +4,60 @@
       <div class="recommendations">
         <section>
           <h3>Para ti</h3>
-          <div class="card-container">
-            <div class="card" *ngFor="let servicio of serviciosFiltrados" (click)="navigateToDetalle(servicio._idServicio)">
-              <img [src]="servicio.imagen" [alt]="servicio.nombre">
-              <span>{{ servicio.nombre }}</span>
+            <div class="scroll-wrapper">
+              <button
+                class="scroll-btn left"
+                [ngClass]="{ 'hidden': !scrollStates['para-ti']?.canScrollLeft }"
+                (click)="scrollLeft('para-ti')"
+              >&#10094;</button>
+
+              <div
+                class="card-container"
+                id="para-ti"
+                (scroll)="onScroll('para-ti')"
+                #paraTiContainer
+              >
+                <div class="card" *ngFor="let servicio of serviciosFiltrados" (click)="navigateToDetalle(servicio._idServicio)">
+                  <img [src]="servicio.imagen" [alt]="servicio.nombre">
+                  <span>{{ servicio.nombre }}</span>
+                </div>
+              </div>
+
+              <button
+                class="scroll-btn right"
+                [ngClass]="{ 'hidden': !scrollStates['para-ti']?.canScrollRight }"
+                (click)="scrollRight('para-ti')"
+              >&#10095;</button>
             </div>
-          </div>
         </section>
         
         <section>
-          <div *ngFor="let grupo of serviciosAgrupadosPorPreferencia">
+          <div *ngFor="let grupo of serviciosAgrupadosPorPreferencia; let i = index">
             <h3>{{ grupo.preferencia.nombre }}</h3>
-            <div class="card-container">
-              <div *ngFor="let servicio of grupo.servicios" class="card"  (click)="navigateToDetalle(servicio._idServicio)">
-              <img [src]="servicio.imagen" [alt]="servicio.nombre">
-              <span>{{ servicio.nombre }}</span>
+
+            <div class="scroll-wrapper">
+              <button
+                class="scroll-btn left"
+                [ngClass]="{ 'hidden': !scrollStates['grupo-' + i]?.canScrollLeft }"
+                (click)="scrollLeft('grupo-' + i)"
+              >&#10094;</button>
+
+              <div
+                class="card-container"
+                [id]="'grupo-' + i"
+                (scroll)="onScroll('grupo-' + i)"
+              >
+                <div class="card" *ngFor="let servicio of grupo.servicios" (click)="navigateToDetalle(servicio._idServicio)">
+                  <img [src]="servicio.imagen" [alt]="servicio.nombre">
+                  <span>{{ servicio.nombre }}</span>
+                </div>
               </div>
+
+              <button
+                class="scroll-btn right"
+                [ngClass]="{ 'hidden': !scrollStates['grupo-' + i]?.canScrollRight }"
+                (click)="scrollRight('grupo-' + i)"
+              >&#10095;</button>
             </div>
           </div>
         </section>
