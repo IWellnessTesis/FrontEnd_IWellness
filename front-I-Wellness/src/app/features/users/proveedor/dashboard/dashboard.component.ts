@@ -57,7 +57,9 @@ reservasPorServicio: any[] = [];
 reservasPorEstado: any[] = [];
 reservasPorGenero: any[] = [];
 reservasPorNacionalidad: any[] = [];
+reservasPorNacionalidadChart: any[] = [];
 reservasPorGeneroChart: any[] = [];
+reservasPorEstadoCivilChart: any[] = [];
   // Otros
   topPais = '';
   topPaisTotal = 0;
@@ -66,9 +68,17 @@ reservasPorGeneroChart: any[] = [];
     name: 'customScheme',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#6C63FF', '#20c997', '#fd7e14', '#ffc107', '#343a40']
+    domain: [
+      '#FF9843', // Naranja vibrante
+      '#FFDD95', // Amarillo suave
+      '#86A7FC', // Azul claro
+      '#3468C0'  // Azul intenso
+    ]
   };
 xAxisTickFormatting: any;
+  totalConfirmadas: number = 0;
+  totalCompletadas: number = 0;
+
 
   constructor(private http: HttpClient) {}
 
@@ -147,23 +157,31 @@ xAxisTickFormatting: any;
   );
 
   // NUEVOS ENDPOINTS:
-  this.http.get<any[]>(`http://localhost:5000/api/proveedor/lista-servicios?idProveedor=${idProveedor}`)
-    .subscribe(data => this.servicios = data);
 
   this.http.get<any>(`http://localhost:5000/api/proveedor/total-reservas?idProveedor=${idProveedor}`)
     .subscribe(data => this.totalReservas = data.total_reservas);
 
-    this.http.get<any[]>(`http://localhost:5000/api/reservas-por-servicio?idProveedor=${idProveedor}`)
+    this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-servicio?idProveedor=${idProveedor}`)
     .subscribe(data => {
       this.reservasPorServicioChart = data.map(r => ({
         name: r.serviceName,
         value: r.total_reservas
       }));
     });
-  this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-estado?idProveedor=${idProveedor}`)
-    .subscribe(data => this.reservasPorEstado = data);
+    this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-estado?idProveedor=${idProveedor}`)
+    .subscribe(data => {
+      this.reservasPorEstado = data;
+      // Reinicia los contadores
+      this.totalConfirmadas = 0;
+      this.totalCompletadas = 0;
+      // Asigna los valores según el estado
+      data.forEach(item => {
+        if (item.estado === 'confirmada') this.totalConfirmadas = item.total;
+        if (item.estado === 'completada') this.totalCompletadas = item.total;
+      });
+    });
 
-    this.http.get<any[]>(`http://localhost:5000/api/reservas-genero-proveedor?idProveedor=${idProveedor}`)
+    this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-genero?idProveedor=${idProveedor}`)
     .subscribe(data => {
       this.reservasPorGeneroChart = data.map(r => ({
         name: r.genero,
@@ -171,8 +189,22 @@ xAxisTickFormatting: any;
       }));
     });
 
-  this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-nacionalidad?idProveedor=${idProveedor}`)
-    .subscribe(data => this.reservasPorNacionalidad = data);
+    this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-nacionalidad?idProveedor=${idProveedor}`)
+    .subscribe(data => {
+      this.reservasPorNacionalidadChart = data.map(item => ({
+        name: item.pais, 
+        value: item.total
+      }));
+    });
+    this.http.get<any[]>(`http://localhost:5000/api/proveedor/reservas-por-estado-civil?idProveedor=${idProveedor}`)
+    .subscribe(data => {
+      this.reservasPorEstadoCivilChart = data.map(item => ({
+        name: item.estadoCivil,
+        value: item.total
+      }));
+    },
+    error => console.error('Error reservas-por-estado-civil', error)
+  );
 
   }
 

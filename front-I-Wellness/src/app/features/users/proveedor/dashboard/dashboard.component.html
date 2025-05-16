@@ -38,7 +38,7 @@
       <div class="chart-wrapper">
         <ngx-charts-bar-horizontal
           [results]="interesesChart"
-          [scheme]="'vivid'"
+          [scheme]="colorScheme"
           [xAxis]="true"
           [yAxis]="true"
           [legend]="false"
@@ -51,7 +51,7 @@
       <div class="chart-wrapper">
         <ngx-charts-pie-chart
           [results]="generoTuristasChart"
-          [scheme]="'vivid'"
+          [scheme]="colorScheme"
           [legend]="true"
           [labels]="true">
         </ngx-charts-pie-chart>
@@ -62,7 +62,7 @@
       <div class="chart-wrapper">
         <ngx-charts-bar-horizontal
           [results]="serviciosPopularesChart"
-          [scheme]="'cool'"
+          [scheme]="colorScheme"
           [xAxis]="true"
           [yAxis]="true"
           [legend]="false"
@@ -74,48 +74,74 @@
 <h2 class="dashboard-title-specific">Datos Específicos de {{ nombreEmpresa || 'Sin nombre' }}</h2>
 <div class="kpi-row">
   <div class="kpi-card">
-    <div class="kpi-title">Activos</div>
+    <div class="kpi-title">Servicios Activos</div>
     <div class="kpi-value" style="color: #20c997;">{{ activos }}</div>
   </div>
   <div class="kpi-card">
-    <div class="kpi-title">Inactivos</div>
+    <div class="kpi-title">Servicios Inactivos</div>
     <div class="kpi-value" style="color: #dc3545;">{{ inactivos }}</div>
   </div>
   <div class="kpi-card">
     <div class="kpi-title">Reservas Totales</div>
     <div class="kpi-value">{{ totalReservas }}</div>
   </div>
+  <div class="kpi-card">
+    <div class="kpi-title">Reservas Confirmadas</div>
+    <div class="kpi-value" style="color: #2973B2;">{{ totalConfirmadas }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-title">Reservas Completadas</div>
+    <div class="kpi-value" style="color: #fd7e14;">{{ totalCompletadas }}</div>
+  </div>
 </div>
 
-<div class="dashboard-card">
-  <h2>Servicios del Proveedor</h2>
-  <ul>
-    <li *ngFor="let s of servicios">
-      {{ s.serviceName }} <span *ngIf="s.estado === 1" style="color:green;">(Activo)</span><span *ngIf="s.estado === 0" style="color:red;">(Inactivo)</span>
-    </li>
-  </ul>
-</div>
-<div class="dashboard-card">
-  <h2>Reservas por Servicio</h2>
-  <ngx-charts-bar-horizontal
-    [results]="reservasPorServicioChart"
-    [scheme]="'cool'"
-    [xAxis]="true"
-    [yAxis]="true"
-    [legend]="false"
-    [showDataLabel]="true">
-  </ngx-charts-bar-horizontal>
-</div>
-<<div class="dashboard-card">
-  <h2>Reservas por Género</h2>
+<div class="dashboard-grid">
+  <div class="dashboard-card">
+    <h2>Reservas por Servicio</h2>
+    <div class="chart-wrapper">
+      <ngx-charts-bar-horizontal
+        [results]="reservasPorServicioChart"
+        [scheme]="colorScheme"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showDataLabel]="true">
+      </ngx-charts-bar-horizontal>
+    </div>
+  </div>
+  <div class="dashboard-card">
+    <h2>Número de Reservas por Género</h2>
+    <div class="chart-wrapper">
+      <ngx-charts-pie-chart
+        [results]="reservasPorGeneroChart"
+        [scheme]="colorScheme"
+        [legend]="true"
+        [labels]="true">
+      </ngx-charts-pie-chart>
+    </div>
+  </div>
+  <div class="dashboard-card">
+    <h2>Reservas por Nacionalidad</h2>
+    <div class="chart-wrapper">
+      <ngx-charts-bar-horizontal
+        [results]="reservasPorNacionalidadChart"
+        [scheme]="colorScheme"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showDataLabel]="true">
+      </ngx-charts-bar-horizontal>
+    </div>
+  </div>
+  <div class="dashboard-card">
+  <h2>Reservas por Estado Civil</h2>
+  <div class="chart-wrapper">
   <ngx-charts-pie-chart
-    [results]="reservasPorGeneroChart"
-    [scheme]="'vivid'"
-    [legend]="true"
-    [labels]="true">
-  </ngx-charts-pie-chart>
+  [results]="reservasPorEstadoCivilChart"
+  [scheme]="colorScheme"
+  [legend]="true"
+  [labels]="true"
+  [doughnut]="false">
+</ngx-charts-pie-chart>
 </div>
-
-
-
 </div>
