@@ -52,6 +52,8 @@ export class DashboardAdminComponent implements OnInit {
   barChartData: any[] = [];
   generoChartData: any[] = [];
   estadoCivilChartData: any[] = [];
+  reservas: any[] = [];
+  reservasPorEstadoChart: any[] = [];
 
   // Propiedades para el mapa
   ubicaciones: Ubicacion[] = [];
@@ -97,9 +99,28 @@ export class DashboardAdminComponent implements OnInit {
     this.getServiciosData();
     this.cargarTopProveedoresActivos();
     this.cargarTuristasGenero();
+
+
   }
 
+  
+
   cargarDatos() {
+
+     // Obtener todas las reservas (solo para depuración o para mostrar en una tabla)
+  this.http.get<any[]>('http://localhost:5000/api/reservas')
+  .subscribe(data => {
+    console.log('Reservas:', data); // <-- Aquí verás todas las reservas en consola
+    this.reservas = data;
+  });
+
+  this.http.get<any[]>('http://localhost:5000/api/reservas')
+    .subscribe(data => {
+      this.reservas = data;
+      this.reservasPorEstadoChart = this.getReservasPorEstado(data);
+    });
+
+
     this.http.get<Preferencia[]>('http://localhost:5000/api/preferencias-usuario').subscribe(data => {
       this.preferenciasChart = data.map(item => ({
         name: `${item.genero} - ${item.estadoCivil}`,
@@ -250,5 +271,22 @@ export class DashboardAdminComponent implements OnInit {
         value: item.total
       }));
     });
+  }
+  getConfirmadasCount(): number {
+    return this.reservas.filter(r => r.estado === 'confirmada').length;
+  }
+  getCanceladasCount(): number {
+    return this.reservas.filter(r => r.estado === 'cancelada').length;
+  }
+
+  getReservasPorEstado(reservas: any[]) {
+    const estados: { [key: string]: number } = {};
+    reservas.forEach(r => {
+      estados[r.estado] = (estados[r.estado] || 0) + 1;
+    });
+    return Object.keys(estados).map(estado => ({
+      name: estado,
+      value: estados[estado]
+    }));
   }
 }

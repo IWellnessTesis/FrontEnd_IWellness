@@ -1,6 +1,7 @@
 <div class="dashboard-main-card">
-  <h1 class="dashboard-title">¡Hola, {{ nombreEmpresa }}!</h1>
+  <h1 class="dashboard-title">¡Hola, {{ usuario?.proveedor?.nombre_empresa || 'Sin nombre' }}!</h1>
   <h2 class="dashboard-title">Datos Generales de I-Wellness</h2>
+
   <div class="kpi-row">
     <div class="kpi-card">
       <div class="kpi-title">Turistas Registrados</div>
@@ -12,13 +13,11 @@
       <div class="kpi-subvalue">Visitas: {{ topPaisTotal }}</div>
     </div>
     <div class="kpi-card">
-    <div class="kpi-title">Servicios Totales</div>
-    <div class="kpi-value">{{ serviciosActivos }}</div>
+      <div class="kpi-title">Servicios Totales</div>
+      <div class="kpi-value">{{ totalServicios }}</div>
+    </div>
   </div>
-    
-  </div>
-  
-  
+
   <div class="dashboard-grid">
     <div class="dashboard-card">
       <h2>Preferencias por Estado Civil</h2>
@@ -71,6 +70,52 @@
         </ngx-charts-bar-horizontal>
       </div>
     </div>
+</div>
+<h2 class="dashboard-title-specific">Datos Específicos de {{ nombreEmpresa || 'Sin nombre' }}</h2>
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="kpi-title">Activos</div>
+    <div class="kpi-value" style="color: #20c997;">{{ activos }}</div>
   </div>
-  <h2 class="dashboard-title">Datos Especificos de {{ nombreEmpresa }}</h2>
+  <div class="kpi-card">
+    <div class="kpi-title">Inactivos</div>
+    <div class="kpi-value" style="color: #dc3545;">{{ inactivos }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-title">Reservas Totales</div>
+    <div class="kpi-value">{{ totalReservas }}</div>
+  </div>
+</div>
+
+<div class="dashboard-card">
+  <h2>Servicios del Proveedor</h2>
+  <ul>
+    <li *ngFor="let s of servicios">
+      {{ s.serviceName }} <span *ngIf="s.estado === 1" style="color:green;">(Activo)</span><span *ngIf="s.estado === 0" style="color:red;">(Inactivo)</span>
+    </li>
+  </ul>
+</div>
+<div class="dashboard-card">
+  <h2>Reservas por Servicio</h2>
+  <ngx-charts-bar-horizontal
+    [results]="reservasPorServicioChart"
+    [scheme]="'cool'"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="false"
+    [showDataLabel]="true">
+  </ngx-charts-bar-horizontal>
+</div>
+<<div class="dashboard-card">
+  <h2>Reservas por Género</h2>
+  <ngx-charts-pie-chart
+    [results]="reservasPorGeneroChart"
+    [scheme]="'vivid'"
+    [legend]="true"
+    [labels]="true">
+  </ngx-charts-pie-chart>
+</div>
+
+
+
 </div>

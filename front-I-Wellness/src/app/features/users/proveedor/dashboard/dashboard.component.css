@@ -120,3 +120,12 @@ ngx-charts-pie-chart text {
         gap: 1rem;
     }
 }
+
+.dashboard-title-specific {
+    padding-top: 2rem;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2973B2;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}

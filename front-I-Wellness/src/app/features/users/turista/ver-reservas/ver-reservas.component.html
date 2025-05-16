@@ -1,6 +1,6 @@
 <div *ngFor="let proveedor of proveedoresFiltrados" class="proveedor-card">
   <h2 (click)="alternarProveedor(proveedor.id)" class="proveedor-header">
-    {{ proveedor.proveedor.nombre_empresa }}
+    {{ proveedor.proveedorInfo?.nombre_empresa }}
   </h2>
 
   <!-- Mostrar si el proveedor está en el set de abiertos -->
