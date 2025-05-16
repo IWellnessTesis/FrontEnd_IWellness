@@ -85,4 +85,20 @@
   cursor: pointer !important;
 }
 
+::ng-deep .custom-tooltip {
+  background-color: #fff;
+  color: #333;
+  padding: 2px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+
+::ng-deep .leaflet-tooltip-bottom::before {
+  display: none !important;  /* quita la flecha */
+}
+
 
