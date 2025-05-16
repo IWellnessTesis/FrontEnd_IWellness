@@ -256,3 +256,7 @@ select.form-control:focus {
 .iti--show-selected-dial-code input.iti__tel-input {
   padding-left: 10px !important;
 }
+
+.foto {
+  color: #000;
+}

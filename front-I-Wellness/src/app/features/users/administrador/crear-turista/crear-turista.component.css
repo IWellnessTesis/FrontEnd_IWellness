@@ -300,3 +300,32 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .iti--show-selected-dial-code input.iti__tel-input {
     padding-left: 10px !important;
 }
+
+/* Ocultar el input file nativo */
+.file-upload-label input[type="file"] {
+  display: none;
+}
+
+/* Estilo del label que actúa como botón */
+.file-upload-label {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #4B9E9E; 
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(49, 102, 166, 0.3);
+}
+
+/* Hover para el label */
+.file-upload-label:hover {
+  background-color: #3e8383;
+  box-shadow: 0 4px 10px rgba(37, 77, 127, 0.5);
+}

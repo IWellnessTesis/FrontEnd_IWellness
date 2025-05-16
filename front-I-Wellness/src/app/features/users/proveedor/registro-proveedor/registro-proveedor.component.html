@@ -85,6 +85,25 @@
           <small *ngIf="passwordError" class="error-message">{{
             passwordError
           }}</small>
+                    <div class="password-container">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Repite tu contraseña"
+              [(ngModel)]="confirmPassword"
+              (input)="validateConfirmPassword()"
+              required
+            />
+            <button
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="toggle-password"
+            >
+              {{ showConfirmPassword ? "Ocultar" : "Mostrar" }}
+            </button>
+          </div>
+          <small *ngIf="confirmPasswordError" class="error-message">{{
+            confirmPasswordError
+          }}</small>
         </div>
 
         <!-- Datos de la Empresa -->
@@ -139,25 +158,11 @@
             companyNamePhoneError
           }}</small>
 
-          <div class="password-container">
-            <input
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              placeholder="Repite tu contraseña"
-              [(ngModel)]="confirmPassword"
-              (input)="validateConfirmPassword()"
-              required
-            />
-            <button
-              type="button"
-              (click)="toggleConfirmPasswordVisibility()"
-              class="toggle-password"
-            >
-              {{ showConfirmPassword ? "Ocultar" : "Mostrar" }}
-            </button>
-          </div>
-          <small *ngIf="confirmPasswordError" class="error-message">{{
-            confirmPasswordError
-          }}</small>
+          <label for="foto">Foto de la persona</label>
+          <input class="foto" type="file" id="foto" accept="image/*" (change)="onFileSelected($event)" />
+          <div *ngIf="fotoError" class="error-message">{{ fotoError }}</div>
+
+
         </div>
       </div>
       <input

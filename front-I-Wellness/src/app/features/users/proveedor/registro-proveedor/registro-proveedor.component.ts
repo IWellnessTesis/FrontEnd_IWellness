@@ -34,6 +34,8 @@ export class RegistroProveedorComponent implements AfterViewInit {
   companyNamePhone: any = '';
   coordinateX: string = '';
   coordinateY: string = '';
+  foto: string = '';  // Aquí se guardará la imagen como base64
+
 
   // Error variables
   nameError: string = '';
@@ -46,6 +48,8 @@ export class RegistroProveedorComponent implements AfterViewInit {
   companyNamePhoneError: string = '';
   coordinateXError: string = '';
   coordinateYError: string = '';
+  fotoError: string = '';
+
 
   isLoading: boolean = false;
 
@@ -185,6 +189,7 @@ handleResultSelection(event: any) {
     this.validatecompanyNamePhone();
     this.validatecoordinateX();
     this.validatecoordinateY();
+    this.validateFoto(); 
 
     return !this.hasErrors();
   }
@@ -245,10 +250,26 @@ handleResultSelection(event: any) {
     this.coordinateYError = this.coordinateY.match(coordinateRegex) ? '' : 'Ingrese la coordenada Y correctamente';
   }
 
+  validateFoto() {
+  this.fotoError = this.foto ? '' : 'Debe subir una imagen.';
+}
+
   // Verifica si hay errores para deshabilitar el botón
-  hasErrors(): boolean {
-    return !!(this.nameError || this.contactPositionError || this.phoneError || this.passwordError || this.confirmPasswordError || this.companyNameError || this.emailError || this.companyNamePhoneError || this.coordinateXError || this.coordinateYError);
-  }
+hasErrors(): boolean {
+  return !!(
+    this.nameError ||
+    this.contactPositionError ||
+    this.phoneError ||
+    this.passwordError ||
+    this.confirmPasswordError ||
+    this.companyNameError ||
+    this.emailError ||
+    this.companyNamePhoneError ||
+    this.coordinateXError ||
+    this.coordinateYError ||
+    this.fotoError
+  );
+}
 
   register() {
     if (this.validateForm()) {
@@ -263,16 +284,13 @@ handleResultSelection(event: any) {
         correo: this.email,
         telefonoEmpresa: this.companyNamePhone.internationalNumber,
         coordenadaX: this.coordinateX || '0',
-        coordenadaY: this.coordinateY || '0'
+        coordenadaY: this.coordinateY || '0',
+        foto: this.foto
       };
-
-      console.log(providerData)
   
       this.authService.registerProveedor(providerData).subscribe({
         next: (response) => {
-          this.isLoading = false;
-          console.log('Registro y login exitosos:', response);
-          
+          this.isLoading = false;          
           // El token ya está guardado por el servicio de auth
           // Redirigir directamente al home del proveedor
           this.router.navigate(['/homeproveedor']);
@@ -298,4 +316,17 @@ handleResultSelection(event: any) {
   navigateTo(path: string) {
     this.router.navigate([path]);
   }
+
+onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.foto = reader.result as string;
+      this.fotoError = ''; 
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
 }
