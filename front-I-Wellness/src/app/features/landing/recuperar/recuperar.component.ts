@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -13,6 +14,8 @@ export class RecuperarComponent {
   correo: string = '';
   emailError: string = '';
 
+  constructor(private http: HttpClient) {}
+
   validateEmail() {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!this.correo.match(regex)) {
@@ -24,20 +27,32 @@ export class RecuperarComponent {
     }
   }
 
+
   onSubmit() {
-    if (!this.correo) {
-      this.emailError = 'Por favor ingrese un correo electrónico';
+    if (!this.correo || !this.validateEmail()) {
+      this.emailError = 'Por favor ingrese un correo electrónico válido';
       return;
     }
-
-    if (this.validateEmail()) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Perfecto',
-        text: 'Hemos enviado un correo de recuperación a tu correo electrónico',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#4a9c9f',
-      });
-    }
+    this.http.post('http://localhost:8082/auth/request-reset-password', null, {
+      params: { correo: this.correo },
+      responseType: 'text' as 'json'
+    }).subscribe({
+      next: (response) => {
+            console.log('Respuesta del servidor:', response);
+        Swal.fire({
+          icon: 'success',
+          title: 'Correo enviado',
+          text: 'Revisa tu correo para restablecer la contraseña.',
+        });
+      },
+      error: (error) => {
+        console.error('Error del servidor:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo enviar el correo. Verifica el correo ingresado.',
+        });
+      }
+    });
   }
 }
