@@ -30,6 +30,7 @@ import { PerfilProveedorComponent } from './features/users/proveedor/perfil-prov
 import { authGuard, turistaGuard, proveedorGuard, adminGuard } from './core/guards/auth.guard';
 import { ServiciosProveedorComponent } from './features/users/proveedor/servicios-proveedor/servicios-proveedor.component';
 import { VerReservasComponent } from './features/users/turista/ver-reservas/ver-reservas.component';
+import { DashboardAdminComponent } from './features/users/administrador/dashboard-admin/dashboard-admin.component';
 import { RestablecerComponent } from './features/landing/restablecer/restablecer.component';
 
 export const routes: Routes = [
@@ -74,6 +75,7 @@ export const routes: Routes = [
     { path: 'proveedores', component: ProveedoresComponent, canActivate: [adminGuard] },
     { path: 'crearturista', component: CrearTuristaComponent, canActivate: [adminGuard] },
     { path: 'crearproveedor', component: CrearProveedorComponent, canActivate: [adminGuard] },
+    { path: 'dashboard-admin', component: DashboardAdminComponent, canActivate: [adminGuard] },
     
     // Ruta comodín - redirige a home
     { path: '**', redirectTo: ''}, 

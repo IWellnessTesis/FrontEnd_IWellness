@@ -124,17 +124,20 @@ actualizarEstadoReservas(): void {
   filtrarProveedoresPorReservas(): void {
     // Obtenemos los idProveedores únicos de las reservas
 // Obtenemos los idProveedor únicos de los servicios
-    const idsProveedoresServicios = Array.from(
-      new Set(this.servicios.map((servicio: { _idProveedor: any; }) => servicio._idProveedor))
-    );
+const idsProveedoresServicios = Array.from(
+  new Set(this.servicios.map((servicio: { _idProveedor: any; }) => servicio._idProveedor))
+);
 
-    // Filtramos los proveedores solo si el _idProveedor está en los servicios
-    this.proveedoresFiltrados = this.proveedores.filter((proveedor: { id: unknown; }) =>
-      idsProveedoresServicios.includes(proveedor.id)
-    );
+// Filtramos los proveedores que tienen proveedorInfo, nombre_empresa y cuyo id está en los servicios
+this.proveedoresFiltrados = this.proveedores.filter(
+  (proveedor: any) =>
+    proveedor.proveedorInfo &&
+    proveedor.proveedorInfo.nombre_empresa &&
+    idsProveedoresServicios.includes(proveedor.id)
+);
 
-    console.log('Proveedores filtrados:', this.proveedoresFiltrados);
-    this.cargando = false;
+console.log('Proveedores filtrados:', this.proveedoresFiltrados);
+this.cargando = false;
   }
 
   alternarProveedor(id: number): void {
