@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -39,10 +39,11 @@ export class ServicioService {
   
 
   actualizar(id: number, servicio: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/update/${id}`, servicio).pipe(
-      catchError(this.handleError)
-    );
-  }
+  const headers = this.obtenerHeaders();
+  return this.http.put<any>(`${this.baseUrl}/update/${id}`, servicio, { headers }).pipe(
+    catchError(this.handleError)
+  );
+}
 
   eliminar(id: number): Observable<string> {
     const headers = this.obtenerHeaders();
