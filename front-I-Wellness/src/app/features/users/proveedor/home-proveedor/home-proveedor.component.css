@@ -16,9 +16,7 @@ body {
 
 /* Contenedor principal */
 .container {
-    width: 80%;
     max-width: 900px;
-    padding: 20px;
     text-align: left;
     color: white;
     margin-top: 7%;
@@ -28,11 +26,12 @@ body {
 .services-box {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     background: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 0 0 10px 10px;
     gap: 15px;
-    max-height: 65%;
+    max-height: 100%;
     overflow-y: auto;
 }
 

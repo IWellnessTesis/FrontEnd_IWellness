@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { jwtDecode } from 'jwt-decode';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 interface Preferencia {
   genero: string;
@@ -31,7 +32,9 @@ interface Usuario {
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent implements OnInit {
+
   usuario: Usuario | null = null;
+  user: any;
   nombreEmpresa: string = '';
 
   // Datos proveedor
@@ -80,26 +83,23 @@ xAxisTickFormatting: any;
   totalCompletadas: number = 0;
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('Token no encontrado');
-      return;
-    }
-    console.log(JSON.parse(atob(token.split('.')[1])));
+    
+    this.authService.usuarioHome().subscribe({
+      next: (data) => {
+        this.user = data;
+        this. user = JSON.parse(data);
+        this.cargarDatosProveedor(this.user.proveedor.id);
 
-    const decoded: any = jwtDecode(token);
-    const idProveedor = decoded.idProveedor;
-
-    if (!idProveedor) {
-      console.error('ID de proveedor no encontrado en el token');
-      return;
-    }
+      },
+      error: (err) => {
+        console.error('Error al obtener el usuario:', err);
+      }
+    });
 
     this.cargarDatosGenerales();
-    this.cargarDatosProveedor(idProveedor);
     this.cargarGraficasProveedor();
   }
 
@@ -147,8 +147,8 @@ xAxisTickFormatting: any;
 
   this.http.get<any>(`http://localhost:5000/api/dashboard-proveedor?idProveedor=${idProveedor}`).subscribe(
     data => {
+            console.log('datos:', data);
       this.nombreEmpresa = data.nombre_empresa;
-      console.log('Nombre empresa actualizado:', this.nombreEmpresa);
       this.usuario = { proveedor: { nombre_empresa: data.nombre_empresa } };
       this.activos = data.activos;
       this.inactivos = data.inactivos;

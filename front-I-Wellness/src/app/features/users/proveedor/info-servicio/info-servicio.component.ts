@@ -166,7 +166,7 @@ ngOnInit(): void {
     const fechaServicioFormateada = `${this.formatearFecha(this.fechaSeleccionada!)}T${horaFormateada}`;
     const ahora = new Date();
     const fechaReserva = this.formatearFechaLocal(ahora);
-
+    console.log("user:", this.usuario);
     const reserva = {
       _idServicio: this.servicio._idServicio,
       _idTurista: this.usuario.id,
@@ -175,7 +175,6 @@ ngOnInit(): void {
       estado: "confirmada"
     };
 
-    console.log(reserva)
 
     this.reservaService.save(reserva).subscribe({
       next: (response) => {

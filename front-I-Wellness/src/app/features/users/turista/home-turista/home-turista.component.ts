@@ -107,14 +107,17 @@ cargarPreferenciasUsuario() {
     });
   }
 
-  agruparServiciosPorTodasLasPreferencias(): void {
+agruparServiciosPorTodasLasPreferencias(): void {
   this.serviciosAgrupadosPorPreferencia = [];
 
   this.preferencias.forEach((preferencia: any) => {
     const serviciosCoincidentes = this.servicios.filter((servicio: any) => {
+      if (!servicio.estado) return false;
+
       const prefsDelServicio = this.preferenciasServicio.filter(
         (ps: any) => ps.idServicio === servicio._idServicio
       );
+
       return prefsDelServicio.some(
         (ps: any) => ps.preferencia._idPreferencias === preferencia._idPreferencias
       );
@@ -129,17 +132,24 @@ cargarPreferenciasUsuario() {
   });
 }
 
+
   
-  filtrarServiciosPorPreferenciasUsuario(): void {
-    this.serviciosFiltrados = this.servicios.filter((servicio: { _idServicio: any; }) => {
-      const preferenciasServicio = this.preferenciasServicio.filter((p: { idServicio: any; }) => p.idServicio === servicio._idServicio);
-      return preferenciasServicio.some((prefServicio: { preferencia: { _idPreferencias: any; }; }) =>
-        this.preferenciasUsuario.some((prefUsuario: { preferencia: { _idPreferencias: any; }; }) =>
-          prefUsuario.preferencia._idPreferencias === prefServicio.preferencia._idPreferencias
-        )
-      );
-    });
-  }
+filtrarServiciosPorPreferenciasUsuario(): void {
+  this.serviciosFiltrados = this.servicios.filter((servicio: { _idServicio: any; estado: boolean }) => {
+    if (!servicio.estado) return false;
+
+    const preferenciasServicio = this.preferenciasServicio.filter((p: { idServicio: any }) =>
+      p.idServicio === servicio._idServicio
+    );
+
+    return preferenciasServicio.some((prefServicio: { preferencia: { _idPreferencias: any } }) =>
+      this.preferenciasUsuario.some((prefUsuario: { preferencia: { _idPreferencias: any } }) =>
+        prefUsuario.preferencia._idPreferencias === prefServicio.preferencia._idPreferencias
+      )
+    );
+  });
+}
+
 
   navigateToDetalle(id: number) {
     this.router.navigate(['/infoservicio/', id]);

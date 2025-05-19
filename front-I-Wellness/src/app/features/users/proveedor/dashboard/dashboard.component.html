@@ -1,5 +1,5 @@
 <div class="dashboard-main-card">
-  <h1 class="dashboard-title">¡Hola, {{ usuario?.proveedor?.nombre_empresa || 'Sin nombre' }}!</h1>
+  <h1 class="dashboard-title">¡Hola, {{ user.proveedor?.nombre_empresa || 'Sin nombre' }}!</h1>
   <h2 class="dashboard-title">Datos Generales de I-Wellness</h2>
 
   <div class="kpi-row">
@@ -71,7 +71,7 @@
       </div>
     </div>
 </div>
-<h2 class="dashboard-title-specific">Datos Específicos de {{ nombreEmpresa || 'Sin nombre' }}</h2>
+<h2 class="dashboard-title-specific">Datos Específicos de {{ user.proveedor.nombre_empresa || 'Sin nombre' }}</h2>
 <div class="kpi-row">
   <div class="kpi-card">
     <div class="kpi-title">Servicios Activos</div>

@@ -24,28 +24,29 @@ export class ServiciosProveedorComponent {
     private servicioService: ServicioService
   ) {}
 
-    ngOnInit(): void {
-    this.nombreEmpresa = sessionStorage.getItem('nombreEmpresa');
-    // Obtener el id del proveedor de la URL
-    this.proveedorId = this.route.snapshot.paramMap.get('id');
-    
-    if (this.proveedorId) {
-      this.servicioService.obtenerServiciosPorProveedor(this.proveedorId).subscribe({
-        next: (data) => {
-          this.servicios = data;
-          console.log('servicios:', this.servicios);
+ngOnInit(): void {
+  this.nombreEmpresa = sessionStorage.getItem('nombreEmpresa');
+  this.proveedorId = this.route.snapshot.paramMap.get('id');
 
-                setTimeout(() => {
-        this.onScroll('para-ti');
-        this.servicios.forEach((_: any, i: number) =>
-          this.onScroll('grupo-' + i)
-        );
-      }, 500);
-        },
-        error: (err) => console.error('Error al obtener los servicios', err),
-      });
-    }
+  if (this.proveedorId) {
+    this.servicioService.obtenerServiciosPorProveedor(this.proveedorId).subscribe({
+      next: (data) => {
+        // ✅ Filtrar solo los servicios con estado en true
+        this.servicios = data.filter((servicio: any) => servicio.estado === true);
+        console.log('servicios filtrados:', this.servicios);
+
+        setTimeout(() => {
+          this.onScroll('para-ti');
+          this.servicios.forEach((_: any, i: number) =>
+            this.onScroll('grupo-' + i)
+          );
+        }, 500);
+      },
+      error: (err) => console.error('Error al obtener los servicios', err),
+    });
   }
+}
+
 
     navigateToDetalle(id: number) {
     this.router.navigate(['/infoservicio/', id]);
