@@ -152,6 +152,7 @@
             placeholder="Teléfono de la empresa"
             required
             (input)="validatecompanyNamePhone()"
+            class="tel"
           >
           </ngx-intl-tel-input>
           <small *ngIf="companyNamePhoneError" class="error-message">{{
