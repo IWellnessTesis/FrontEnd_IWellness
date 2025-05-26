@@ -86,7 +86,7 @@ export class MapaEmpresasComponent implements AfterViewInit {
         .bindPopup(popupContent);
 
       const tooltipInstance = marker.bindTooltip(empresa.nombre, {
-        permanent: true,
+        permanent: false,
         direction: 'bottom',
         offset: [0, 10],
         className: 'custom-tooltip'

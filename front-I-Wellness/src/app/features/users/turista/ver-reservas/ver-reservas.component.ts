@@ -86,7 +86,7 @@ actualizarEstadoReservas(): void {
 
     this.reservas.forEach((reserva: any) => {
       const fechaServicio = new Date(reserva.fechaServicio); // Fecha de servicio de la reserva
-      if (fechaServicio < fechaHoy && reserva.estado !== 'completada') {
+      if (fechaServicio < fechaHoy && reserva.estado !== 'completada' && reserva.estado !== 'cancelada') {
         // Si la fecha de servicio ya pasó y no está marcada como completada
         const reservaActualizada = {
           ...reserva,

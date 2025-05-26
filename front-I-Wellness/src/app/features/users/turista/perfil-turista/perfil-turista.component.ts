@@ -94,14 +94,11 @@ export class PerfilTuristaComponent implements OnInit {
         if (this.usuario.turistaInfo && this.usuario.turistaInfo.fechaNacimiento) {
           const fechaTimestamp = this.usuario.turistaInfo.fechaNacimiento;
           
-          if (typeof fechaTimestamp === 'number' || !isNaN(Number(fechaTimestamp))) {
-            const fecha = new Date(Number(fechaTimestamp));
-            const year = fecha.getFullYear();
-            const month = String(fecha.getMonth() + 1).padStart(2, '0');
-            const day = String(fecha.getDate()).padStart(2, '0');
+          if (typeof fechaTimestamp === 'string' || !isNaN(Number(fechaTimestamp))) {
+            const fecha = new Date(fechaTimestamp);
+            this.usuario.turistaInfo.fechaNacimiento = fecha.toISOString().slice(0, 10);
+            this.usuario.turistaInfo.fechaNacimientoFormateada = fecha.toISOString().slice(0, 10);
             
-            this.usuario.turistaInfo.fechaNacimientoFormateada = `${year}-${month}-${day}`;
-            console.log("Fecha formateada:", this.usuario.turistaInfo.fechaNacimientoFormateada);
           }
         }
         
